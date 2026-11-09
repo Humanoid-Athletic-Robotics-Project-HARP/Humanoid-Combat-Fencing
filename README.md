@@ -8,7 +8,7 @@ A community project from the **Humanoid Athletic Robotics Project (HARP)**
 
 ![Robot](https://img.shields.io/badge/robot-Unitree%20G1%20(29%20DoF)-1f6feb)
 ![Weapon](https://img.shields.io/badge/weapon-saber-8957e5)
-![Simulation](https://img.shields.io/badge/sim-Isaac%20Sim%204.5%20%7C%20MuJoCo-2ea44f)
+![Simulation](https://img.shields.io/badge/sim-mjlab%20%7C%20Isaac%20Sim%204.5-2ea44f)
 ![Status](https://img.shields.io/badge/status-Goal%201%20in%20progress-orange)
 ![License](https://img.shields.io/badge/license-Apache--2.0-lightgrey)
 
@@ -63,8 +63,8 @@ flowchart LR
 |---|---|---|
 | Video → human motion | [GVHMR](https://github.com/zju3dv/GVHMR) | Estimates the fencer's 3D body pose from a single camera |
 | Human → robot motion | [GMR](https://github.com/YanjieZe/GMR) | Maps that motion onto the G1's joints and proportions |
-| Robot motion → policy | [BeyondMimic](https://arxiv.org/abs/2508.08241) | Trains a whole-body tracking policy with RL, using one fixed recipe for every motion |
-| Simulation → hardware | Isaac Sim, MuJoCo | Each policy passes both simulators before any supervised test on the real robot |
+| Robot motion → policy | [BeyondMimic](https://arxiv.org/abs/2508.08241) via [mjlab](https://github.com/mujocolab/mjlab) | Trains a whole-body tracking policy with RL, using one fixed recipe for every motion. The original Isaac Lab code is kept as a second simulator ([ADR 0001](docs/adr/0001-training-stack.md)) |
+| Simulation → hardware | mjlab, Isaac Sim, [motion_tracking_controller](https://github.com/HybridRobotics/motion_tracking_controller) | Each policy passes sim-to-sim before any supervised test on the real robot |
 
 **Our rule:** when a motion fails, we fix the **data** (foot contacts, vertical drift, segment choice) before changing the training recipe.
 
@@ -90,8 +90,8 @@ Motions 1–4 are trained **without the saber** first. The saber is added once t
 
 | Phase | Description | Status |
 |:-:|---|:-:|
-| 1.0 | Repository setup and pinned upstream code | 🟡 Partly done |
-| 1.1 | GPU environment (Isaac Sim 4.5 / Isaac Lab v2.1.0) | ⏳ Next |
+| 1.0 | Repository setup and pinned upstream code | ✅ Done |
+| 1.1 | Environments: Mac side done; Linux GPU machine (mjlab + Isaac Lab v2.1.0) next | 🟡 In progress |
 | 1.2 | Train one known motion end to end to prove the pipeline | ⚪ Planned |
 | 1.3 | Saber and hardware decisions (grip, wrist range, sim model) | ⚪ Planned |
 | 1.4 | Fencing motion dataset: video → G1 motion | ⏳ Started |
@@ -105,16 +105,15 @@ Motions 1–4 are trained **without the saber** first. The saber is added once t
 ## 🚀 Getting started
 
 ```bash
-git clone https://github.com/Humanoid-Athletic-Robotics-Project-HARP/Humanoid-Combat-Fencing.git
+git clone --recurse-submodules https://github.com/Humanoid-Athletic-Robotics-Project-HARP/Humanoid-Combat-Fencing.git
+cd Humanoid-Combat-Fencing
+scripts/setup_mac.sh            # Mac: retargeting, motion cleanup, playback (no training)
+scripts/setup_linux_gpu.sh      # Linux + NVIDIA GPU: training (mjlab, Isaac Lab), GVHMR
 ```
 
-**Requirements for training**
+**Requirements for training:** native Ubuntu 22.04 with an NVIDIA GPU, and a Weights & Biases organization (for the motion registry). The full guide, including the manual downloads (SMPL-X, GVHMR checkpoints) and commands for every phase, is in **[docs/setup.md](docs/setup.md)**.
 
-- Linux with an NVIDIA GPU
-- Isaac Sim 4.5 and Isaac Lab v2.1.0
-- A Weights & Biases organization (for the motion registry)
-
-Upstream projects (BeyondMimic, GMR, GVHMR) will be added as pinned git submodules in `third_party/`. Until then, follow each project's own install instructions.
+Upstream projects (mjlab, BeyondMimic, Isaac Lab, GMR, GVHMR, motion_tracking_controller) are pinned git submodules in `third_party/`.
 
 ---
 
@@ -122,6 +121,19 @@ Upstream projects (BeyondMimic, GMR, GVHMR) will be added as pinned git submodul
 
 | Path | Contents |
 |---|---|
+| [`docs/setup.md`](docs/setup.md) | Environment setup and commands for every phase |
+| [`docs/roadmap.md`](docs/roadmap.md) | All goals and phases; Goal 1 in detail |
+| [`docs/adr/`](docs/adr/) | Decisions (e.g. the training stack) |
+| [`docs/plans/`](docs/plans/) | Weekly plans |
+| [`docs/log.md`](docs/log.md) | Every run and environment change |
+| [`data/video_log.md`](data/video_log.md) | Links to source fencing videos (never the videos themselves) |
+| [`motions/`](motions/) | Small retargeted G1 motion CSVs |
+| [`training/`](training/) | Run notes and W&B links, no checkpoints |
+| [`safety/checklist.md`](safety/checklist.md) | Checklist for human-led hardware tests |
+| [`scripts/`](scripts/) | Setup scripts and our own glue (`replay_csv.sh`) |
+| `third_party/` | Upstream code as pinned git submodules |
+
+---|---|
 | [`docs/roadmap.md`](docs/roadmap.md) | All goals and phases; Goal 1 in detail |
 | [`docs/plans/`](docs/plans/) | Weekly plans |
 | [`data/video_log.md`](data/video_log.md) | Links to source fencing videos (never the videos themselves) |
@@ -158,8 +170,8 @@ Open an issue or a pull request to get started.
 Code and docs in this repository are **Apache-2.0** (see [LICENSE](LICENSE)). Third-party projects keep their own licenses.
 
 > [!WARNING]
-> GVHMR and the SMPL / SMPL-X body models are restricted to **non-commercial research use**.
+> GVHMR, the SMPL / SMPL-X body models and the LAFAN1 dataset are restricted to **non-commercial research use**.
 
 ## 🙏 Acknowledgements
 
-This project builds on [BeyondMimic](https://arxiv.org/abs/2508.08241) (Hybrid Robotics), [GMR](https://github.com/YanjieZe/GMR) (Yanjie Ze et al.) and [GVHMR](https://github.com/zju3dv/GVHMR) (Zhejiang University 3D Vision Group).
+This project builds on [BeyondMimic](https://arxiv.org/abs/2508.08241) (Hybrid Robotics), [mjlab](https://github.com/mujocolab/mjlab), [GMR](https://github.com/YanjieZe/GMR) (Yanjie Ze et al.) and [GVHMR](https://github.com/zju3dv/GVHMR) (Zhejiang University 3D Vision Group).

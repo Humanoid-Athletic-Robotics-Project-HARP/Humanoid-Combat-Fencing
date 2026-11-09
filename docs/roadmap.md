@@ -6,16 +6,16 @@ The roadmap has four **goals**. A goal is a capability the robot shows. Each goa
 
 | Goal | Capability | Method | Status |
 |---|---|---|---|
-| **1** | Footwork and saber coordination (replayed motions) | Video → GVHMR → GMR → BeyondMimic | In progress |
+| **1** | Footwork and saber coordination (replayed motions) | Video → GVHMR → GMR → BeyondMimic (mjlab) | In progress |
 | **2** | Targeted hits and blade perception | Goal-conditioned policy + head-camera perception | Planned |
 | **3** | Footwork and bladework combined, aimed at a target | Goal-conditioned whole-body policy | Planned |
 | **4** | Reactive and autonomous fencing | Reactive policy (e.g. guided diffusion) + real-time perception | Stretch |
 
 **Rules that apply to every goal**
 
-- **Simulation first.** Every policy passes Isaac Sim and MuJoCo sim-to-sim before it goes near hardware.
+- **Simulation first.** Every policy passes sim-to-sim before it goes near hardware: trained in mjlab, then run in `motion_tracking_controller`'s MuJoCo launch, plus Isaac Sim where practical ([ADR 0001](adr/0001-training-stack.md)).
 - **Humans run hardware.** Nothing in this repo sends commands to the real robot. Hardware tests follow [`safety/checklist.md`](../safety/checklist.md): gantry or harness, cleared space, foam or padded weapons only.
-- **Upstream code stays upstream.** BeyondMimic, GMR and GVHMR are pinned submodules in `third_party/`.
+- **Upstream code stays upstream.** mjlab, BeyondMimic, Isaac Lab, GMR, GVHMR and motion_tracking_controller are pinned submodules in `third_party/`. Setup: [`setup.md`](setup.md).
 - **Log every run** in [`log.md`](log.md): date, motion, data version, commit, W&B link, result.
 
 ---
@@ -43,27 +43,31 @@ The roadmap has four **goals**. A goal is a capability the robot shows. Each goa
 - [x] Repo structure, license, contribution docs
 - [x] Upstream code pinned as git submodules (`scripts/setup_third_party.sh`)
 
+- [x] Setup scripts: `scripts/setup_mac.sh`, `scripts/setup_linux_gpu.sh`, kinematic replay `scripts/replay_csv.sh`
+- [x] Training stack decided: mjlab primary, Isaac Lab kept ([ADR 0001](adr/0001-training-stack.md))
+
 **Done when:** a fresh clone plus `setup_third_party.sh` gives the pinned upstream code.
 
-> Note: as of 2026-11-08 the `main` branch only has `README.md`, `LICENSE` and `.gitignore`. The setup work needs to be pushed before this phase really counts as done.
+### Phase 1.1: Environments
 
-### Phase 1.1: GPU environment check
-
-- [ ] Linux machine with an NVIDIA GPU; record GPU model, driver and CUDA version in `log.md`
-- [ ] Install Isaac Sim 4.5 and Isaac Lab v2.1.0
-- [ ] Install `whole_body_tracking` (BeyondMimic) at the pinned commit
+- [x] Mac: mjlab + GMR installed, LAFAN1 downloaded, CSV → NPZ and kinematic replay verified on CPU
+- [ ] Linux machine (native Ubuntu 22.04) with an NVIDIA GPU; `scripts/setup_linux_gpu.sh check`, record the output in `log.md`
+- [ ] Install mjlab, Isaac Sim 4.5 + Isaac Lab v2.1.0, `whole_body_tracking`, GVHMR (`scripts/setup_linux_gpu.sh`)
+- [ ] Manual downloads: SMPL / SMPL-X models, GVHMR checkpoints ([setup.md](setup.md#manual-steps-licences-and-logins-cannot-be-scripted))
 - [ ] Set up the W&B organization and motion registry
-- [ ] Run Isaac Lab's own sample task to confirm the install
+- [ ] Run an mjlab dummy-agent check and Isaac Lab's own sample task to confirm the installs
+- [ ] ROS 2 Jazzy + `motion_tracking_controller` (Docker on 22.04) for sim-to-sim; can wait until Phase 1.2's last step
 
-**Done when:** an Isaac Lab sample trains without errors and logs to W&B.
+**Done when:** an mjlab task and an Isaac Lab sample both train without errors and log to W&B.
 
 ### Phase 1.2: Prove the pipeline on a known motion
 
 Train one motion that BeyondMimic already supports, before adding any fencing data. If this fails, the problem is the setup, not our data.
 
-- [ ] Choose a reference motion from the BeyondMimic examples
-- [ ] Train with the standard recipe and leave it unchanged
-- [ ] Evaluate in Isaac Sim, then MuJoCo sim-to-sim
+- [ ] Choose a reference motion from the BeyondMimic examples (LAFAN1, already in `data/external/lafan1/`)
+- [ ] Train with the standard recipe and leave it unchanged, in mjlab and in Isaac Lab
+- [ ] Evaluate in both, then MuJoCo sim-to-sim with `motion_tracking_controller`
+- [ ] Check that mjlab's ONNX export loads in `motion_tracking_controller` ([ADR 0001](adr/0001-training-stack.md) open item)
 - [ ] Write down the metrics we will reuse for every fencing motion (see [Evaluation](#goal-1-evaluation))
 
 **Done when:** the known motion tracks in both simulators with numbers close to the ones BeyondMimic reports.
@@ -111,6 +115,7 @@ Turn fencing video into G1 reference trajectories.
 - [ ] Segment selection: trim to clean start and end poses, ideally starting and ending in en garde
 - [ ] Joint limits and speeds within the G1's specs
 - [ ] Save as small CSVs in `motions/`, with a version number and a short note on where each came from
+- [ ] Kinematic replay check: `scripts/replay_csv.sh motions/<motion>_vN.csv`
 
 **Done when:** each of the seven motions has at least one cleaned, versioned reference CSV that plays back properly in simulation without physics (kinematic replay).
 
@@ -129,9 +134,9 @@ Train in this order. Each motion has to pass before starting the next:
 - [ ] 1.5.7 Advance-lunge with hit
 
 For each motion:
-- [ ] Train in Isaac Sim; log to W&B
-- [ ] Evaluate in Isaac Sim against the reference
-- [ ] MuJoCo sim-to-sim: same policy, different physics engine
+- [ ] Train in mjlab; log to W&B
+- [ ] Evaluate in mjlab against the reference
+- [ ] Sim-to-sim: same ONNX in `motion_tracking_controller`'s MuJoCo launch; Isaac Lab cross-check where practical
 - [ ] Robustness: push the robot, add sensor noise, vary friction and saber mass
 - [ ] Record the result in `log.md`
 

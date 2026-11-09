@@ -1,0 +1,31 @@
+[submodule "third_party/mjlab"]
+	path = third_party/mjlab
+	url = https://github.com/mujocolab/mjlab.git
+	branch = main
+	shallow = true
+[submodule "third_party/whole_body_tracking"]
+	path = third_party/whole_body_tracking
+	url = https://github.com/HybridRobotics/whole_body_tracking.git
+	branch = main
+	shallow = true
+[submodule "third_party/motion_tracking_controller"]
+	path = third_party/motion_tracking_controller
+	url = https://github.com/HybridRobotics/motion_tracking_controller.git
+	branch = main
+	shallow = true
+[submodule "third_party/GMR"]
+	path = third_party/GMR
+	url = https://github.com/YanjieZe/GMR.git
+	branch = master
+	shallow = true
+[submodule "third_party/GVHMR"]
+	path = third_party/GVHMR
+	url = https://github.com/zju3dv/GVHMR.git
+	branch = main
+	shallow = true
+[submodule "third_party/IsaacLab"]
+	path = third_party/IsaacLab
+	url = https://github.com/isaac-sim/IsaacLab.git
+	branch = main
+	shallow = true
+	update = none

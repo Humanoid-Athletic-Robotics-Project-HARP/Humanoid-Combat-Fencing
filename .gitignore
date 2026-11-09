@@ -218,3 +218,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---- Humanoid-Combat-Fencing ----
+# Third-party datasets (own licences, e.g. LAFAN1 is CC BY-NC-ND) and raw video: never commit
+data/external/
+data/video/
+*.mp4
+*.mov
+*.webm
+# Large training outputs live in W&B, not git
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.onnx
+wandb/
+logs/
+outputs/
