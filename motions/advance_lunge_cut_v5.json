@@ -1,0 +1,236 @@
+{
+  "base": {
+    "kind": "advance_lunge",
+    "path": "motions/advance_lunge_v4.csv",
+    "source": "aY1P3wzvNBM_0-20000 (video_log #35; youtube aY1P3wzvNBM, 0.33-4.93 s; Fencing Master 'Step Forward Lunge - Footwork Drills #4', static camera, line parallel to the image plane, chest to camera) via advance_lunge_v4.csv",
+    "synthetic": false
+  },
+  "blade": {
+    "keys": [
+      {
+        "action": "en_garde",
+        "angle_error_deg": 0.0,
+        "collisions": [],
+        "frame": 0,
+        "hold_drift_m": 0.1363,
+        "hold_s": 0.0,
+        "index": 0,
+        "joint_set": "arm",
+        "kind": "guard",
+        "move_s_requested": 0.0,
+        "move_s_used": 0.0,
+        "target": "en_garde",
+        "time_s": 0.0,
+        "tip_error_m": 0.0,
+        "waist_delta_rad": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "action": "cut_head",
+        "angle_error_deg": 0.0,
+        "collisions": [],
+        "frame": 93,
+        "hold_drift_m": 0.2523,
+        "hold_s": 0.3,
+        "index": 1,
+        "joint_set": "arm",
+        "kind": "cut",
+        "move_s_requested": 0.3,
+        "move_s_used": 0.4,
+        "target": "cut_head",
+        "time_s": 3.1,
+        "tip_error_m": 0.0,
+        "waist_delta_rad": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "action": "en_garde",
+        "angle_error_deg": 0.0,
+        "collisions": [],
+        "frame": 149,
+        "hold_drift_m": 0.1008,
+        "hold_s": 0.6,
+        "index": 2,
+        "joint_set": "arm",
+        "kind": "guard",
+        "move_s_requested": 0.5,
+        "move_s_used": 0.5,
+        "target": "en_garde",
+        "time_s": 4.9667,
+        "tip_error_m": 0.0,
+        "waist_delta_rad": [
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "script": [
+      {
+        "action": "en_garde",
+        "at_s": null,
+        "hold_s": 0.0,
+        "move_s": 0.0
+      },
+      {
+        "action": "cut_head",
+        "at_s": 3.1,
+        "hold_s": 0.3,
+        "move_s": 0.3
+      },
+      {
+        "action": "en_garde",
+        "at_s": 4.966666666666667,
+        "hold_s": 0.6,
+        "move_s": 0.5
+      }
+    ],
+    "summary": {
+      "arm_reach_m": 0.5717,
+      "collision_frames": 0,
+      "collision_pairs": [],
+      "config": {
+        "allow_waist": true,
+        "angle_tolerance_deg": 5.0,
+        "end_hold_s": 2.0,
+        "heading": "x",
+        "position_tolerance_m": 0.02,
+        "restarts": 16,
+        "seed": 0,
+        "soft_limit_factor": 0.9,
+        "velocity_fraction": 0.5,
+        "waist_pitch_bound_rad": 0.2,
+        "waist_yaw_bound_rad": 0.35
+      },
+      "controlled_joints_beyond_soft_limit": [],
+      "controlled_max_speed_fraction_of_motor": 0.4481327810791909,
+      "frames": 214,
+      "keys_off_target": [],
+      "max_angle_error_deg": 0.0,
+      "max_hold_drift_m": 0.2523,
+      "max_tip_error_m": 0.0,
+      "speed_clamp": {
+        "frames_over": 0,
+        "max_change_rad": 0.0
+      },
+      "target_frame": "base right shoulder, axes: x",
+      "waist_used": false,
+      "wrist_pitch_yaw_max_abs_rad": 1.1234241285296747
+    }
+  },
+  "file": "advance_lunge_cut_v5.csv",
+  "fps": 30.0,
+  "frames": 214,
+  "key_frames": [
+    {
+      "frame": 93,
+      "index": 1,
+      "kind": "cut",
+      "target": "cut_head",
+      "time_s": 3.1
+    }
+  ],
+  "motion": "advance_lunge_cut",
+  "provenance": {
+    "cleanup": "bladework keyframes [en_garde 0s > cut_head 0.3s/0.3s@3.10s > en_garde 0.5s/0.6s@4.97s]; right arm IK per key, min-jerk, speed <= 0.5x motor, soft limits 0.9, end hold 2 s",
+    "hand": "R",
+    "notes": "legs/root/left arm: video-derived footwork; saber arm: hand-keyframed (not from video); key tip err max 0.0 cm, dir 0.0 deg; warn; slip 1.2 cm, pen 1.0 cm, limits 0, max 11.0 rad/s, 7.10 s; v5 = v4 with the return guard re-solved from the first guard's pose (keyframes._solve_all): v2-v4 ended in a different redundant arm solution for the same en_garde target (wrist roll/pitch/yaw -0.64/-0.70/-1.12 at the start, +0.21/-0.29/+1.45 at the end, shoulder yaw -1.20 vs -2.16), and the v4 policy averaged the two guards over the static start (sim2sim right wrist yaw error 0.78 rad in the first third). v5's guards differ by at most 0.10 rad; only the right arm from 4.5 s on changed",
+    "segment": "whole base (213 frames) + bladework",
+    "source_clip": "aY1P3wzvNBM_0-20000 (video_log #35; youtube aY1P3wzvNBM, 0.33-4.93 s; Fencing Master 'Step Forward Lunge - Footwork Drills #4', static camera, line parallel to the image plane, chest to camera) via advance_lunge_v4.csv"
+  },
+  "published_utc": "2026-11-11T17:10:47+00:00",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.7102803738317757,
+          "right": 0.7616822429906542
+        },
+        "no_contact_frames": 48,
+        "pattern": {
+          "left": "#############.##...........#####..####.....#################",
+          "right": "###############...........#############...##################"
+        },
+        "phases": {
+          "left": 5,
+          "right": 3
+        }
+      },
+      "duration_s": 7.1,
+      "foot_slip": {
+        "contact_phases": 8,
+        "max_deviation_m": 0.011522383888912876,
+        "mean_slide_speed_mps": 0.0022143459809762745,
+        "total_slide_m": 0.02325063280025088
+      },
+      "fps": 30.0,
+      "frames": 214,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "right_knee_joint",
+        "max_fraction_of_motor_limit": 0.550566,
+        "max_rad_s": 11.01132
+      },
+      "penetration": {
+        "frames_below_5mm": 2,
+        "max_depth_m": 0.010337566201251413
+      },
+      "planted_float_p95_m": 0.016479912130333927,
+      "plausibility": {
+        "pelvis_height_min_m": 0.577984,
+        "pelvis_high_sustained_m": 0.709557,
+        "pelvis_low_sustained_m": 0.5828,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 19.121138972985932,
+        "torso_tilt_sustained_deg": 17.447244081668085
+      },
+      "root": {
+        "height_max_m": 0.723231,
+        "height_min_m": 0.577984,
+        "max_ground_speed_mps": 2.271944519040902,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [
+      "floor penetration (m) 0.010 > 0.005"
+    ],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "warn"
+  },
+  "version": 5
+}

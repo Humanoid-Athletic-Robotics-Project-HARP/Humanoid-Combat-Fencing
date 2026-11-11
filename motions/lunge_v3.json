@@ -1,0 +1,22 @@
+{
+  "clear_arm_torso_collision": {
+    "frames_fixed": 60,
+    "max_offset_rad": 0.24000000000000007,
+    "side": "right"
+  },
+  "derived_from": "lunge_v2.csv",
+  "file": "lunge_v3.csv",
+  "fps": 30.0,
+  "frames": 129,
+  "input": null,
+  "provenance": {
+    "cleanup": "straighten line (travel; 7 deg heading drift removed, lateral x0.25), smooth 8 Hz, joint limits, vertical drift, ground align, plant still feet, foot slide (root + leg IK), speed <= 0.5x motor, joint limits final, floor penetration, hold 0.5 s, plant still feet final, heading line -> +x, rear arm -> en_garde_v2 pose, sword arm cleared of torso",
+    "hand": "R (sidecar)",
+    "notes": "video-derived via MediaPipe fallback + GMR (no SMPL-X); the 2nd of 4 lunges in the clip: en garde 7.4-8.4 s, lunge 8.45-9.2 s, held ~0.9 s, recovery 10.1-10.65 s; cut at 10.70 s just before the drill's reset retreat, start/end holds synthesized. Recovers FORWARD: the source fencer drags the back foot ~0.5 m on the lunge (visible in the video, magnitude from monocular depth), so the root ends +0.57 m along +x. Supersedes lunge_v1 (same source and frames), whose end en garde floated ~8 cm and whose front foot hovered 10 cm through the held lunge; cleaned with fixes.contact_floor_track edge fallback + fixes.plant_still_feet (front foot lowered up to 10 cm by leg IK during the hold). Caveats: pelvis yaw 85 deg off the line (more profiled than the 30-60 deg norm; oblique-front camera depth), retarget at-limit 14 %; warn; slip 2.8 cm, pen 0.9 cm, limits 0, max 9.8 rad/s, 4.27 s; v3 = lunge_v2 with two arm fixes (deviations from the video): (1) the rear (left) arm, which the retarget pinned at its joint limits in every frame (shoulder roll +2.23 / limit +2.25, pitch -2.90: a raised foil/epee rear arm), is replaced by en_garde_v2's mean saber rear-arm pose, held constant; (2) the sword arm, which hung adducted inside the torso (up to 3.7 cm), is abducted clear by fixes.clear_arm_torso_collision (shoulder roll only, max 0.24 rad, 60 frames). lunge_v2's policy plateaued at joint error 0.131 (gate 0.10) after 6000 it, the largest errors in exactly these arms.",
+    "segment": "frames 222-321 (7.40-10.70 s)",
+    "source_clip": "53FZTK_8qOI_0-20000 (video_log #21; youtube 53FZTK_8qOI, 7.40-10.70 s; KFC Fencing 'Introduction to fencing basic: fencing lunge', static camera, oblique-front view, outdoor)"
+  },
+  "published_utc": "2026-11-10T10:38:05+00:00",
+  "rear_arm_pose_from": "en_garde_v2.csv (mean)",
+  "version": 3
+}

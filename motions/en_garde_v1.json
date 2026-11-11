@@ -1,0 +1,82 @@
+{
+  "file": "en_garde_v1.csv",
+  "fps": 30.0,
+  "frames": 55,
+  "input": "/home/nathan/hcf-data/motion/clean/IpM7citb5bs_3837-11411__en_garde_18-43.csv",
+  "provenance": {
+    "cleanup": "fencing motion batch: canonicalize, jitter low-pass 8 Hz, joint speed cap 0.5x, vertical drift, foot-slide IK, holds",
+    "hand": "R (source hand per sidecar; mirrored if L)",
+    "notes": "video-derived via MediaPipe fallback + GMR (no SMPL-X); quality pass; slight backward torso lean",
+    "segment": "frames 18-43 of the clip (0.8 s) + 0.5 s holds",
+    "source_clip": "IpM7citb5bs_3837-11411 (youtube IpM7citb5bs, 3.84-11.41 s)"
+  },
+  "published_utc": "2026-11-10T00:48:45+00:00",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 1.0,
+          "right": 1.0
+        },
+        "no_contact_frames": 0,
+        "pattern": {
+          "left": "#######################################################",
+          "right": "#######################################################"
+        },
+        "phases": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      "duration_s": 1.8,
+      "foot_slip": {
+        "contact_phases": 2,
+        "max_deviation_m": 0.00612964720701823,
+        "mean_slide_speed_mps": 0.009343596913046029,
+        "total_slide_m": 0.03425985534783544
+      },
+      "fps": 30.0,
+      "frames": 55,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "left_knee_joint",
+        "max_fraction_of_motor_limit": 0.031249499999999986,
+        "max_rad_s": 0.7178400000000001
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 0.0003229768463379624
+      },
+      "planted_float_p95_m": 0.006987426627152833,
+      "root": {
+        "height_max_m": 0.724566,
+        "height_min_m": 0.711455,
+        "max_ground_speed_mps": 0.06997634243085302,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6
+    },
+    "verdict": "pass"
+  },
+  "version": 1
+}

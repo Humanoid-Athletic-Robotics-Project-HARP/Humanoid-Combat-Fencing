@@ -1,0 +1,115 @@
+{
+  "derived_from": "advance_lunge_v3.csv",
+  "file": "advance_lunge_v4.csv",
+  "fps": 30.0,
+  "frames": 213,
+  "neutralize_wrists": {
+    "joints": [
+      "left_wrist_pitch_joint",
+      "left_wrist_yaw_joint",
+      "right_wrist_pitch_joint",
+      "right_wrist_yaw_joint"
+    ],
+    "max_change_rad": 1.211809,
+    "target_rad": 0.0
+  },
+  "provenance": {
+    "cleanup": "mirror, straighten line (travel; 17 deg heading drift removed, lateral x0.25), smooth 8 Hz, joint limits, vertical drift, ground align, plant still feet, foot slide (root + leg IK), speed <= 0.5x motor, joint limits final, floor penetration, hold 0.5 s (end 2 s), plant still feet final, heading line -> +x, wrist pitch/yaw -> neutral",
+    "hand": "L (sidecar) -> mirrored to R",
+    "notes": "video-derived via MediaPipe fallback + GMR (no SMPL-X); rep 1 of the drill: en garde 0.33-1.6 s (sword arm extends ~1.3-1.7 s), advance 1.6-2.2 s, lunge 2.2-2.8 s, held ~1.5 s, recovery 4.4-4.93 s; the drill flows straight from the recovery into a retreat back to the start, so the clip is cut as the front foot lands (4.93 s; the back foot is already sliding back ~15 cm) and the end hold is synthesized (eased to rest over 0.25 s, front foot put down by plant_still_feet). Ends FORWARD: root +1.1 m along +x (advance ~0.5 m + back-foot drag on the lunge). Source fencer is left-handed (sidecar), mirrored to R. Same as advance_lunge_v2 but with a 2 s end hold (v2: 0.5 s); v2's policy fell ~1.5 s into holding the final pose. v2 superseded advance_lunge_v1 (frames 10-146), whose end en garde floated 10-16 cm and whose front foot hovered 10-15 cm through the held lunge; cleaned with fixes.contact_floor_track edge fallback + fixes.plant_still_feet (front foot lowered up to 15 cm by leg IK). Caveats: pelvis yaw ~74 deg off the line; the recovery is fast (front foot ~3 m/s just before the eased end); warn; slip 1.2 cm, pen 1.0 cm, limits 0, max 15.3 rad/s, 7.07 s; v4 = advance_lunge_v3 with wrist pitch and yaw of both arms set to 0 (fixes.neutralize_wrists; max change 1.21 rad). Video pose has no wrist rotation, so those angles were a retargeting by-product; with the wrist motors' 0.075 rad action scale they needed actions up to 16 and were never tracked (left wrist error 0.2-0.27 rad in advance_lunge_cut_v3).",
+    "segment": "frames 10-148 (0.33-4.93 s)",
+    "source_clip": "aY1P3wzvNBM_0-20000 (video_log #35; youtube aY1P3wzvNBM, 0.33-4.93 s; Fencing Master 'Step Forward Lunge - Footwork Drills #4', static camera, line parallel to the image plane, chest to camera)"
+  },
+  "published_utc": "2026-11-11T11:11:20+00:00",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.7089201877934272,
+          "right": 0.7605633802816901
+        },
+        "no_contact_frames": 48,
+        "pattern": {
+          "left": "#############.##...........######.####.....#################",
+          "right": "###############...........#############...##################"
+        },
+        "phases": {
+          "left": 5,
+          "right": 3
+        }
+      },
+      "duration_s": 7.066666666666666,
+      "foot_slip": {
+        "contact_phases": 8,
+        "max_deviation_m": 0.011522383888912876,
+        "mean_slide_speed_mps": 0.002228504552211881,
+        "total_slide_m": 0.02325073082807729
+      },
+      "fps": 30.0,
+      "frames": 213,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "right_knee_joint",
+        "max_fraction_of_motor_limit": 0.550566,
+        "max_rad_s": 15.340770000000003
+      },
+      "penetration": {
+        "frames_below_5mm": 2,
+        "max_depth_m": 0.010337548399241234
+      },
+      "planted_float_p95_m": 0.016500831636350414,
+      "plausibility": {
+        "pelvis_height_min_m": 0.577984,
+        "pelvis_high_sustained_m": 0.709557,
+        "pelvis_low_sustained_m": 0.5828,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 19.121138972985932,
+        "torso_tilt_sustained_deg": 17.447244081668085
+      },
+      "root": {
+        "height_max_m": 0.723231,
+        "height_min_m": 0.577984,
+        "max_ground_speed_mps": 2.271944519040902,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [
+      "floor penetration (m) 0.010 > 0.005"
+    ],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "warn"
+  },
+  "version": 4
+}

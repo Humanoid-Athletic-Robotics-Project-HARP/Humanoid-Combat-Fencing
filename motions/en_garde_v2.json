@@ -1,0 +1,22 @@
+{
+  "derived_from": "en_garde_v1.csv",
+  "file": "en_garde_v2.csv",
+  "fps": 30.0,
+  "frames": 55,
+  "input": "/home/nathan/hcf-data/motion/clean/IpM7citb5bs_3837-11411__en_garde_18-43.csv",
+  "provenance": {
+    "cleanup": "fencing motion batch: canonicalize, jitter low-pass 8 Hz, joint speed cap 0.5x, vertical drift, foot-slide IK, holds, front foot heading -> line",
+    "hand": "R (source hand per sidecar; mirrored if L)",
+    "notes": "video-derived via MediaPipe fallback + GMR (no SMPL-X); quality pass; slight backward torso lean; v2 = en_garde_v1 with the front (right) foot turned down the fencing line by fixes.set_foot_heading (leg IK, sole held in place; turn 48 deg, IK error 0.02 mm). v1's front foot pointed 47 deg off the line, its right hip yaw was -0.77 rad / hip roll -0.37, and the COM sat 1.8 cm outside the support polygon, so it could not be held statically; v2: hip yaw -0.03, hip roll +0.04, COM 0.9 cm inside. Every v1-based policy carried a ~0.28 rad right hip yaw / 0.25 rad ankle roll offset (cut_head_v2_tip failed the joint gate on it).",
+    "segment": "frames 18-43 of the clip (0.8 s) + 0.5 s holds",
+    "source_clip": "IpM7citb5bs_3837-11411 (youtube IpM7citb5bs, 3.84-11.41 s)"
+  },
+  "published_utc": "2026-11-10T09:43:47+00:00",
+  "set_foot_heading": {
+    "foot_index": 1,
+    "max_turn_deg": 48.361575379496365,
+    "target_yaw_deg": 0.0,
+    "worst_ik_error_m": 2.0263366654673232e-05
+  },
+  "version": 2
+}
