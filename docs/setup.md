@@ -18,7 +18,7 @@ Everything needed to work through Goal 1. The stack choice is explained in [ADR 
 
 **GPU machine: native Ubuntu 22.04 with an NVIDIA RTX GPU.** This is the most compatible choice:
 
-- Isaac Sim 4.5 needs GLIBC ≥ 2.34 (pip install) and does not support WSL2 or macOS. Ubuntu 22.04 is the version Isaac Lab 2.1 was tested on.
+- Isaac Sim 4.5 needs GLIBC ≥ 2.34 (pip install) and does not support WSL2 or macOS. Ubuntu 22.04 is the version Isaac Lab 2.1 was tested on. *WSL2 checked 2026-11-11 on the RTX 5080 PC:* headless Isaac Sim still starts Kit through Vulkan, and WSL2 exposes no NVIDIA Vulkan driver to Linux (`/usr/lib/wsl/lib` has CUDA, NVML and OptiX only; Mesa falls back to llvmpipe). Upstream closed this as not planned ([IsaacLab #3792](https://github.com/isaac-sim/IsaacLab/issues/3792)); Docker inside WSL2 fails the same way. The untried route on that PC is **native Windows 11**, which Isaac Sim 4.5 and Isaac Lab 2.1 support (`isaaclab.bat --install`, Python 3.10, long paths enabled, cu128 nightly torch, a clone path without spaces). It was not installed: it needs roughly 20–50 GB on a system drive with 70 GB free, an EULA acceptance, and `whole_body_tracking` is untested on Windows.
 - mjlab only needs CUDA 12.4+. It also runs on WSL2, but the Isaac half of the stack would not.
 - `motion_tracking_controller` needs ROS 2 **Jazzy**, which targets Ubuntu **24.04**. On a 22.04 machine, run it in a `ros:jazzy` Docker container. *Unverified:* whether Isaac Sim 4.5 runs on 24.04. Check NVIDIA's 4.5 system requirements before choosing 24.04 for the whole machine.
 - RTX 50-series (Blackwell) GPUs: Isaac Lab 2.1 needs a PyTorch nightly instead of 2.5.1:
@@ -123,6 +123,21 @@ Check the registry name format against what the W&B UI shows for your org. The `
 
 ### 1.4 Video → G1 motion CSV
 
+The `fencing` CLI wraps the whole chain (WSL/Linux, venvs under `$HCF_DATA/venvs`):
+
+```bash
+scripts/hcf screen <yt_id>              # people tracking, fencer track, usable ranges (pose venv, GPU)
+scripts/hcf pose <yt_id>                # usable ranges -> clips <yt_id>_<start_ms>-<end_ms> (pose venv, CPU)
+scripts/hcf retarget <yt_id>            # clips -> retarget/csv/<clip_id>.csv + .json (gmr venv, CPU)
+scripts/hcf motion check --raw ~/hcf-data/retarget/csv/<clip_id>.csv
+scripts/hcf motion render ~/hcf-data/retarget/csv/<clip_id>.csv --png /tmp/<clip_id>.png
+scripts/hcf motion batch                # dry run of the cleanup over retarget/csv (add --publish to publish)
+```
+
+`fencing pose` uses GVHMR only when `$HCF_DATA/gvhmr/inputs/checkpoints/body_models/smplx/SMPLX_NEUTRAL.npz` and `.../smpl/SMPL_NEUTRAL.pkl` exist (licence-gated, see the table above; that branch is untested). Otherwise it uses the licence-free MediaPipe fallback and says so once. Useful flags: `--max-seconds` (clip length cap, default 20), `--height` (fencer height, default 1.75 m), `--hfov` / `--pitch-deg` (camera), `--reprocess` (redo the post-processing from cached MediaPipe output), `--force`. Check `pose/<clip_id>/overlay.png` before retargeting.
+
+The upstream commands the wrapper follows, for running a stage by hand:
+
 ```bash
 # 1. GVHMR (third_party/GVHMR, conda env gvhmr). -s = static camera, skips visual odometry
 python tools/demo/demo.py --video=/path/to/clip.mp4 -s
@@ -145,6 +160,22 @@ scripts/replay_csv.sh motions/en_garde_v1.csv
 ### 1.5 Train and evaluate
 
 Same commands as 1.2, with `motions/<motion>_vN.csv` as input. Never change the recipe without an ADR.
+
+On the WSL2 GPU PC, the repo CLI chains every stage. Data lives in `$HCF_DATA` (default `~/hcf-data`). There is no W&B (`WANDB_MODE=disabled`).
+
+```bash
+scripts/hcf pipeline status                      # per Goal 1 motion: published CSV, runs, latest verdicts
+scripts/hcf pipeline --dry-run train --goal1      # print the plan without running it
+scripts/hcf pipeline train motions/en_garde_v1.csv --iterations 3000
+#   one motion after another: train (foreground) -> export -> eval -> sim2sim,
+#   then a row in docs/log.md and a summary in $HCF_DATA/eval/pipeline/<ts>.json.
+#   --task auto picks Fencing-Tracking-Flat-G1-Saber for bladework motions.
+scripts/hcf pipeline data                        # (scrape) -> screen -> pose -> retarget -> motion batch
+scripts/hcf train eval <run> --checkpoint N      # single stages; see docs/evaluation.md
+scripts/hcf sim2sim <run> --checkpoint N [--video]
+```
+
+Training is CPU-latency-bound here (see `docs/log.md`, Environments). Two runs fit on the 16 GB card at once. Other heavy CPU jobs slow both runs a lot.
 
 ### Sim-to-sim and hardware (1.5, 1.6)
 

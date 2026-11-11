@@ -9,7 +9,7 @@ A community project from the **Humanoid Athletic Robotics Project (HARP)**
 ![Robot](https://img.shields.io/badge/robot-Unitree%20G1%20(29%20DoF)-1f6feb)
 ![Weapon](https://img.shields.io/badge/weapon-saber-8957e5)
 ![Simulation](https://img.shields.io/badge/sim-mjlab%20%7C%20Isaac%20Sim%204.5-2ea44f)
-![Status](https://img.shields.io/badge/status-Goal%201%20in%20progress-orange)
+![Status](https://img.shields.io/badge/status-Goal%201%20simulation%20done-yellowgreen)
 ![License](https://img.shields.io/badge/license-Apache--2.0-lightgrey)
 
 [Goals](#-goals) · [Approach](#-approach) · [Current work](#-current-work) · [Roadmap](docs/roadmap.md) · [Get involved](#-get-involved)
@@ -37,7 +37,7 @@ We work towards four goals. Each one builds on the one before it.
 
 | | Goal | The robot can… | Status |
 |:-:|---|---|:-:|
-| **1** | **Footwork and saber coordination** | Advance, retreat and lunge; parry and hit; do an advance-lunge with a cut. All learned from human fencing video | 🟡 In progress |
+| **1** | **Footwork and saber coordination** | Advance, retreat and lunge; parry and hit; do an advance-lunge with a cut. All learned from human fencing video | 🟡 Passing in simulation; hardware tests next |
 | **2** | **Targeted hits and perception** | Hit a chosen target on a stationary dummy, and see the opponent's blade with its own camera | ⚪ Planned |
 | **3** | **Footwork and bladework aimed at a target** | Close the distance and pick an attack (e.g. advance-lunge to the flank) to hit a given target | ⚪ Planned |
 | **4** | **Reactive and autonomous fencing** | Parry an incoming attack in real time and, in the end, fence a short bout on its own | ⚪ Stretch |
@@ -91,11 +91,11 @@ Motions 1–4 are trained **without the saber** first. The saber is added once t
 | Phase | Description | Status |
 |:-:|---|:-:|
 | 1.0 | Repository setup and pinned upstream code | ✅ Done |
-| 1.1 | Environments: Mac side done; Linux GPU machine (mjlab + Isaac Lab v2.1.0) next | 🟡 In progress |
-| 1.2 | Train one known motion end to end to prove the pipeline | ⚪ Planned |
-| 1.3 | Saber and hardware decisions (grip, wrist range, sim model) | ⚪ Planned |
-| 1.4 | Fencing motion dataset: video → G1 motion | ⏳ Started |
-| 1.5 | Train and evaluate all seven motions in simulation | ⚪ Planned |
+| 1.1 | Environments: Mac, the WSL2 GPU PC (mjlab) and motion_tracking_controller ([mtc.md](docs/mtc.md)) done; Isaac Lab (does not run on WSL2) and SMPL-X still open | 🟡 In progress |
+| 1.2 | Train one known motion end to end to prove the pipeline: LAFAN1 `dance1_subject2` trained to 10000 it and evaluated in mjlab, CPU MuJoCo and the C++ controller (misses the provisional joint gate, 0.108 vs 0.10); no Isaac Lab run | 🟡 In progress |
+| 1.3 | Saber and hardware decisions (grip, wrist range, sim model): [ADR 0002](docs/adr/0002-saber-grip-and-mount.md), [saber.md](docs/saber.md) | 🟡 Mostly done |
+| 1.4 | Fencing motion dataset: video → G1 motion ([pipeline.md](docs/pipeline.md)); all footwork (en garde, advance, retreat, lunge, advance-lunge) from video; bladework keyframed; SMPL-X/GVHMR still open | 🟡 Mostly done |
+| 1.5 | Train and evaluate all seven motions in simulation: 16 policies pass in mjlab, CPU MuJoCo and the motion_tracking_controller sim ([results](results/SUMMARY.md)); no Isaac Sim cross-check | ✅ Done in MuJoCo |
 | 1.6 | Human-supervised hardware tests | ⚪ Planned |
 
 **This week:** [week plan, 9–15 Nov 2026](docs/plans/2026-11-09-week.md). Goal: the first fencing motion (en garde) working in simulation.
@@ -122,6 +122,7 @@ Upstream projects (mjlab, BeyondMimic, Isaac Lab, GMR, GVHMR, motion_tracking_co
 | Path | Contents |
 |---|---|
 | [`docs/setup.md`](docs/setup.md) | Environment setup and commands for every phase |
+| [`results/`](results/README.md) | Trained policies (ONNX and last checkpoint), scores from all three simulators, training curves, logs and pipeline intermediates; [`SUMMARY.md`](results/SUMMARY.md) is the table |
 | [`docs/roadmap.md`](docs/roadmap.md) | All goals and phases; Goal 1 in detail |
 | [`docs/adr/`](docs/adr/) | Decisions (e.g. the training stack) |
 | [`docs/plans/`](docs/plans/) | Weekly plans |
