@@ -1,0 +1,7 @@
+{
+  "source_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/cut_flank_v3.csv",
+  "source_csv_sha256": "ed9b96f313e0dfe7058fcdb46660a5b2b60d4127470d213954d820465f29439f",
+  "input_fps": 30.0,
+  "output_fps": 50,
+  "npz_sha256": "4ff07dd7ae5d4b7c6d57234fd4a8893434ef7796759ecbb10877340e2cd4753c"
+}

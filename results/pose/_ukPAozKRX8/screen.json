@@ -1,0 +1,68 @@
+{
+  "yt_id": "_ukPAozKRX8",
+  "video": "/home/nathan/hcf-data/videos/raw/_ukPAozKRX8.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T01:18:44+00:00",
+  "detect_seconds": 35.3,
+  "width": 1280,
+  "height": 720,
+  "processed_fps": 10.0,
+  "num_frames": 501,
+  "duration_s": 50.0,
+  "shot_cuts_s": [
+    5.0,
+    5.3,
+    29.9
+  ],
+  "people_count_median": 0,
+  "people_count_max": 2,
+  "chosen_track_id": 3,
+  "full_body_frac": 0.994,
+  "camera_motion_width_per_s": 0.0,
+  "camera": "static",
+  "view_ratio_median": 0.597,
+  "view": "oblique",
+  "tracks": [
+    {
+      "track_id": 3,
+      "start_s": 14.4,
+      "end_s": 29.8,
+      "frames": 155,
+      "area_frac": 0.1285,
+      "centrality": 0.962,
+      "full_body_frac": 0.994,
+      "score": 81.429
+    },
+    {
+      "track_id": 1,
+      "start_s": 5.3,
+      "end_s": 14.4,
+      "frames": 92,
+      "area_frac": 0.1277,
+      "centrality": 0.96,
+      "full_body_frac": 1.0,
+      "score": 48.345
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 14.4,
+      "end_s": 29.9,
+      "track_id": 3,
+      "full_body_frac": 0.994,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.597,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    }
+  ],
+  "usable_ranges": [
+    [
+      14.4,
+      29.9
+    ]
+  ]
+}

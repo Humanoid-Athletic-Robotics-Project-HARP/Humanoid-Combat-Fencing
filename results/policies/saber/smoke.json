@@ -1,0 +1,37 @@
+{
+  "task_id": "Fencing-Tracking-Flat-G1-Saber",
+  "motion_file": "/home/nathan/hcf-data/npz/dance1_subject2_mjlab.npz",
+  "device": "cuda:0",
+  "body_order": {
+    "plain_bodies": 30,
+    "saber_bodies": 31,
+    "npz_bodies": 30
+  },
+  "npz_pose_max_body_error_m": 7.177349630183016e-07,
+  "training_env": {
+    "num_envs": 32,
+    "steps": 100,
+    "episode_ends": 222,
+    "saber_mass_kg": {
+      "min": 0.1209,
+      "max": 0.3186,
+      "mean": 0.2051
+    },
+    "tip_offset_from_wrist_max_error_m": 9.334361266155611e-07,
+    "env0_wrist_travel_m": 2.1151,
+    "env0_tip_travel_m": 3.8816,
+    "env0_tip_first_last": [
+      [
+        6.51200008392334,
+        -4.389999866485596,
+        1.996000051498413
+      ],
+      [
+        6.952000141143799,
+        -4.434000015258789,
+        0.5249999761581421
+      ]
+    ]
+  },
+  "passed": true
+}

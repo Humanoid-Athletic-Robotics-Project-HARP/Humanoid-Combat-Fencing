@@ -1,0 +1,16 @@
+{
+  "run_name": "dance1_subject2_p12v2r",
+  "task": "Mjlab-Tracking-Flat-Unitree-G1",
+  "motion_npz": "/home/nathan/hcf-data/npz/dance1_subject2_mjlab.npz",
+  "motion_npz_sha256": "221a562339f0d372a21da8465d30f82c281642a9b6a842f69ceec5fc9e8e07e8",
+  "motion_csv": null,
+  "motion_csv_sha256": null,
+  "repo_commit": "2f8d260",
+  "repo_dirty": true,
+  "iterations": 8500,
+  "num_envs": 4096,
+  "started_at": "2026-11-10T21:17:02+00:00",
+  "resume_from": "/home/nathan/hcf-data/runs/rsl_rl/g1_tracking/2026-11-09_14-57-04_dance1_subject2_p12v2/model_1500.pt",
+  "extra": {},
+  "schema_version": 1
+}

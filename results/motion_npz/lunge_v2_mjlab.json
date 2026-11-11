@@ -1,0 +1,7 @@
+{
+  "source_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/lunge_v2.csv",
+  "source_csv_sha256": "7f6aad9cd8a54b323c42cd8b9da967700fb8089bcefa13efc7d35aed201ce8ba",
+  "input_fps": 30.0,
+  "output_fps": 50,
+  "npz_sha256": "9ced5eaeae938d151bf7b9dc287ed0c3e6fa15536b8a7ab5759dc32c38a680f4"
+}

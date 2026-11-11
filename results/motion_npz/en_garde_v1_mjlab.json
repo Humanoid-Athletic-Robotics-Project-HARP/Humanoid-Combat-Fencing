@@ -1,0 +1,7 @@
+{
+  "source_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/en_garde_v1.csv",
+  "source_csv_sha256": "d62af029c42c38849f28d06b94db52c24f26691af42e5b1ff1200b0e3509b153",
+  "input_fps": 30.0,
+  "output_fps": 50,
+  "npz_sha256": "4f9688164b6aef8ac3ca33b09cf39863ffc486c9fc43394bd2e764869e89843c"
+}

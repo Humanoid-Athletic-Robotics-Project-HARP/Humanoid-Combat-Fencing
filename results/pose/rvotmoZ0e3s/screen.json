@@ -1,0 +1,68 @@
+{
+  "yt_id": "rvotmoZ0e3s",
+  "video": "/home/nathan/hcf-data/videos/raw/rvotmoZ0e3s.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T01:33:50+00:00",
+  "detect_seconds": 38.1,
+  "width": 1280,
+  "height": 720,
+  "processed_fps": 9.99,
+  "num_frames": 767,
+  "duration_s": 76.677,
+  "shot_cuts_s": [
+    4.404,
+    70.37
+  ],
+  "people_count_median": 1,
+  "people_count_max": 2,
+  "chosen_track_id": 2,
+  "full_body_frac": 0.035,
+  "camera_motion_width_per_s": 0.0004,
+  "camera": "static",
+  "view_ratio_median": null,
+  "view": "unknown",
+  "tracks": [
+    {
+      "track_id": 2,
+      "start_s": 6.206,
+      "end_s": 60.861,
+      "frames": 546,
+      "area_frac": 0.3462,
+      "centrality": 0.604,
+      "full_body_frac": 0.035,
+      "score": 137.83
+    },
+    {
+      "track_id": 7,
+      "start_s": 63.764,
+      "end_s": 66.466,
+      "frames": 28,
+      "area_frac": 0.5501,
+      "centrality": 0.687,
+      "full_body_frac": 0.0,
+      "score": 8.761
+    },
+    {
+      "track_id": 5,
+      "start_s": 60.761,
+      "end_s": 63.664,
+      "frames": 30,
+      "area_frac": 0.3548,
+      "centrality": 0.635,
+      "full_body_frac": 0.0,
+      "score": 7.305
+    },
+    {
+      "track_id": 1,
+      "start_s": 4.404,
+      "end_s": 5.806,
+      "frames": 15,
+      "area_frac": 0.1965,
+      "centrality": 0.444,
+      "full_body_frac": 0.0,
+      "score": 2.401
+    }
+  ],
+  "ranges": [],
+  "usable_ranges": []
+}

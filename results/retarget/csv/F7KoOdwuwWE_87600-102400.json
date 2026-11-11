@@ -1,0 +1,22 @@
+{
+  "clip_id": "F7KoOdwuwWE_87600-102400",
+  "yt_id": "F7KoOdwuwWE",
+  "source_start_s": 87.6,
+  "source_end_s": 102.4,
+  "pose_method": "fallback_mediapipe",
+  "track_id": 17,
+  "human_height_m": 1.75,
+  "handedness_guess": "R",
+  "fps": 30,
+  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; retargeted with GMR smplx_to_g1 (fallback input)",
+  "retarget": {
+    "frames": 444,
+    "source_fps": 30.0,
+    "human_height_m": 1.75,
+    "ik_error_median": 0.8183,
+    "ik_error_p95": 0.9732,
+    "ik_seconds": 0.8,
+    "joint_limit_frac": 0.0345,
+    "despiked_joint_samples": 0
+  }
+}

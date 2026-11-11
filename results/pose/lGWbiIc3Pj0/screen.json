@@ -1,0 +1,379 @@
+{
+  "yt_id": "lGWbiIc3Pj0",
+  "video": "/home/nathan/hcf-data/videos/raw/lGWbiIc3Pj0.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T02:03:04+00:00",
+  "detect_seconds": 151.0,
+  "width": 640,
+  "height": 480,
+  "processed_fps": 9.99,
+  "num_frames": 3927,
+  "duration_s": 392.993,
+  "shot_cuts_s": [
+    160.56,
+    268.969
+  ],
+  "people_count_median": 1,
+  "people_count_max": 3,
+  "chosen_track_id": 61,
+  "full_body_frac": 0.812,
+  "camera_motion_width_per_s": 0.0012,
+  "camera": "static",
+  "view_ratio_median": 0.557,
+  "view": "oblique",
+  "tracks": [
+    {
+      "track_id": 61,
+      "start_s": 273.173,
+      "end_s": 335.635,
+      "frames": 623,
+      "area_frac": 0.3953,
+      "centrality": 0.866,
+      "full_body_frac": 0.812,
+      "score": 479.58
+    },
+    {
+      "track_id": 63,
+      "start_s": 335.635,
+      "end_s": 366.166,
+      "frames": 306,
+      "area_frac": 0.3771,
+      "centrality": 0.965,
+      "full_body_frac": 0.922,
+      "score": 262.435
+    },
+    {
+      "track_id": 22,
+      "start_s": 87.187,
+      "end_s": 119.72,
+      "frames": 324,
+      "area_frac": 0.4175,
+      "centrality": 0.839,
+      "full_body_frac": 0.861,
+      "score": 262.034
+    },
+    {
+      "track_id": 64,
+      "start_s": 370.37,
+      "end_s": 392.893,
+      "frames": 226,
+      "area_frac": 0.4308,
+      "centrality": 0.974,
+      "full_body_frac": 0.752,
+      "score": 183.347
+    },
+    {
+      "track_id": 35,
+      "start_s": 138.338,
+      "end_s": 160.46,
+      "frames": 211,
+      "area_frac": 0.3528,
+      "centrality": 0.91,
+      "full_body_frac": 0.9,
+      "score": 167.595
+    },
+    {
+      "track_id": 11,
+      "start_s": 42.943,
+      "end_s": 61.762,
+      "frames": 183,
+      "area_frac": 0.4137,
+      "centrality": 0.887,
+      "full_body_frac": 0.863,
+      "score": 151.42
+    },
+    {
+      "track_id": 7,
+      "start_s": 27.728,
+      "end_s": 42.242,
+      "frames": 133,
+      "area_frac": 0.4062,
+      "centrality": 0.759,
+      "full_body_frac": 0.857,
+      "score": 101.167
+    },
+    {
+      "track_id": 40,
+      "start_s": 183.083,
+      "end_s": 194.194,
+      "frames": 105,
+      "area_frac": 0.355,
+      "centrality": 0.828,
+      "full_body_frac": 0.886,
+      "score": 79.245
+    },
+    {
+      "track_id": 1,
+      "start_s": 4.104,
+      "end_s": 14.214,
+      "frames": 102,
+      "area_frac": 0.3865,
+      "centrality": 0.79,
+      "full_body_frac": 0.892,
+      "score": 78.998
+    },
+    {
+      "track_id": 26,
+      "start_s": 117.217,
+      "end_s": 128.428,
+      "frames": 97,
+      "area_frac": 0.3687,
+      "centrality": 0.952,
+      "full_body_frac": 0.732,
+      "score": 70.812
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 87.788,
+      "end_s": 93.393,
+      "track_id": 22,
+      "full_body_frac": 0.8,
+      "camera_motion_width_per_s": 0.002,
+      "camera": "static",
+      "view_ratio": 0.516,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 93.794,
+      "end_s": 96.897,
+      "track_id": 22,
+      "full_body_frac": 0.968,
+      "camera_motion_width_per_s": 0.0033,
+      "camera": "static",
+      "view_ratio": 0.533,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 98.398,
+      "end_s": 118.819,
+      "track_id": 22,
+      "full_body_frac": 0.971,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.551,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 183.083,
+      "end_s": 186.987,
+      "track_id": 40,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.0013,
+      "camera": "static",
+      "view_ratio": null,
+      "view": "unknown",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 187.988,
+      "end_s": 189.69,
+      "track_id": 40,
+      "full_body_frac": 0.765,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": null,
+      "view": "unknown",
+      "people_median": 1,
+      "usable": false,
+      "reasons": [
+        "full body visible in only 76% of frames"
+      ]
+    },
+    {
+      "start_s": 190.19,
+      "end_s": 194.294,
+      "track_id": 40,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": null,
+      "view": "unknown",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 273.173,
+      "end_s": 290.69,
+      "track_id": 61,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.0023,
+      "camera": "static",
+      "view_ratio": 0.58,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 291.691,
+      "end_s": 293.994,
+      "track_id": 61,
+      "full_body_frac": 0.652,
+      "camera_motion_width_per_s": 0.0039,
+      "camera": "static",
+      "view_ratio": 0.55,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": false,
+      "reasons": [
+        "full body visible in only 65% of frames"
+      ]
+    },
+    {
+      "start_s": 294.494,
+      "end_s": 297.397,
+      "track_id": 61,
+      "full_body_frac": 0.966,
+      "camera_motion_width_per_s": 0.0016,
+      "camera": "static",
+      "view_ratio": 0.555,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 298.198,
+      "end_s": 304.805,
+      "track_id": 61,
+      "full_body_frac": 0.939,
+      "camera_motion_width_per_s": 0.0045,
+      "camera": "static",
+      "view_ratio": 0.601,
+      "view": "front",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 305.205,
+      "end_s": 319.219,
+      "track_id": 61,
+      "full_body_frac": 0.857,
+      "camera_motion_width_per_s": 0.0016,
+      "camera": "static",
+      "view_ratio": 0.559,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 320.02,
+      "end_s": 323.023,
+      "track_id": 61,
+      "full_body_frac": 0.867,
+      "camera_motion_width_per_s": 0.003,
+      "camera": "static",
+      "view_ratio": 0.564,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 323.623,
+      "end_s": 326.827,
+      "track_id": 61,
+      "full_body_frac": 0.719,
+      "camera_motion_width_per_s": 0.0026,
+      "camera": "static",
+      "view_ratio": 0.568,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": false,
+      "reasons": [
+        "full body visible in only 72% of frames"
+      ]
+    },
+    {
+      "start_s": 329.429,
+      "end_s": 331.932,
+      "track_id": 61,
+      "full_body_frac": 0.92,
+      "camera_motion_width_per_s": 0.0013,
+      "camera": "static",
+      "view_ratio": null,
+      "view": "unknown",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 332.632,
+      "end_s": 335.635,
+      "track_id": 61,
+      "full_body_frac": 0.862,
+      "camera_motion_width_per_s": 0.0024,
+      "camera": "static",
+      "view_ratio": null,
+      "view": "unknown",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    }
+  ],
+  "usable_ranges": [
+    [
+      87.788,
+      93.393
+    ],
+    [
+      93.794,
+      96.897
+    ],
+    [
+      98.398,
+      118.819
+    ],
+    [
+      183.083,
+      186.987
+    ],
+    [
+      190.19,
+      194.294
+    ],
+    [
+      273.173,
+      290.69
+    ],
+    [
+      294.494,
+      297.397
+    ],
+    [
+      298.198,
+      304.805
+    ],
+    [
+      305.205,
+      319.219
+    ],
+    [
+      320.02,
+      323.023
+    ],
+    [
+      329.429,
+      331.932
+    ],
+    [
+      332.632,
+      335.635
+    ]
+  ]
+}

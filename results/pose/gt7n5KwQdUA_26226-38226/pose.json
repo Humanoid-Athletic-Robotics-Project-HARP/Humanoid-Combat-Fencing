@@ -1,0 +1,40 @@
+{
+  "clip_id": "gt7n5KwQdUA_26226-38226",
+  "yt_id": "gt7n5KwQdUA",
+  "source_start_s": 26.226,
+  "source_end_s": 38.226,
+  "track_id": 7,
+  "video": "/home/nathan/hcf-data/videos/raw/gt7n5KwQdUA.mp4",
+  "pose_method": "fallback_mediapipe",
+  "pose_version": 2,
+  "fps": 30.0,
+  "human_height_m": 1.75,
+  "handedness_guess": "L",
+  "handedness_score": -0.354,
+  "camera": {
+    "width": 1048,
+    "height": 720,
+    "focal_px": 1271.5,
+    "hfov_deg": null,
+    "pitch_down_deg": 9.98,
+    "view": "oblique"
+  },
+  "body_scale": 1.0733,
+  "quality": {
+    "frames": 360,
+    "raw_frames": 360,
+    "valid_frac": 1.0,
+    "median_visibility": 0.985,
+    "visible_landmark_frac": 0.915,
+    "leg_swaps_fixed": 0,
+    "arm_swaps_fixed": 0,
+    "root_path_m": 2.721,
+    "root_max_speed_mps": 1.485,
+    "pelvis_height_median_m": 0.832,
+    "upper_foot_height_median_m": 0.034,
+    "shin_length_cv": 0.033
+  },
+  "created": "2026-11-11T20:06:27+00:00",
+  "seconds": 15.4,
+  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate"
+}

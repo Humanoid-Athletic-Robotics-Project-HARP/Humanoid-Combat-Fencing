@@ -1,0 +1,138 @@
+{
+  "yt_id": "IpM7citb5bs",
+  "video": "/home/nathan/hcf-data/videos/raw/IpM7citb5bs.mp4",
+  "screen_version": 1,
+  "created": "2026-11-09T23:00:52+00:00",
+  "detect_seconds": 68.4,
+  "width": 1280,
+  "height": 720,
+  "processed_fps": 29.97,
+  "num_frames": 1226,
+  "duration_s": 40.874,
+  "shot_cuts_s": [
+    3.804,
+    3.837,
+    33.901
+  ],
+  "people_count_median": 1,
+  "people_count_max": 4,
+  "chosen_track_id": 1,
+  "full_body_frac": 0.996,
+  "camera_motion_width_per_s": 0.0088,
+  "camera": "static",
+  "view_ratio_median": 0.581,
+  "view": "oblique",
+  "tracks": [
+    {
+      "track_id": 1,
+      "start_s": 3.837,
+      "end_s": 11.411,
+      "frames": 228,
+      "area_frac": 0.1037,
+      "centrality": 0.932,
+      "full_body_frac": 0.996,
+      "score": 106.083
+    },
+    {
+      "track_id": 7,
+      "start_s": 12.045,
+      "end_s": 19.486,
+      "frames": 224,
+      "area_frac": 0.1039,
+      "centrality": 0.942,
+      "full_body_frac": 0.991,
+      "score": 104.526
+    },
+    {
+      "track_id": 23,
+      "start_s": 26.76,
+      "end_s": 33.867,
+      "frames": 214,
+      "area_frac": 0.0963,
+      "centrality": 0.78,
+      "full_body_frac": 0.995,
+      "score": 88.347
+    },
+    {
+      "track_id": 16,
+      "start_s": 20.053,
+      "end_s": 26.493,
+      "frames": 194,
+      "area_frac": 0.0966,
+      "centrality": 0.779,
+      "full_body_frac": 0.99,
+      "score": 79.883
+    },
+    {
+      "track_id": 25,
+      "start_s": 27.327,
+      "end_s": 30.063,
+      "frames": 48,
+      "area_frac": 0.0043,
+      "centrality": 0.216,
+      "full_body_frac": 0.0,
+      "score": 0.955
+    },
+    {
+      "track_id": 11,
+      "start_s": 17.184,
+      "end_s": 18.485,
+      "frames": 38,
+      "area_frac": 0.0042,
+      "centrality": 0.206,
+      "full_body_frac": 0.0,
+      "score": 0.747
+    },
+    {
+      "track_id": 4,
+      "start_s": 9.142,
+      "end_s": 11.044,
+      "frames": 31,
+      "area_frac": 0.0042,
+      "centrality": 0.182,
+      "full_body_frac": 0.0,
+      "score": 0.593
+    },
+    {
+      "track_id": 24,
+      "start_s": 27.127,
+      "end_s": 28.762,
+      "frames": 33,
+      "area_frac": 0.0029,
+      "centrality": 0.273,
+      "full_body_frac": 0.0,
+      "score": 0.564
+    },
+    {
+      "track_id": 13,
+      "start_s": 17.317,
+      "end_s": 18.485,
+      "frames": 30,
+      "area_frac": 0.003,
+      "centrality": 0.25,
+      "full_body_frac": 0.0,
+      "score": 0.515
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 3.837,
+      "end_s": 11.411,
+      "track_id": 1,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.009,
+      "camera": "static",
+      "view_ratio": 0.581,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    }
+  ],
+  "usable_ranges": [
+    [
+      3.837,
+      11.411
+    ]
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "source_csv": "/home/nathan/hcf-data/motion/blade/advance_lunge_cut.csv",
+  "source_csv_sha256": "74cfca2d24cf8ea14fe8e08c324a4cb71101ca11cd10c7466b362871a3cdef29",
+  "input_fps": 30.0,
+  "output_fps": 50,
+  "npz_sha256": "4414e046cb654a2ce0660418c5974b5224747fcbb927071713db1232e62389b2"
+}

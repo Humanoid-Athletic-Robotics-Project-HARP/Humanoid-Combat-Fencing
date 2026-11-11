@@ -1,0 +1,40 @@
+{
+  "clip_id": "rimLeD22f9M_98300-108400",
+  "yt_id": "rimLeD22f9M",
+  "source_start_s": 98.3,
+  "source_end_s": 108.4,
+  "track_id": 237,
+  "video": "/home/nathan/hcf-data/videos/raw/rimLeD22f9M.mp4",
+  "pose_method": "fallback_mediapipe",
+  "pose_version": 2,
+  "fps": 30.0,
+  "human_height_m": 1.75,
+  "handedness_guess": "R",
+  "handedness_score": 0.464,
+  "camera": {
+    "width": 1280,
+    "height": 720,
+    "focal_px": 1468.6,
+    "hfov_deg": null,
+    "pitch_down_deg": -0.37,
+    "view": "front"
+  },
+  "body_scale": 1.0842,
+  "quality": {
+    "frames": 304,
+    "raw_frames": 304,
+    "valid_frac": 0.993,
+    "median_visibility": 0.945,
+    "visible_landmark_frac": 0.916,
+    "leg_swaps_fixed": 37,
+    "arm_swaps_fixed": 0,
+    "root_path_m": 8.357,
+    "root_max_speed_mps": 3.181,
+    "pelvis_height_median_m": 0.808,
+    "upper_foot_height_median_m": 0.085,
+    "shin_length_cv": 0.079
+  },
+  "created": "2026-11-11T19:56:27+00:00",
+  "seconds": 15.1,
+  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate"
+}

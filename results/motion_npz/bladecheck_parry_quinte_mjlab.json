@@ -1,0 +1,7 @@
+{
+  "source_csv": "/home/nathan/hcf-data/motion/blade/parry_quinte.csv",
+  "source_csv_sha256": "86c05a288480c461b4d4aec07718e0294abc37830aa1b4592d054c92022e2981",
+  "input_fps": 30.0,
+  "output_fps": 50,
+  "npz_sha256": "e4247a11f72b2b79ff85feb50de78f6458e7cb0481c5473fa35a3009b2e001ca"
+}

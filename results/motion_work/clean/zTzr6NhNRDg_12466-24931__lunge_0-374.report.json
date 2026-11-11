@@ -1,0 +1,301 @@
+{
+  "hand": "R",
+  "hand_source": "sidecar",
+  "label": "lunge",
+  "mirrored": false,
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.0,
+          "right": 0.009900990099009901
+        },
+        "no_contact_frames": 400,
+        "pattern": {
+          "left": "............................................................",
+          "right": ".........................#.................................."
+        },
+        "phases": {
+          "left": 0,
+          "right": 1
+        }
+      },
+      "duration_s": 13.433333333333334,
+      "foot_slip": {
+        "contact_phases": 1,
+        "max_deviation_m": 3.510833468576701e-16,
+        "mean_slide_speed_mps": 8.899809061182103e-15,
+        "total_slide_m": 1.1866412081576138e-15
+      },
+      "fps": 30.0,
+      "frames": 404,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "left_hip_yaw_joint",
+        "max_fraction_of_motor_limit": 0.6119430168874583,
+        "max_rad_s": 19.582176540398667
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 4.631711680858075e-16
+      },
+      "planted_float_p95_m": 0.04761306304208077,
+      "root": {
+        "height_max_m": 0.858798562916822,
+        "height_min_m": 0.27173621549940724,
+        "max_ground_speed_mps": 3.474880539348737,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [
+      "planted-foot float p95 (m) 0.048 > 0.02",
+      "joint speed / motor limit (left_hip_yaw_joint) 0.612 > 0.6"
+    ],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6
+    },
+    "verdict": "warn"
+  },
+  "raw_quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.0,
+          "right": 0.008021390374331552
+        },
+        "no_contact_frames": 371,
+        "pattern": {
+          "left": "............................................................",
+          "right": "............................................................"
+        },
+        "phases": {
+          "left": 0,
+          "right": 1
+        }
+      },
+      "duration_s": 12.433333333333334,
+      "foot_slip": {
+        "contact_phases": 1,
+        "max_deviation_m": 0.008357243382848566,
+        "mean_slide_speed_mps": 0.14795806663469302,
+        "total_slide_m": 0.014795806663469302
+      },
+      "fps": 30.0,
+      "frames": 374,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "left_knee_joint",
+        "max_fraction_of_motor_limit": 2.0703465,
+        "max_rad_s": 41.406929999999996
+      },
+      "penetration": {
+        "frames_below_5mm": 5,
+        "max_depth_m": 0.024213308992183824
+      },
+      "planted_float_p95_m": 0.032450892328294574,
+      "root": {
+        "height_max_m": 0.719318,
+        "height_min_m": 0.26925,
+        "max_ground_speed_mps": 4.90850172774748,
+        "start_xy": [
+          -0.014792,
+          0.01456
+        ]
+      }
+    },
+    "reasons": [
+      "floor penetration (m) 0.024 > 0.02",
+      "joint speed / motor limit (left_knee_joint) 2.070 > 0.9",
+      "planted-foot float p95 (m) 0.032 > 0.02"
+    ],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6
+    },
+    "verdict": "fail"
+  },
+  "segment": {
+    "confidence": 1.0,
+    "end": 374,
+    "label": "lunge",
+    "source": "manual",
+    "start": 0
+  },
+  "source": "/home/nathan/hcf-data/retarget/csv/zTzr6NhNRDg_12466-24931.csv",
+  "steps": [
+    {
+      "end": 374,
+      "label": "lunge",
+      "source": "manual",
+      "start": 0,
+      "step": "segment"
+    },
+    {
+      "heading_source": "pelvis",
+      "rotated_deg": -60.15860416072942,
+      "step": "canonicalize",
+      "translated_xy": [
+        0.014792,
+        -0.01456
+      ]
+    },
+    {
+      "cutoff_hz": 8.0,
+      "max_joint_change_rad": 0.28403470881768034,
+      "mean_joint_change_rad": 0.009062188834884818,
+      "step": "smooth"
+    },
+    {
+      "clamped_values": 2705,
+      "margin_rad": 0.02,
+      "max_violation_rad": 0.1024983632165446,
+      "per_joint_frames": {
+        "left_ankle_pitch_joint": 156,
+        "left_ankle_roll_joint": 319,
+        "left_elbow_joint": 2,
+        "left_hip_roll_joint": 24,
+        "left_knee_joint": 32,
+        "left_shoulder_pitch_joint": 178,
+        "left_shoulder_roll_joint": 45,
+        "left_wrist_pitch_joint": 158,
+        "left_wrist_roll_joint": 160,
+        "left_wrist_yaw_joint": 156,
+        "right_ankle_pitch_joint": 123,
+        "right_ankle_roll_joint": 252,
+        "right_hip_roll_joint": 3,
+        "right_knee_joint": 137,
+        "right_shoulder_roll_joint": 349,
+        "right_wrist_pitch_joint": 134,
+        "right_wrist_roll_joint": 173,
+        "right_wrist_yaw_joint": 139,
+        "waist_pitch_joint": 117,
+        "waist_roll_joint": 48
+      },
+      "step": "joint_limits"
+    },
+    {
+      "cutoff_hz": 0.3,
+      "drift_range_m": 0.02628441409277527,
+      "step": "vertical_drift"
+    },
+    {
+      "correction_range_m": 0.02454000129611601,
+      "mean_correction_m": -0.03624143273336023,
+      "smoothing_hz": 1.5,
+      "step": "ground_align"
+    },
+    {
+      "blend_s": 0.15,
+      "contact_phases": [
+        0,
+        1
+      ],
+      "ik_solves": 0,
+      "max_root_shift_m": 0.011677665830296564,
+      "slip_after_m": 2.7755575615628914e-17,
+      "slip_before_m": 0.02161391991868723,
+      "step": "foot_slide",
+      "worst_ik_error_m": 0.0
+    },
+    {
+      "cutoff_hz": 0.3,
+      "drift_range_m": 0.016783279056088805,
+      "step": "vertical_drift_round2"
+    },
+    {
+      "correction_range_m": 0.015673996442568738,
+      "mean_correction_m": 0.002896664623899716,
+      "smoothing_hz": 1.5,
+      "step": "ground_align_round2"
+    },
+    {
+      "blend_s": 0.15,
+      "contact_phases": [
+        0,
+        2
+      ],
+      "ik_solves": 0,
+      "max_root_shift_m": 0.009245227355295958,
+      "slip_after_m": 5.551115123125783e-17,
+      "slip_before_m": 0.01252504563366572,
+      "step": "foot_slide_round2",
+      "worst_ik_error_m": 0.0
+    },
+    {
+      "frames_over": 30,
+      "joints_over": [
+        "left_hip_pitch_joint",
+        "left_hip_roll_joint",
+        "left_hip_yaw_joint",
+        "left_knee_joint",
+        "left_shoulder_pitch_joint",
+        "left_wrist_yaw_joint",
+        "right_ankle_pitch_joint",
+        "right_knee_joint",
+        "right_shoulder_yaw_joint",
+        "right_wrist_pitch_joint",
+        "right_wrist_yaw_joint",
+        "waist_yaw_joint"
+      ],
+      "max_joint_change_rad": 0.8870782689759067,
+      "max_speed_before": 29.48374611798206,
+      "step": "joint_speed"
+    },
+    {
+      "clamped_values": 0,
+      "margin_rad": 0.0,
+      "max_violation_rad": 0.0,
+      "step": "joint_limits_final"
+    },
+    {
+      "frames_lifted": 190,
+      "max_depth_m": 0.31298617772922954,
+      "step": "floor_penetration"
+    },
+    {
+      "ease_s": 0.25,
+      "end_hold_s": 0.5,
+      "start_hold_s": 0.5,
+      "step": "hold"
+    },
+    {
+      "heading_source": "pelvis",
+      "rotated_deg": -26.50244585690346,
+      "step": "canonicalize_final",
+      "translated_xy": [
+        -2.8102520310824275e-16,
+        -1.0755285551056204e-16
+      ]
+    }
+  ]
+}

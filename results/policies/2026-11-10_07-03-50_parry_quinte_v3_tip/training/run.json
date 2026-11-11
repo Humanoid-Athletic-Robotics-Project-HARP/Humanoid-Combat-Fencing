@@ -1,0 +1,16 @@
+{
+  "run_name": "parry_quinte_v3_tip",
+  "task": "Fencing-Tracking-Flat-G1-Saber",
+  "motion_npz": "/home/nathan/hcf-data/npz/parry_quinte_v3_mjlab.npz",
+  "motion_npz_sha256": "c0b9351d528d9d1b55eaf25fb933552a21ae984baf237a59b98fe958bcb8f75d",
+  "motion_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/parry_quinte_v3.csv",
+  "motion_csv_sha256": "23c9ee247a3cfd567c4a23bc2be667da33746a947f6eab92402bf6bfec32c50b",
+  "repo_commit": "2f8d260",
+  "repo_dirty": true,
+  "iterations": 3000,
+  "num_envs": 4096,
+  "started_at": "2026-11-10T15:03:56+00:00",
+  "resume_from": null,
+  "extra": {},
+  "schema_version": 1
+}

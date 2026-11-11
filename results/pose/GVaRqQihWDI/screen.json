@@ -1,0 +1,118 @@
+{
+  "yt_id": "GVaRqQihWDI",
+  "video": "/home/nathan/hcf-data/videos/raw/GVaRqQihWDI.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T02:04:58+00:00",
+  "detect_seconds": 60.2,
+  "width": 1280,
+  "height": 720,
+  "processed_fps": 9.99,
+  "num_frames": 1332,
+  "duration_s": 133.233,
+  "shot_cuts_s": [
+    10.11,
+    26.527,
+    129.129
+  ],
+  "people_count_median": 2,
+  "people_count_max": 3,
+  "chosen_track_id": 10,
+  "full_body_frac": 1.0,
+  "camera_motion_width_per_s": 0.0,
+  "camera": "static",
+  "view_ratio_median": 0.557,
+  "view": "oblique",
+  "tracks": [
+    {
+      "track_id": 10,
+      "start_s": 30.53,
+      "end_s": 86.086,
+      "frames": 556,
+      "area_frac": 0.1312,
+      "centrality": 0.979,
+      "full_body_frac": 1.0,
+      "score": 298.945
+    },
+    {
+      "track_id": 12,
+      "start_s": 90.19,
+      "end_s": 129.029,
+      "frames": 389,
+      "area_frac": 0.2144,
+      "centrality": 0.984,
+      "full_body_frac": 1.0,
+      "score": 268.026
+    },
+    {
+      "track_id": 11,
+      "start_s": 30.53,
+      "end_s": 86.086,
+      "frames": 556,
+      "area_frac": 0.0452,
+      "centrality": 0.258,
+      "full_body_frac": 1.0,
+      "score": 111.572
+    },
+    {
+      "track_id": 13,
+      "start_s": 90.19,
+      "end_s": 129.029,
+      "frames": 389,
+      "area_frac": 0.0389,
+      "centrality": 0.255,
+      "full_body_frac": 1.0,
+      "score": 72.237
+    },
+    {
+      "track_id": 9,
+      "start_s": 10.11,
+      "end_s": 26.426,
+      "frames": 164,
+      "area_frac": 0.4148,
+      "centrality": 0.528,
+      "full_body_frac": 0.0,
+      "score": 40.336
+    },
+    {
+      "track_id": 8,
+      "start_s": 10.11,
+      "end_s": 26.426,
+      "frames": 164,
+      "area_frac": 0.2102,
+      "centrality": 0.967,
+      "full_body_frac": 0.0,
+      "score": 36.975
+    },
+    {
+      "track_id": 2,
+      "start_s": 1.101,
+      "end_s": 3.604,
+      "frames": 26,
+      "area_frac": 0.3317,
+      "centrality": 0.831,
+      "full_body_frac": 0.0,
+      "score": 6.854
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 30.53,
+      "end_s": 86.186,
+      "track_id": 10,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.557,
+      "view": "oblique",
+      "people_median": 2,
+      "usable": true,
+      "reasons": []
+    }
+  ],
+  "usable_ranges": [
+    [
+      30.53,
+      86.186
+    ]
+  ]
+}

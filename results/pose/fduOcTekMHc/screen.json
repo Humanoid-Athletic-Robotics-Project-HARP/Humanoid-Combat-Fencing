@@ -1,0 +1,162 @@
+{
+  "yt_id": "fduOcTekMHc",
+  "video": "/home/nathan/hcf-data/videos/raw/fduOcTekMHc.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T01:59:00+00:00",
+  "detect_seconds": 204.1,
+  "width": 1280,
+  "height": 720,
+  "processed_fps": 10.0,
+  "num_frames": 3199,
+  "duration_s": 319.8,
+  "shot_cuts_s": [
+    118.9,
+    120.7
+  ],
+  "people_count_median": 2,
+  "people_count_max": 7,
+  "chosen_track_id": 104,
+  "full_body_frac": 0.998,
+  "camera_motion_width_per_s": 0.0128,
+  "camera": "static",
+  "view_ratio_median": 0.583,
+  "view": "oblique",
+  "tracks": [
+    {
+      "track_id": 104,
+      "start_s": 120.7,
+      "end_s": 248.8,
+      "frames": 1282,
+      "area_frac": 0.1386,
+      "centrality": 0.471,
+      "full_body_frac": 0.998,
+      "score": 526.029
+    },
+    {
+      "track_id": 103,
+      "start_s": 120.7,
+      "end_s": 248.8,
+      "frames": 1282,
+      "area_frac": 0.128,
+      "centrality": 0.531,
+      "full_body_frac": 0.995,
+      "score": 525.103
+    },
+    {
+      "track_id": 106,
+      "start_s": 248.9,
+      "end_s": 319.8,
+      "frames": 710,
+      "area_frac": 0.1593,
+      "centrality": 0.477,
+      "full_body_frac": 0.996,
+      "score": 312.949
+    },
+    {
+      "track_id": 105,
+      "start_s": 248.9,
+      "end_s": 319.8,
+      "frames": 710,
+      "area_frac": 0.1174,
+      "centrality": 0.465,
+      "full_body_frac": 0.982,
+      "score": 264.009
+    },
+    {
+      "track_id": 81,
+      "start_s": 28.2,
+      "end_s": 105.7,
+      "frames": 776,
+      "area_frac": 0.124,
+      "centrality": 0.637,
+      "full_body_frac": 0.543,
+      "score": 233.154
+    },
+    {
+      "track_id": 91,
+      "start_s": 47.9,
+      "end_s": 118.8,
+      "frames": 710,
+      "area_frac": 0.1343,
+      "centrality": 0.9,
+      "full_body_frac": 0.059,
+      "score": 138.234
+    },
+    {
+      "track_id": 1,
+      "start_s": 0.0,
+      "end_s": 29.5,
+      "frames": 284,
+      "area_frac": 0.1891,
+      "centrality": 0.755,
+      "full_body_frac": 0.007,
+      "score": 54.94
+    },
+    {
+      "track_id": 102,
+      "start_s": 106.1,
+      "end_s": 118.8,
+      "frames": 128,
+      "area_frac": 0.0984,
+      "centrality": 0.75,
+      "full_body_frac": 0.992,
+      "score": 52.442
+    },
+    {
+      "track_id": 83,
+      "start_s": 30.5,
+      "end_s": 46.1,
+      "frames": 153,
+      "area_frac": 0.2181,
+      "centrality": 0.397,
+      "full_body_frac": 0.092,
+      "score": 29.514
+    },
+    {
+      "track_id": 2,
+      "start_s": 0.0,
+      "end_s": 8.3,
+      "frames": 82,
+      "area_frac": 0.4332,
+      "centrality": 0.455,
+      "full_body_frac": 0.0,
+      "score": 19.626
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 63.7,
+      "end_s": 105.6,
+      "track_id": 81,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.0162,
+      "camera": "moving",
+      "view_ratio": 0.632,
+      "view": "front",
+      "people_median": 2,
+      "usable": false,
+      "reasons": [
+        "camera moving (0.016 image widths/s)"
+      ]
+    },
+    {
+      "start_s": 120.7,
+      "end_s": 248.9,
+      "track_id": 104,
+      "full_body_frac": 0.998,
+      "camera_motion_width_per_s": 0.0104,
+      "camera": "static",
+      "view_ratio": 0.533,
+      "view": "oblique",
+      "people_median": 2,
+      "usable": true,
+      "reasons": []
+    }
+  ],
+  "usable_ranges": [
+    [
+      120.7,
+      248.9
+    ]
+  ]
+}

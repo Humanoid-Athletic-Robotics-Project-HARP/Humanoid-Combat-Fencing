@@ -1,0 +1,138 @@
+{
+  "yt_id": "IKDmvrc87o8",
+  "video": "/home/nathan/hcf-data/videos/raw/IKDmvrc87o8.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T01:34:16+00:00",
+  "detect_seconds": 11.0,
+  "width": 640,
+  "height": 480,
+  "processed_fps": 9.99,
+  "num_frames": 151,
+  "duration_s": 15.015,
+  "shot_cuts_s": [
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.501,
+    3.804,
+    3.904,
+    4.004,
+    4.104,
+    4.204,
+    4.304,
+    4.404,
+    4.505,
+    4.605,
+    9.51,
+    9.61,
+    9.71,
+    11.111,
+    11.211,
+    11.311,
+    13.914,
+    14.014,
+    14.114,
+    14.214,
+    14.314,
+    14.414
+  ],
+  "people_count_median": 2,
+  "people_count_max": 2,
+  "chosen_track_id": 19,
+  "full_body_frac": 0.956,
+  "camera_motion_width_per_s": 0.0002,
+  "camera": "static",
+  "view_ratio_median": 0.442,
+  "view": "oblique",
+  "tracks": [
+    {
+      "track_id": 19,
+      "start_s": 4.605,
+      "end_s": 9.009,
+      "frames": 45,
+      "area_frac": 0.1739,
+      "centrality": 0.916,
+      "full_body_frac": 0.956,
+      "score": 26.17
+    },
+    {
+      "track_id": 20,
+      "start_s": 4.605,
+      "end_s": 9.009,
+      "frames": 45,
+      "area_frac": 0.1081,
+      "centrality": 0.363,
+      "full_body_frac": 1.0,
+      "score": 15.126
+    },
+    {
+      "track_id": 7,
+      "start_s": 0.501,
+      "end_s": 3.704,
+      "frames": 33,
+      "area_frac": 0.1071,
+      "centrality": 0.764,
+      "full_body_frac": 0.97,
+      "score": 14.005
+    },
+    {
+      "track_id": 8,
+      "start_s": 0.501,
+      "end_s": 3.704,
+      "frames": 33,
+      "area_frac": 0.1118,
+      "centrality": 0.364,
+      "full_body_frac": 1.0,
+      "score": 11.284
+    },
+    {
+      "track_id": 21,
+      "start_s": 12.713,
+      "end_s": 13.814,
+      "frames": 12,
+      "area_frac": 0.3285,
+      "centrality": 0.775,
+      "full_body_frac": 0.833,
+      "score": 8.136
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 0.501,
+      "end_s": 3.804,
+      "track_id": 7,
+      "full_body_frac": 0.97,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.366,
+      "view": "oblique",
+      "people_median": 2,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 4.605,
+      "end_s": 9.109,
+      "track_id": 19,
+      "full_body_frac": 0.956,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.518,
+      "view": "oblique",
+      "people_median": 2,
+      "usable": true,
+      "reasons": []
+    }
+  ],
+  "usable_ranges": [
+    [
+      0.501,
+      3.804
+    ],
+    [
+      4.605,
+      9.109
+    ]
+  ]
+}

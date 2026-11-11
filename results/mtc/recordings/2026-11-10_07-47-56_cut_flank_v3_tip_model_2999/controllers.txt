@@ -1,0 +1,6 @@
+[WARN] [1794424909.583998701] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.
+[WARN] [1794424909.584054332] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.
+[INFO] [1794424910.157619152] [_ros2cli_230]: waiting for service /controller_manager/list_controllers to become available...
+state_estimator    legged_controllers/StateEstimator                    active  
+standby_controller legged_controllers/StandbyController                 inactive
+walking_controller motion_tracking_controller/MotionTrackingController  active  

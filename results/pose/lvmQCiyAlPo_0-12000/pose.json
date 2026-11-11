@@ -1,0 +1,40 @@
+{
+  "clip_id": "lvmQCiyAlPo_0-12000",
+  "yt_id": "lvmQCiyAlPo",
+  "source_start_s": 0.0,
+  "source_end_s": 12.0,
+  "track_id": 2,
+  "video": "/home/nathan/hcf-data/videos/raw/lvmQCiyAlPo.mp4",
+  "pose_method": "fallback_mediapipe",
+  "pose_version": 2,
+  "fps": 30.0,
+  "human_height_m": 1.75,
+  "handedness_guess": "R",
+  "handedness_score": 0.259,
+  "camera": {
+    "width": 1280,
+    "height": 720,
+    "focal_px": 1468.6,
+    "hfov_deg": null,
+    "pitch_down_deg": 15.89,
+    "view": "oblique"
+  },
+  "body_scale": 1.0498,
+  "quality": {
+    "frames": 361,
+    "raw_frames": 301,
+    "valid_frac": 1.0,
+    "median_visibility": 0.965,
+    "visible_landmark_frac": 0.966,
+    "leg_swaps_fixed": 0,
+    "arm_swaps_fixed": 0,
+    "root_path_m": 4.632,
+    "root_max_speed_mps": 2.813,
+    "pelvis_height_median_m": 0.791,
+    "upper_foot_height_median_m": 0.062,
+    "shin_length_cv": 0.052
+  },
+  "created": "2026-11-11T20:05:53+00:00",
+  "seconds": 14.3,
+  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate"
+}

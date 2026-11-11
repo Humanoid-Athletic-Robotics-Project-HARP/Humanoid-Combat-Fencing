@@ -1,0 +1,213 @@
+{
+  "kind": "sim2sim",
+  "export_dir": "/home/nathan/hcf-data/eval/2026-11-10_12-26-40_parry_tierce_high_v3_tip/model_2999",
+  "onnx": "/home/nathan/hcf-data/eval/2026-11-10_12-26-40_parry_tierce_high_v3_tip/model_2999/policy.onnx",
+  "scene_xml": "/home/nathan/hcf-data/eval/2026-11-10_12-26-40_parry_tierce_high_v3_tip/model_2999/scene/scene.xml",
+  "run_dir": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_12-26-40_parry_tierce_high_v3_tip",
+  "checkpoint": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_12-26-40_parry_tierce_high_v3_tip/model_2999.pt",
+  "iteration": 2999,
+  "task": "Fencing-Tracking-Flat-G1-Saber",
+  "simulator": "mujoco (CPU, python bindings)",
+  "reference_source": "onnx",
+  "pd_mode": "actuator",
+  "metadata_full_precision": true,
+  "gains_vs_metadata": {
+    "kp_max_abs_diff": 4.6195748577559925e-05,
+    "kd_max_abs_diff": 4.3134151539447885e-06
+  },
+  "physics": {
+    "timestep": 0.005,
+    "decimation": 4,
+    "step_dt": 0.02,
+    "integrator": 3
+  },
+  "motion_frames": 209,
+  "motion_steps": 209,
+  "hold_steps": 100,
+  "truncated": false,
+  "steps_run": 309,
+  "terminated_at_step": null,
+  "terminated_at_s": null,
+  "termination_terms": [],
+  "has_blade": true,
+  "video": "/home/nathan/hcf-data/eval/2026-11-10_12-26-40_parry_tierce_high_v3_tip/model_2999/sim2sim.mp4",
+  "nominal": {
+    "num_episodes": 1,
+    "success_rate": 1.0,
+    "window_success_rate": 1.0,
+    "recovery_rate": 1.0,
+    "joint_angle_error_rad": 0.08984093451125566,
+    "body_pos_error_m": 0.039650863578736095,
+    "body_pos_error_global_m": 0.050268165415757925,
+    "per_body_pos_error_m": {
+      "pelvis": 0.009393560117931335,
+      "left_hip_roll_link": 0.016177306873604802,
+      "left_knee_link": 0.07880470103968189,
+      "left_ankle_roll_link": 0.11017645964141713,
+      "right_hip_roll_link": 0.011787945889510607,
+      "right_knee_link": 0.0614251328329046,
+      "right_ankle_roll_link": 0.13626202934792175,
+      "torso_link": 0.009326850977243912,
+      "left_shoulder_roll_link": 0.016211586953017526,
+      "left_elbow_link": 0.0188017654184748,
+      "left_wrist_yaw_link": 0.026800609947056995,
+      "right_shoulder_roll_link": 0.012368857518558632,
+      "right_elbow_link": 0.022334550811539945,
+      "right_wrist_yaw_link": 0.025240732733441112
+    },
+    "anchor_pos_error_m": 0.025618201244601214,
+    "anchor_ori_error_rad": 0.04076877718364899,
+    "foot_slip_m_s": 0.03839415783634869,
+    "foot_slip_samples": 418,
+    "blade_tip_error_m": 0.011053517380434495,
+    "blade_tip_error_global_m": 0.03867310193006396,
+    "blade_tip_error_max_m": 0.05398784833683987,
+    "blade_key_frames": [
+      53
+    ],
+    "blade_tip_error_key_m": 0.016407985790941722,
+    "blade_tip_error_key_global_m": 0.02050273576285561,
+    "ground_z_m": 0.035942538008093834,
+    "scored_steps": 209,
+    "final_pelvis_height_error_m": 0.008975019526322847,
+    "final_pelvis_speed_m_s": 0.00037328398857498215
+  },
+  "gap_vs_mjlab": {
+    "metrics_json": "/home/nathan/hcf-data/eval/2026-11-10_12-26-40_parry_tierce_high_v3_tip/model_2999/metrics.json",
+    "mjlab_seconds": null,
+    "mjlab_num_envs": 1024,
+    "metrics": {
+      "success_rate": {
+        "mjlab": 1.0,
+        "mujoco": 1.0,
+        "diff": 0.0
+      },
+      "joint_angle_error_rad": {
+        "mjlab": 0.09033979514870837,
+        "mujoco": 0.08984093451125566,
+        "diff": -0.0004988606374527055
+      },
+      "body_pos_error_m": {
+        "mjlab": 0.040292718726347536,
+        "mujoco": 0.039650863578736095,
+        "diff": -0.0006418551476114406
+      },
+      "body_pos_error_global_m": {
+        "mjlab": 0.052035699572265934,
+        "mujoco": 0.050268165415757925,
+        "diff": -0.001767534156508009
+      },
+      "anchor_pos_error_m": {
+        "mjlab": 0.02762626234880689,
+        "mujoco": 0.025618201244601214,
+        "diff": -0.002008061104205674
+      },
+      "anchor_ori_error_rad": {
+        "mjlab": 0.04551232270009239,
+        "mujoco": 0.04076877718364899,
+        "diff": -0.004743545516443397
+      },
+      "foot_slip_m_s": {
+        "mjlab": 0.0386626512615734,
+        "mujoco": 0.03839415783634869,
+        "diff": -0.0002684934252247112
+      },
+      "recovery_rate": {
+        "mjlab": 1.0,
+        "mujoco": 1.0,
+        "diff": 0.0
+      },
+      "blade_tip_error_m": {
+        "mjlab": 0.012127364989191144,
+        "mujoco": 0.011053517380434495,
+        "diff": -0.0010738476087566486
+      },
+      "blade_tip_error_key_m": {
+        "mjlab": 0.014101680826519844,
+        "mujoco": 0.016407985790941722,
+        "diff": 0.0023063049644218778
+      }
+    }
+  },
+  "thresholds": [
+    {
+      "metric": "nominal.success_rate",
+      "op": ">=",
+      "threshold": 0.95,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.joint_angle_error_rad",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.08984093451125566,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.body_pos_error_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.039650863578736095,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_pos_error_m",
+      "op": "<=",
+      "threshold": 0.25,
+      "value": 0.025618201244601214,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_ori_error_rad",
+      "op": "<=",
+      "threshold": 0.2,
+      "value": 0.04076877718364899,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.foot_slip_m_s",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.03839415783634869,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.recovery_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_m",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.011053517380434495,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_key_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.016407985790941722,
+      "status": "pass"
+    }
+  ],
+  "verdict": "PASS",
+  "key_frames": {
+    "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/parry_tierce_high_v3.json",
+    "steps": [
+      53
+    ],
+    "keys": [
+      {
+        "frame": 32,
+        "index": 1,
+        "kind": "parry",
+        "target": "parry_tierce_high",
+        "time_s": 1.066667
+      }
+    ]
+  }
+}

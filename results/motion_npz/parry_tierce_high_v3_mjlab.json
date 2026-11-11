@@ -1,0 +1,7 @@
+{
+  "source_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/parry_tierce_high_v3.csv",
+  "source_csv_sha256": "4fe04fa04e77737e5e45a38e9a0aeeb3ef1813bc9e63295fd0929016eb281ef1",
+  "input_fps": 30.0,
+  "output_fps": 50,
+  "npz_sha256": "8e7e85d50301ffca0cab6da01736f1d655fa7fd4d1a41a564e5f233320a1c201"
+}

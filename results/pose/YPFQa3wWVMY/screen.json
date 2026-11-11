@@ -1,0 +1,117 @@
+{
+  "yt_id": "YPFQa3wWVMY",
+  "video": "/home/nathan/hcf-data/videos/raw/YPFQa3wWVMY.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T01:27:55+00:00",
+  "detect_seconds": 10.1,
+  "width": 320,
+  "height": 240,
+  "processed_fps": 10.0,
+  "num_frames": 126,
+  "duration_s": 12.5,
+  "shot_cuts_s": [],
+  "people_count_median": 3,
+  "people_count_max": 5,
+  "chosen_track_id": 1,
+  "full_body_frac": 0.413,
+  "camera_motion_width_per_s": 0.0169,
+  "camera": "moving",
+  "view_ratio_median": 0.68,
+  "view": "front",
+  "tracks": [
+    {
+      "track_id": 1,
+      "start_s": 0.0,
+      "end_s": 12.5,
+      "frames": 126,
+      "area_frac": 0.3491,
+      "centrality": 0.954,
+      "full_body_frac": 0.413,
+      "score": 66.376
+    },
+    {
+      "track_id": 3,
+      "start_s": 0.0,
+      "end_s": 12.5,
+      "frames": 126,
+      "area_frac": 0.1029,
+      "centrality": 0.357,
+      "full_body_frac": 1.0,
+      "score": 41.142
+    },
+    {
+      "track_id": 5,
+      "start_s": 1.1,
+      "end_s": 8.8,
+      "frames": 78,
+      "area_frac": 0.0937,
+      "centrality": 0.364,
+      "full_body_frac": 0.962,
+      "score": 23.789
+    },
+    {
+      "track_id": 15,
+      "start_s": 10.3,
+      "end_s": 11.8,
+      "frames": 16,
+      "area_frac": 0.0937,
+      "centrality": 0.305,
+      "full_body_frac": 0.75,
+      "score": 3.993
+    },
+    {
+      "track_id": 2,
+      "start_s": 0.0,
+      "end_s": 0.9,
+      "frames": 10,
+      "area_frac": 0.0608,
+      "centrality": 0.443,
+      "full_body_frac": 0.8,
+      "score": 2.313
+    },
+    {
+      "track_id": 14,
+      "start_s": 9.3,
+      "end_s": 10.3,
+      "frames": 11,
+      "area_frac": 0.1044,
+      "centrality": 0.148,
+      "full_body_frac": 0.0,
+      "score": 1.02
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 7.0,
+      "end_s": 8.5,
+      "track_id": 1,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.0284,
+      "camera": "moving",
+      "view_ratio": 0.643,
+      "view": "front",
+      "people_median": 3,
+      "usable": false,
+      "reasons": [
+        "camera moving (0.028 image widths/s)"
+      ]
+    },
+    {
+      "start_s": 9.2,
+      "end_s": 12.5,
+      "track_id": 1,
+      "full_body_frac": 0.618,
+      "camera_motion_width_per_s": 0.0195,
+      "camera": "moving",
+      "view_ratio": 0.718,
+      "view": "front",
+      "people_median": 3,
+      "usable": false,
+      "reasons": [
+        "camera moving (0.020 image widths/s)",
+        "full body visible in only 62% of frames"
+      ]
+    }
+  ],
+  "usable_ranges": []
+}

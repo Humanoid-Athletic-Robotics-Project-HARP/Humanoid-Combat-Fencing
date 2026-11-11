@@ -1,0 +1,195 @@
+{
+  "yt_id": "YyiWe-ZakzE",
+  "video": "/home/nathan/hcf-data/videos/raw/YyiWe-ZakzE.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T00:02:00+00:00",
+  "detect_seconds": 3372.5,
+  "width": 1280,
+  "height": 720,
+  "processed_fps": 14.985,
+  "num_frames": 2559,
+  "duration_s": 170.704,
+  "shot_cuts_s": [],
+  "people_count_median": 2,
+  "people_count_max": 3,
+  "chosen_track_id": 1,
+  "full_body_frac": 0.907,
+  "camera_motion_width_per_s": 0.0,
+  "camera": "static",
+  "view_ratio_median": 0.621,
+  "view": "front",
+  "tracks": [
+    {
+      "track_id": 1,
+      "start_s": 0.0,
+      "end_s": 75.742,
+      "frames": 1136,
+      "area_frac": 0.1432,
+      "centrality": 0.537,
+      "full_body_frac": 0.907,
+      "score": 464.646
+    },
+    {
+      "track_id": 19,
+      "start_s": 75.809,
+      "end_s": 129.196,
+      "frames": 801,
+      "area_frac": 0.1412,
+      "centrality": 0.503,
+      "full_body_frac": 0.873,
+      "score": 310.365
+    },
+    {
+      "track_id": 39,
+      "start_s": 135.802,
+      "end_s": 170.704,
+      "frames": 524,
+      "area_frac": 0.12,
+      "centrality": 0.896,
+      "full_body_frac": 0.689,
+      "score": 204.544
+    },
+    {
+      "track_id": 35,
+      "start_s": 129.262,
+      "end_s": 135.736,
+      "frames": 98,
+      "area_frac": 0.0652,
+      "centrality": 0.951,
+      "full_body_frac": 1.0,
+      "score": 36.609
+    },
+    {
+      "track_id": 2,
+      "start_s": 0.0,
+      "end_s": 13.547,
+      "frames": 204,
+      "area_frac": 0.0058,
+      "centrality": 0.876,
+      "full_body_frac": 0.966,
+      "score": 21.334
+    },
+    {
+      "track_id": 27,
+      "start_s": 100.033,
+      "end_s": 110.377,
+      "frames": 156,
+      "area_frac": 0.0092,
+      "centrality": 0.875,
+      "full_body_frac": 0.936,
+      "score": 20.156
+    },
+    {
+      "track_id": 8,
+      "start_s": 35.235,
+      "end_s": 43.577,
+      "frames": 126,
+      "area_frac": 0.0091,
+      "centrality": 0.807,
+      "full_body_frac": 0.976,
+      "score": 16.029
+    },
+    {
+      "track_id": 31,
+      "start_s": 116.316,
+      "end_s": 123.19,
+      "frames": 104,
+      "area_frac": 0.0093,
+      "centrality": 0.884,
+      "full_body_frac": 0.913,
+      "score": 13.372
+    },
+    {
+      "track_id": 11,
+      "start_s": 53.921,
+      "end_s": 61.128,
+      "frames": 108,
+      "area_frac": 0.009,
+      "centrality": 0.862,
+      "full_body_frac": 0.889,
+      "score": 13.244
+    },
+    {
+      "track_id": 24,
+      "start_s": 87.621,
+      "end_s": 93.493,
+      "frames": 89,
+      "area_frac": 0.0093,
+      "centrality": 0.879,
+      "full_body_frac": 0.899,
+      "score": 11.303
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 0.0,
+      "end_s": 36.169,
+      "track_id": 1,
+      "full_body_frac": 0.998,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.606,
+      "view": "front",
+      "people_median": 2,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 40.04,
+      "end_s": 42.042,
+      "track_id": 1,
+      "full_body_frac": 0.8,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.728,
+      "view": "front",
+      "people_median": 2,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 42.709,
+      "end_s": 65.132,
+      "track_id": 1,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.599,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    },
+    {
+      "start_s": 67.467,
+      "end_s": 75.809,
+      "track_id": 1,
+      "full_body_frac": 0.976,
+      "camera_motion_width_per_s": 0.0,
+      "camera": "static",
+      "view_ratio": 0.637,
+      "view": "front",
+      "people_median": 2,
+      "usable": true,
+      "reasons": []
+    }
+  ],
+  "usable_ranges": [
+    [
+      0.0,
+      36.169
+    ],
+    [
+      40.04,
+      42.042
+    ],
+    [
+      42.709,
+      65.132
+    ],
+    [
+      67.467,
+      75.809
+    ]
+  ]
+}

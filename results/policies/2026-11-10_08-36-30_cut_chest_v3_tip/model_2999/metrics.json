@@ -1,0 +1,469 @@
+{
+  "kind": "mjlab_eval",
+  "run_dir": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_08-36-30_cut_chest_v3_tip",
+  "checkpoint": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_08-36-30_cut_chest_v3_tip/model_2999.pt",
+  "iteration": 2999,
+  "task": "Fencing-Tracking-Flat-G1-Saber",
+  "motion_file": "/home/nathan/hcf-data/npz/cut_chest_v3_mjlab.npz",
+  "seed": 0,
+  "device": "cuda:0",
+  "seconds": null,
+  "hold_seconds": 2.0,
+  "nominal": {
+    "num_episodes": 1024,
+    "success_rate": 1.0,
+    "window_success_rate": 1.0,
+    "recovery_rate": 1.0,
+    "joint_angle_error_rad": 0.0775908346889749,
+    "body_pos_error_m": 0.04013924432274689,
+    "body_pos_error_global_m": 0.0486257379569755,
+    "per_body_pos_error_m": {
+      "pelvis": 0.007586096283982685,
+      "left_hip_roll_link": 0.017383074675062917,
+      "left_knee_link": 0.07851880356686251,
+      "left_ankle_roll_link": 0.11295068231757158,
+      "right_hip_roll_link": 0.010969505606032744,
+      "right_knee_link": 0.06595749931293227,
+      "right_ankle_roll_link": 0.13503173788323058,
+      "torso_link": 0.007363941206857941,
+      "left_shoulder_roll_link": 0.017664657729182704,
+      "left_elbow_link": 0.02188716224088781,
+      "left_wrist_yaw_link": 0.028661631568042526,
+      "right_shoulder_roll_link": 0.013259510100102883,
+      "right_elbow_link": 0.01990190641208831,
+      "right_wrist_yaw_link": 0.02481321161561891
+    },
+    "anchor_pos_error_m": 0.023310146692241726,
+    "anchor_ori_error_rad": 0.05201812432342211,
+    "foot_slip_m_s": 0.04393971427240258,
+    "foot_slip_samples": 376245,
+    "blade_tip_error_m": 0.016709804553369307,
+    "blade_tip_error_global_m": 0.03725303502364352,
+    "blade_tip_error_max_m": 0.29777643422274347,
+    "blade_key_frames": [
+      43
+    ],
+    "blade_tip_error_key_m": 0.03170509601999372,
+    "blade_tip_error_key_global_m": 0.06238097316981928,
+    "ground_z_m": 0.03593062482774258,
+    "scored_steps": 184,
+    "num_envs": 1024,
+    "description": "play config, no obs noise, no pushes, no startup randomization",
+    "termination_counts": {
+      "anchor_pos": 0,
+      "anchor_ori": 0,
+      "ee_body_pos": 0
+    },
+    "mean_termination_time_s": null,
+    "step_dt": 0.02,
+    "motion_frames": 184,
+    "motion_steps": 184,
+    "hold_steps": 100,
+    "truncated": false,
+    "window_steps": 500,
+    "has_blade": true,
+    "elapsed_s": 9.6,
+    "final_pelvis_height_error_m": 0.0066024455591104925,
+    "final_pelvis_speed_m_s": 0.0002136614028687081,
+    "key_frames": {
+      "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/cut_chest_v3.json",
+      "steps": [
+        43
+      ],
+      "keys": [
+        {
+          "frame": 26,
+          "index": 1,
+          "kind": "cut",
+          "target": "cut_chest",
+          "time_s": 0.866667
+        }
+      ]
+    }
+  },
+  "robustness": {
+    "push": {
+      "num_episodes": 1024,
+      "success_rate": 1.0,
+      "window_success_rate": 1.0,
+      "recovery_rate": 0.8935546875,
+      "joint_angle_error_rad": 0.0793935000369402,
+      "body_pos_error_m": 0.040466214092904296,
+      "body_pos_error_global_m": 0.06483261921910204,
+      "per_body_pos_error_m": {
+        "pelvis": 0.008108721396949762,
+        "left_hip_roll_link": 0.017825856561131746,
+        "left_knee_link": 0.07933045053448057,
+        "left_ankle_roll_link": 0.11413460866622369,
+        "right_hip_roll_link": 0.011657138441024985,
+        "right_knee_link": 0.06553924968750757,
+        "right_ankle_roll_link": 0.13352324826837725,
+        "torso_link": 0.00784223085578346,
+        "left_shoulder_roll_link": 0.01796484175814955,
+        "left_elbow_link": 0.022355080401555982,
+        "left_wrist_yaw_link": 0.029238641263459843,
+        "right_shoulder_roll_link": 0.013856657590126038,
+        "right_elbow_link": 0.020188570410421384,
+        "right_wrist_yaw_link": 0.024961701465468368
+      },
+      "anchor_pos_error_m": 0.042055105087741816,
+      "anchor_ori_error_rad": 0.054703111079550865,
+      "foot_slip_m_s": 0.06772856588161003,
+      "foot_slip_samples": 375898,
+      "blade_tip_error_m": 0.01752286340560423,
+      "blade_tip_error_global_m": 0.05801734602818492,
+      "blade_tip_error_max_m": 0.29480689250913994,
+      "blade_key_frames": [
+        43
+      ],
+      "blade_tip_error_key_m": 0.03169534086149494,
+      "blade_tip_error_key_global_m": 0.06306678535703117,
+      "ground_z_m": 0.03593062482774258,
+      "scored_steps": 184,
+      "num_envs": 1024,
+      "description": "nominal + push_robot (training velocity ranges, every 1-3 s)",
+      "termination_counts": {
+        "anchor_pos": 0,
+        "anchor_ori": 0,
+        "ee_body_pos": 0
+      },
+      "mean_termination_time_s": null,
+      "step_dt": 0.02,
+      "motion_frames": 184,
+      "motion_steps": 184,
+      "hold_steps": 100,
+      "truncated": false,
+      "window_steps": 500,
+      "has_blade": true,
+      "elapsed_s": 7.3,
+      "final_pelvis_height_error_m": 0.007037486182525754,
+      "final_pelvis_speed_m_s": 0.07913317965784865,
+      "key_frames": {
+        "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/cut_chest_v3.json",
+        "steps": [
+          43
+        ],
+        "keys": [
+          {
+            "frame": 26,
+            "index": 1,
+            "kind": "cut",
+            "target": "cut_chest",
+            "time_s": 0.866667
+          }
+        ]
+      }
+    },
+    "obs_noise": {
+      "num_episodes": 1024,
+      "success_rate": 1.0,
+      "window_success_rate": 1.0,
+      "recovery_rate": 1.0,
+      "joint_angle_error_rad": 0.07853834653907972,
+      "body_pos_error_m": 0.0397617747335154,
+      "body_pos_error_global_m": 0.05677542378952593,
+      "per_body_pos_error_m": {
+        "pelvis": 0.006982615996967943,
+        "left_hip_roll_link": 0.016302875462400918,
+        "left_knee_link": 0.07361872909807186,
+        "left_ankle_roll_link": 0.10868828691253661,
+        "right_hip_roll_link": 0.011825479406247367,
+        "right_knee_link": 0.06949570901342286,
+        "right_ankle_roll_link": 0.1383799076569896,
+        "torso_link": 0.006637428271143884,
+        "left_shoulder_roll_link": 0.017202353181648825,
+        "left_elbow_link": 0.021075048952011274,
+        "left_wrist_yaw_link": 0.02717692004855021,
+        "right_shoulder_roll_link": 0.01419190631452201,
+        "right_elbow_link": 0.02008231700783445,
+        "right_wrist_yaw_link": 0.02500526894686777
+      },
+      "anchor_pos_error_m": 0.032642300942652754,
+      "anchor_ori_error_rad": 0.05721601352243303,
+      "foot_slip_m_s": 0.05434337443616629,
+      "foot_slip_samples": 375758,
+      "blade_tip_error_m": 0.026943147286692722,
+      "blade_tip_error_global_m": 0.054990864694477136,
+      "blade_tip_error_max_m": 0.2952309825837569,
+      "blade_key_frames": [
+        43
+      ],
+      "blade_tip_error_key_m": 0.03609554839405895,
+      "blade_tip_error_key_global_m": 0.06279842498376245,
+      "ground_z_m": 0.03593062482774258,
+      "scored_steps": 184,
+      "num_envs": 1024,
+      "description": "nominal + training observation noise + encoder bias",
+      "termination_counts": {
+        "anchor_pos": 0,
+        "anchor_ori": 0,
+        "ee_body_pos": 0
+      },
+      "mean_termination_time_s": null,
+      "step_dt": 0.02,
+      "motion_frames": 184,
+      "motion_steps": 184,
+      "hold_steps": 100,
+      "truncated": false,
+      "window_steps": 500,
+      "has_blade": true,
+      "elapsed_s": 7.3,
+      "final_pelvis_height_error_m": 0.005291894776746631,
+      "final_pelvis_speed_m_s": 0.05343196083695105,
+      "key_frames": {
+        "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/cut_chest_v3.json",
+        "steps": [
+          43
+        ],
+        "keys": [
+          {
+            "frame": 26,
+            "index": 1,
+            "kind": "cut",
+            "target": "cut_chest",
+            "time_s": 0.866667
+          }
+        ]
+      }
+    },
+    "friction": {
+      "num_episodes": 1024,
+      "success_rate": 1.0,
+      "window_success_rate": 1.0,
+      "recovery_rate": 1.0,
+      "joint_angle_error_rad": 0.07731398857058074,
+      "body_pos_error_m": 0.03972599417891018,
+      "body_pos_error_global_m": 0.04813375777440907,
+      "per_body_pos_error_m": {
+        "pelvis": 0.0072116909590466075,
+        "left_hip_roll_link": 0.016734683993598985,
+        "left_knee_link": 0.07605683573269181,
+        "left_ankle_roll_link": 0.10992633142859853,
+        "right_hip_roll_link": 0.011008935988638528,
+        "right_knee_link": 0.06701781304042959,
+        "right_ankle_roll_link": 0.13691394603440937,
+        "torso_link": 0.006964186565860544,
+        "left_shoulder_roll_link": 0.017303208703445233,
+        "left_elbow_link": 0.021458571532252106,
+        "left_wrist_yaw_link": 0.027893181139910312,
+        "right_shoulder_roll_link": 0.013186917174220209,
+        "right_elbow_link": 0.019750178355524523,
+        "right_wrist_yaw_link": 0.024737437856116123
+      },
+      "anchor_pos_error_m": 0.023285409992629794,
+      "anchor_ori_error_rad": 0.05165278285926976,
+      "foot_slip_m_s": 0.043439252363707284,
+      "foot_slip_samples": 375917,
+      "blade_tip_error_m": 0.016780559520063684,
+      "blade_tip_error_global_m": 0.03863851705502354,
+      "blade_tip_error_max_m": 0.29478078914555933,
+      "blade_key_frames": [
+        43
+      ],
+      "blade_tip_error_key_m": 0.03176106603636822,
+      "blade_tip_error_key_global_m": 0.061723089114947435,
+      "ground_z_m": 0.03593062482774258,
+      "scored_steps": 184,
+      "num_envs": 1024,
+      "description": "nominal + foot_friction (per-env, uniform over the friction range)",
+      "termination_counts": {
+        "anchor_pos": 0,
+        "anchor_ori": 0,
+        "ee_body_pos": 0
+      },
+      "mean_termination_time_s": null,
+      "step_dt": 0.02,
+      "motion_frames": 184,
+      "motion_steps": 184,
+      "hold_steps": 100,
+      "truncated": false,
+      "window_steps": 500,
+      "has_blade": true,
+      "elapsed_s": 6.0,
+      "final_pelvis_height_error_m": 0.006012265454046428,
+      "final_pelvis_speed_m_s": 0.0002210931161673399,
+      "key_frames": {
+        "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/cut_chest_v3.json",
+        "steps": [
+          43
+        ],
+        "keys": [
+          {
+            "frame": 26,
+            "index": 1,
+            "kind": "cut",
+            "target": "cut_chest",
+            "time_s": 0.866667
+          }
+        ]
+      }
+    },
+    "saber_mass": {
+      "num_episodes": 1024,
+      "success_rate": 1.0,
+      "window_success_rate": 1.0,
+      "recovery_rate": 1.0,
+      "joint_angle_error_rad": 0.07770637847864123,
+      "body_pos_error_m": 0.04012179818051832,
+      "body_pos_error_global_m": 0.04870050205050165,
+      "per_body_pos_error_m": {
+        "pelvis": 0.007524757302809561,
+        "left_hip_roll_link": 0.017309146240202126,
+        "left_knee_link": 0.07829840990142237,
+        "left_ankle_roll_link": 0.1128022025630368,
+        "right_hip_roll_link": 0.010946857465485287,
+        "right_knee_link": 0.06591439113943678,
+        "right_ankle_roll_link": 0.13484732050294473,
+        "torso_link": 0.007298343954096797,
+        "left_shoulder_roll_link": 0.017592805885904998,
+        "left_elbow_link": 0.021868083288078613,
+        "left_wrist_yaw_link": 0.028605108333122256,
+        "right_shoulder_roll_link": 0.013221831325021251,
+        "right_elbow_link": 0.020101294069981256,
+        "right_wrist_yaw_link": 0.02537462255571368
+      },
+      "anchor_pos_error_m": 0.023476311202817277,
+      "anchor_ori_error_rad": 0.05217905900312346,
+      "foot_slip_m_s": 0.044385894820407716,
+      "foot_slip_samples": 376214,
+      "blade_tip_error_m": 0.020212777688529034,
+      "blade_tip_error_global_m": 0.03958720913671674,
+      "blade_tip_error_max_m": 0.29982219900475654,
+      "blade_key_frames": [
+        43
+      ],
+      "blade_tip_error_key_m": 0.038894325956191335,
+      "blade_tip_error_key_global_m": 0.07689666888449945,
+      "ground_z_m": 0.03593062482774258,
+      "scored_steps": 184,
+      "num_envs": 1024,
+      "description": "nominal + saber_mass (per-env saber mass over the training range)",
+      "termination_counts": {
+        "anchor_pos": 0,
+        "anchor_ori": 0,
+        "ee_body_pos": 0
+      },
+      "mean_termination_time_s": null,
+      "step_dt": 0.02,
+      "motion_frames": 184,
+      "motion_steps": 184,
+      "hold_steps": 100,
+      "truncated": false,
+      "window_steps": 500,
+      "has_blade": true,
+      "elapsed_s": 6.0,
+      "final_pelvis_height_error_m": 0.0065445551299490035,
+      "final_pelvis_speed_m_s": 0.00020465469206561372,
+      "key_frames": {
+        "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/cut_chest_v3.json",
+        "steps": [
+          43
+        ],
+        "keys": [
+          {
+            "frame": 26,
+            "index": 1,
+            "kind": "cut",
+            "target": "cut_chest",
+            "time_s": 0.866667
+          }
+        ]
+      }
+    }
+  },
+  "thresholds": [
+    {
+      "metric": "nominal.success_rate",
+      "op": ">=",
+      "threshold": 0.95,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.joint_angle_error_rad",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.0775908346889749,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.body_pos_error_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.04013924432274689,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_pos_error_m",
+      "op": "<=",
+      "threshold": 0.25,
+      "value": 0.023310146692241726,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_ori_error_rad",
+      "op": "<=",
+      "threshold": 0.2,
+      "value": 0.05201812432342211,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.foot_slip_m_s",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.04393971427240258,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.recovery_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_m",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.016709804553369307,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_key_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.03170509601999372,
+      "status": "pass"
+    },
+    {
+      "metric": "robustness.push.success_rate",
+      "op": ">=",
+      "threshold": 0.8,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "robustness.obs_noise.success_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "robustness.friction.success_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "robustness.saber_mass.success_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    }
+  ],
+  "verdict": "PASS",
+  "summary": "success 1 (1024 envs) | joint 0.0776 rad | body 4.01 cm (global 4.86 cm) | anchor 2.33 cm | slip 0.0439 m/s | recovery 1 | blade 1.67 cm | blade at key 3.17 cm"
+}

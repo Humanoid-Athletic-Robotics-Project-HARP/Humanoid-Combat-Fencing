@@ -1,0 +1,213 @@
+{
+  "base": {
+    "kind": "en_garde",
+    "path": "motions/en_garde_v3.csv",
+    "source": "IpM7citb5bs_3837-11411 (youtube IpM7citb5bs, 3.84-11.41 s) via en_garde_v3.csv",
+    "synthetic": false
+  },
+  "blade": {
+    "keys": [
+      {
+        "action": "en_garde",
+        "angle_error_deg": 0.79,
+        "collisions": [],
+        "frame": 0,
+        "hold_drift_m": 0.0054,
+        "hold_s": 0.6,
+        "index": 0,
+        "joint_set": "arm",
+        "kind": "guard",
+        "move_s_requested": 0.0,
+        "move_s_used": 0.0,
+        "target": "en_garde",
+        "time_s": 0.0,
+        "tip_error_m": 0.0038,
+        "waist_delta_rad": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "action": "point_thrust",
+        "angle_error_deg": 0.0,
+        "collisions": [],
+        "frame": 29,
+        "hold_drift_m": 0.0135,
+        "hold_s": 0.3,
+        "index": 1,
+        "joint_set": "arm+waist",
+        "kind": "thrust",
+        "move_s_requested": 0.2,
+        "move_s_used": 0.3667,
+        "target": "point_thrust",
+        "time_s": 0.9667,
+        "tip_error_m": 0.0,
+        "waist_delta_rad": [
+          0.166,
+          0.1646
+        ]
+      },
+      {
+        "action": "en_garde",
+        "angle_error_deg": 1.14,
+        "collisions": [],
+        "frame": 53,
+        "hold_drift_m": 0.0097,
+        "hold_s": 0.6,
+        "index": 2,
+        "joint_set": "arm",
+        "kind": "guard",
+        "move_s_requested": 0.5,
+        "move_s_used": 0.5,
+        "target": "en_garde",
+        "time_s": 1.7667,
+        "tip_error_m": 0.0097,
+        "waist_delta_rad": [
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "script": [
+      {
+        "action": "en_garde",
+        "at_s": null,
+        "hold_s": 0.6,
+        "move_s": 0.0
+      },
+      {
+        "action": "point_thrust",
+        "at_s": null,
+        "hold_s": 0.3,
+        "move_s": 0.2
+      },
+      {
+        "action": "en_garde",
+        "at_s": null,
+        "hold_s": 0.6,
+        "move_s": 0.5
+      }
+    ],
+    "summary": {
+      "arm_reach_m": 0.5717,
+      "collision_frames": 0,
+      "collision_pairs": [],
+      "config": {
+        "allow_waist": true,
+        "angle_tolerance_deg": 5.0,
+        "end_hold_s": 2.0,
+        "heading": "x",
+        "position_tolerance_m": 0.02,
+        "restarts": 16,
+        "seed": 0,
+        "soft_limit_factor": 0.9,
+        "velocity_fraction": 0.5,
+        "waist_pitch_bound_rad": 0.2,
+        "waist_yaw_bound_rad": 0.35
+      },
+      "controlled_joints_beyond_soft_limit": [],
+      "controlled_max_speed_fraction_of_motor": 0.4297726518038751,
+      "frames": 114,
+      "keys_off_target": [],
+      "max_angle_error_deg": 1.14,
+      "max_hold_drift_m": 0.0135,
+      "max_tip_error_m": 0.0097,
+      "speed_clamp": {
+        "frames_over": 0,
+        "max_change_rad": 0.0
+      },
+      "target_frame": "base right shoulder, axes: x",
+      "waist_used": true,
+      "wrist_pitch_yaw_max_abs_rad": 1.166098043312062
+    }
+  },
+  "motion": "thrust",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 1.0,
+          "right": 1.0
+        },
+        "no_contact_frames": 0,
+        "pattern": {
+          "left": "############################################################",
+          "right": "############################################################"
+        },
+        "phases": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      "duration_s": 3.7666666666666666,
+      "foot_slip": {
+        "contact_phases": 2,
+        "max_deviation_m": 0.006140048474831899,
+        "mean_slide_speed_mps": 0.004507648316712986,
+        "total_slide_m": 0.03425812720701869
+      },
+      "fps": 30.0,
+      "frames": 114,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "right_wrist_pitch_joint",
+        "max_fraction_of_motor_limit": 0.4297726518038751,
+        "max_rad_s": 9.454998339685252
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 0.00030808021813409116
+      },
+      "planted_float_p95_m": 0.006987426627152833,
+      "plausibility": {
+        "pelvis_height_min_m": 0.711455,
+        "pelvis_high_sustained_m": 0.723546,
+        "pelvis_low_sustained_m": 0.711455,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 15.419642189033178,
+        "torso_tilt_sustained_deg": 15.24123452140037
+      },
+      "root": {
+        "height_max_m": 0.724566,
+        "height_min_m": 0.711455,
+        "max_ground_speed_mps": 0.06997634243085302,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "pass"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "run_name": "advance_lunge_cut_v3_tip",
+  "task": "Fencing-Tracking-Flat-G1-Saber",
+  "motion_npz": "/home/nathan/hcf-data/npz/advance_lunge_cut_v3_mjlab.npz",
+  "motion_npz_sha256": "e925ab4080a7e86ec41515476c41308b613f5ad2e7d7199b37322c0b9d7d9767",
+  "motion_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/advance_lunge_cut_v3.csv",
+  "motion_csv_sha256": "43f4d3d9e439d6fd6c1964a5e92eefdf98496ce4afa0b6e804a13a1548eab73e",
+  "repo_commit": "2f8d260",
+  "repo_dirty": true,
+  "iterations": 3000,
+  "num_envs": 4096,
+  "started_at": "2026-11-10T11:14:27+00:00",
+  "resume_from": null,
+  "extra": {},
+  "schema_version": 1
+}

@@ -1,0 +1,40 @@
+{
+  "clip_id": "Zisax-82POc_21375-33375",
+  "yt_id": "Zisax-82POc",
+  "source_start_s": 21.375,
+  "source_end_s": 33.375,
+  "track_id": 4,
+  "video": "/home/nathan/hcf-data/videos/raw/Zisax-82POc.mp4",
+  "pose_method": "fallback_mediapipe",
+  "pose_version": 2,
+  "fps": 30.0,
+  "human_height_m": 1.75,
+  "handedness_guess": null,
+  "handedness_score": 0.054,
+  "camera": {
+    "width": 1280,
+    "height": 720,
+    "focal_px": 1468.6,
+    "hfov_deg": null,
+    "pitch_down_deg": 29.73,
+    "view": "front"
+  },
+  "body_scale": 1.0798,
+  "quality": {
+    "frames": 361,
+    "raw_frames": 289,
+    "valid_frac": 1.0,
+    "median_visibility": 0.995,
+    "visible_landmark_frac": 1.0,
+    "leg_swaps_fixed": 0,
+    "arm_swaps_fixed": 0,
+    "root_path_m": 0.834,
+    "root_max_speed_mps": 0.303,
+    "pelvis_height_median_m": 0.433,
+    "upper_foot_height_median_m": 0.013,
+    "shin_length_cv": 0.016
+  },
+  "created": "2026-11-11T19:57:58+00:00",
+  "seconds": 13.4,
+  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; handedness undecided (cues weak or disagree)"
+}

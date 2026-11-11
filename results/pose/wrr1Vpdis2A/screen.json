@@ -1,0 +1,35 @@
+{
+  "yt_id": "wrr1Vpdis2A",
+  "video": "/home/nathan/hcf-data/videos/raw/wrr1Vpdis2A.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T01:28:35+00:00",
+  "detect_seconds": 14.3,
+  "width": 1280,
+  "height": 720,
+  "processed_fps": 9.99,
+  "num_frames": 185,
+  "duration_s": 18.418,
+  "shot_cuts_s": [],
+  "people_count_median": 1,
+  "people_count_max": 2,
+  "chosen_track_id": 1,
+  "full_body_frac": 0.076,
+  "camera_motion_width_per_s": 0.1475,
+  "camera": "moving",
+  "view_ratio_median": null,
+  "view": "unknown",
+  "tracks": [
+    {
+      "track_id": 1,
+      "start_s": 0.0,
+      "end_s": 18.418,
+      "frames": 185,
+      "area_frac": 0.3541,
+      "centrality": 0.64,
+      "full_body_frac": 0.076,
+      "score": 51.952
+    }
+  ],
+  "ranges": [],
+  "usable_ranges": []
+}

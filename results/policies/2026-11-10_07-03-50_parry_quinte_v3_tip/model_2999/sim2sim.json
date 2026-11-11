@@ -1,0 +1,213 @@
+{
+  "kind": "sim2sim",
+  "export_dir": "/home/nathan/hcf-data/eval/2026-11-10_07-03-50_parry_quinte_v3_tip/model_2999",
+  "onnx": "/home/nathan/hcf-data/eval/2026-11-10_07-03-50_parry_quinte_v3_tip/model_2999/policy.onnx",
+  "scene_xml": "/home/nathan/hcf-data/eval/2026-11-10_07-03-50_parry_quinte_v3_tip/model_2999/scene/scene.xml",
+  "run_dir": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_07-03-50_parry_quinte_v3_tip",
+  "checkpoint": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_07-03-50_parry_quinte_v3_tip/model_2999.pt",
+  "iteration": 2999,
+  "task": "Fencing-Tracking-Flat-G1-Saber",
+  "simulator": "mujoco (CPU, python bindings)",
+  "reference_source": "onnx",
+  "pd_mode": "actuator",
+  "metadata_full_precision": true,
+  "gains_vs_metadata": {
+    "kp_max_abs_diff": 4.6195748577559925e-05,
+    "kd_max_abs_diff": 4.3134151539447885e-06
+  },
+  "physics": {
+    "timestep": 0.005,
+    "decimation": 4,
+    "step_dt": 0.02,
+    "integrator": 3
+  },
+  "motion_frames": 200,
+  "motion_steps": 200,
+  "hold_steps": 100,
+  "truncated": false,
+  "steps_run": 300,
+  "terminated_at_step": null,
+  "terminated_at_s": null,
+  "termination_terms": [],
+  "has_blade": true,
+  "video": "/home/nathan/hcf-data/eval/2026-11-10_07-03-50_parry_quinte_v3_tip/model_2999/sim2sim.mp4",
+  "nominal": {
+    "num_episodes": 1,
+    "success_rate": 1.0,
+    "window_success_rate": 1.0,
+    "recovery_rate": 1.0,
+    "joint_angle_error_rad": 0.07239588464994552,
+    "body_pos_error_m": 0.04568426278635772,
+    "body_pos_error_global_m": 0.06299243232819579,
+    "per_body_pos_error_m": {
+      "pelvis": 0.009125515259406485,
+      "left_hip_roll_link": 0.02789489057210945,
+      "left_knee_link": 0.12499917450854352,
+      "left_ankle_roll_link": 0.16797434409373238,
+      "right_hip_roll_link": 0.015964813293237488,
+      "right_knee_link": 0.06621986576801929,
+      "right_ankle_roll_link": 0.12064468484354084,
+      "torso_link": 0.008750942943680923,
+      "left_shoulder_roll_link": 0.012932221092820207,
+      "left_elbow_link": 0.014310865644189253,
+      "left_wrist_yaw_link": 0.015984681091102744,
+      "right_shoulder_roll_link": 0.01034634503023006,
+      "right_elbow_link": 0.018079436202305246,
+      "right_wrist_yaw_link": 0.026351898666090424
+    },
+    "anchor_pos_error_m": 0.028226593233934342,
+    "anchor_ori_error_rad": 0.02965507982126562,
+    "foot_slip_m_s": 0.0324968856617485,
+    "foot_slip_samples": 396,
+    "blade_tip_error_m": 0.015840997028345686,
+    "blade_tip_error_global_m": 0.02687806381168819,
+    "blade_tip_error_max_m": 0.041804757338451154,
+    "blade_key_frames": [
+      45
+    ],
+    "blade_tip_error_key_m": 0.019887218027751886,
+    "blade_tip_error_key_global_m": 0.03984280027665903,
+    "ground_z_m": 0.03593181453645229,
+    "scored_steps": 200,
+    "final_pelvis_height_error_m": 0.0067409710785109045,
+    "final_pelvis_speed_m_s": 0.0004981141312239563
+  },
+  "gap_vs_mjlab": {
+    "metrics_json": "/home/nathan/hcf-data/eval/2026-11-10_07-03-50_parry_quinte_v3_tip/model_2999/metrics.json",
+    "mjlab_seconds": null,
+    "mjlab_num_envs": 1024,
+    "metrics": {
+      "success_rate": {
+        "mjlab": 1.0,
+        "mujoco": 1.0,
+        "diff": 0.0
+      },
+      "joint_angle_error_rad": {
+        "mjlab": 0.07180281266699604,
+        "mujoco": 0.07239588464994552,
+        "diff": 0.0005930719829494863
+      },
+      "body_pos_error_m": {
+        "mjlab": 0.045224060974329884,
+        "mujoco": 0.04568426278635772,
+        "diff": 0.0004602018120278342
+      },
+      "body_pos_error_global_m": {
+        "mjlab": 0.0652461734009797,
+        "mujoco": 0.06299243232819579,
+        "diff": -0.0022537410727839075
+      },
+      "anchor_pos_error_m": {
+        "mjlab": 0.03184519837821975,
+        "mujoco": 0.028226593233934342,
+        "diff": -0.0036186051442854104
+      },
+      "anchor_ori_error_rad": {
+        "mjlab": 0.03146272355063417,
+        "mujoco": 0.02965507982126562,
+        "diff": -0.0018076437293685493
+      },
+      "foot_slip_m_s": {
+        "mjlab": 0.03266095517278656,
+        "mujoco": 0.0324968856617485,
+        "diff": -0.0001640695110380619
+      },
+      "recovery_rate": {
+        "mjlab": 1.0,
+        "mujoco": 1.0,
+        "diff": 0.0
+      },
+      "blade_tip_error_m": {
+        "mjlab": 0.017005943072443123,
+        "mujoco": 0.015840997028345686,
+        "diff": -0.0011649460440974375
+      },
+      "blade_tip_error_key_m": {
+        "mjlab": 0.023724373964202537,
+        "mujoco": 0.019887218027751886,
+        "diff": -0.0038371559364506515
+      }
+    }
+  },
+  "thresholds": [
+    {
+      "metric": "nominal.success_rate",
+      "op": ">=",
+      "threshold": 0.95,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.joint_angle_error_rad",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.07239588464994552,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.body_pos_error_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.04568426278635772,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_pos_error_m",
+      "op": "<=",
+      "threshold": 0.25,
+      "value": 0.028226593233934342,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_ori_error_rad",
+      "op": "<=",
+      "threshold": 0.2,
+      "value": 0.02965507982126562,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.foot_slip_m_s",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.0324968856617485,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.recovery_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_m",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.015840997028345686,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_key_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.019887218027751886,
+      "status": "pass"
+    }
+  ],
+  "verdict": "PASS",
+  "key_frames": {
+    "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/parry_quinte_v3.json",
+    "steps": [
+      45
+    ],
+    "keys": [
+      {
+        "frame": 27,
+        "index": 1,
+        "kind": "parry",
+        "target": "parry_quinte",
+        "time_s": 0.9
+      }
+    ]
+  }
+}

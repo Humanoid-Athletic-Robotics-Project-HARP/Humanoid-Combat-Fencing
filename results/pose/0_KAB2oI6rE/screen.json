@@ -1,0 +1,37 @@
+{
+  "yt_id": "0_KAB2oI6rE",
+  "video": "/home/nathan/hcf-data/videos/raw/0_KAB2oI6rE.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T01:27:38+00:00",
+  "detect_seconds": 82.9,
+  "width": 640,
+  "height": 360,
+  "processed_fps": 8.333,
+  "num_frames": 1653,
+  "duration_s": 198.24,
+  "shot_cuts_s": [
+    0.12
+  ],
+  "people_count_median": 1,
+  "people_count_max": 2,
+  "chosen_track_id": 2,
+  "full_body_frac": 0.0,
+  "camera_motion_width_per_s": 0.0,
+  "camera": "static",
+  "view_ratio_median": null,
+  "view": "unknown",
+  "tracks": [
+    {
+      "track_id": 2,
+      "start_s": 0.48,
+      "end_s": 198.24,
+      "frames": 1649,
+      "area_frac": 0.1787,
+      "centrality": 0.892,
+      "full_body_frac": 0.0,
+      "score": 329.785
+    }
+  ],
+  "ranges": [],
+  "usable_ranges": []
+}

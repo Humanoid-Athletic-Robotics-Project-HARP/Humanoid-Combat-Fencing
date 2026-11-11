@@ -1,0 +1,188 @@
+{
+  "yt_id": "kGXTmtq-2fM",
+  "video": "/home/nathan/hcf-data/videos/raw/kGXTmtq-2fM.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T01:21:40+00:00",
+  "detect_seconds": 702.3,
+  "width": 1280,
+  "height": 720,
+  "processed_fps": 10.0,
+  "num_frames": 11724,
+  "duration_s": 1172.3,
+  "shot_cuts_s": [
+    1172.0
+  ],
+  "people_count_median": 2,
+  "people_count_max": 5,
+  "chosen_track_id": 5,
+  "full_body_frac": 0.995,
+  "camera_motion_width_per_s": 0.0227,
+  "camera": "moving",
+  "view_ratio_median": 0.496,
+  "view": "oblique",
+  "tracks": [
+    {
+      "track_id": 5,
+      "start_s": 38.9,
+      "end_s": 1171.9,
+      "frames": 11330,
+      "area_frac": 0.1044,
+      "centrality": 0.617,
+      "full_body_frac": 0.995,
+      "score": 4426.128
+    },
+    {
+      "track_id": 22,
+      "start_s": 204.2,
+      "end_s": 1168.8,
+      "frames": 9647,
+      "area_frac": 0.1067,
+      "centrality": 0.427,
+      "full_body_frac": 0.988,
+      "score": 3346.273
+    },
+    {
+      "track_id": 3,
+      "start_s": 1.5,
+      "end_s": 204.1,
+      "frames": 2027,
+      "area_frac": 0.1539,
+      "centrality": 0.765,
+      "full_body_frac": 0.993,
+      "score": 1047.67
+    },
+    {
+      "track_id": 4,
+      "start_s": 1.5,
+      "end_s": 39.0,
+      "frames": 374,
+      "area_frac": 0.1073,
+      "centrality": 0.711,
+      "full_body_frac": 0.997,
+      "score": 156.881
+    },
+    {
+      "track_id": 71,
+      "start_s": 1168.9,
+      "end_s": 1171.9,
+      "frames": 31,
+      "area_frac": 0.0422,
+      "centrality": 0.936,
+      "full_body_frac": 1.0,
+      "score": 9.252
+    },
+    {
+      "track_id": 7,
+      "start_s": 76.8,
+      "end_s": 89.2,
+      "frames": 117,
+      "area_frac": 0.0137,
+      "centrality": 0.176,
+      "full_body_frac": 0.538,
+      "score": 8.369
+    },
+    {
+      "track_id": 1,
+      "start_s": 0.0,
+      "end_s": 1.4,
+      "frames": 15,
+      "area_frac": 0.1107,
+      "centrality": 0.45,
+      "full_body_frac": 1.0,
+      "score": 5.427
+    },
+    {
+      "track_id": 46,
+      "start_s": 633.3,
+      "end_s": 638.0,
+      "frames": 48,
+      "area_frac": 0.0215,
+      "centrality": 0.34,
+      "full_body_frac": 0.479,
+      "score": 4.623
+    },
+    {
+      "track_id": 2,
+      "start_s": 0.0,
+      "end_s": 1.4,
+      "frames": 15,
+      "area_frac": 0.1006,
+      "centrality": 0.269,
+      "full_body_frac": 1.0,
+      "score": 4.529
+    },
+    {
+      "track_id": 6,
+      "start_s": 76.8,
+      "end_s": 81.4,
+      "frames": 47,
+      "area_frac": 0.0144,
+      "centrality": 0.099,
+      "full_body_frac": 0.596,
+      "score": 3.392
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 38.9,
+      "end_s": 683.5,
+      "track_id": 5,
+      "full_body_frac": 0.998,
+      "camera_motion_width_per_s": 0.027,
+      "camera": "moving",
+      "view_ratio": 0.472,
+      "view": "oblique",
+      "people_median": 2,
+      "usable": false,
+      "reasons": [
+        "camera moving (0.027 image widths/s)"
+      ]
+    },
+    {
+      "start_s": 683.9,
+      "end_s": 804.3,
+      "track_id": 5,
+      "full_body_frac": 0.997,
+      "camera_motion_width_per_s": 0.0151,
+      "camera": "moving",
+      "view_ratio": 0.504,
+      "view": "oblique",
+      "people_median": 2,
+      "usable": false,
+      "reasons": [
+        "camera moving (0.015 image widths/s)"
+      ]
+    },
+    {
+      "start_s": 806.9,
+      "end_s": 1044.6,
+      "track_id": 5,
+      "full_body_frac": 0.999,
+      "camera_motion_width_per_s": 0.0207,
+      "camera": "moving",
+      "view_ratio": 0.489,
+      "view": "oblique",
+      "people_median": 2,
+      "usable": false,
+      "reasons": [
+        "camera moving (0.021 image widths/s)"
+      ]
+    },
+    {
+      "start_s": 1045.6,
+      "end_s": 1172.0,
+      "track_id": 5,
+      "full_body_frac": 1.0,
+      "camera_motion_width_per_s": 0.0183,
+      "camera": "moving",
+      "view_ratio": 0.591,
+      "view": "oblique",
+      "people_median": 2,
+      "usable": false,
+      "reasons": [
+        "camera moving (0.018 image widths/s)"
+      ]
+    }
+  ],
+  "usable_ranges": []
+}

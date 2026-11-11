@@ -1,0 +1,92 @@
+[
+  {
+    "file": "8GwT1fx7_RM_12512-14932.csv",
+    "segment": [
+      52,
+      73
+    ],
+    "label": "advance",
+    "out": "/home/nathan/hcf-data/motion/clean/8GwT1fx7_RM_12512-14932__advance_52-73.csv",
+    "verdict": "fail"
+  },
+  {
+    "file": "8VWYUu5jS9I_16300-32600.csv",
+    "segment": [
+      142,
+      284
+    ],
+    "label": "lunge",
+    "out": "/home/nathan/hcf-data/motion/clean/8VWYUu5jS9I_16300-32600__lunge_142-284.csv",
+    "verdict": "warn"
+  },
+  {
+    "file": "8VWYUu5jS9I_16300-32600.csv",
+    "segment": [
+      284,
+      433
+    ],
+    "label": "lunge",
+    "out": "/home/nathan/hcf-data/motion/clean/8VWYUu5jS9I_16300-32600__lunge_284-433.csv",
+    "verdict": "warn"
+  },
+  {
+    "file": "IpM7citb5bs_3837-11411.csv",
+    "segment": [
+      18,
+      43
+    ],
+    "label": "en_garde",
+    "out": "/home/nathan/hcf-data/motion/clean/IpM7citb5bs_3837-11411__en_garde_18-43.csv",
+    "verdict": "pass"
+  },
+  {
+    "file": "IpM7citb5bs_3837-11411.csv",
+    "segment": [
+      34,
+      228
+    ],
+    "label": "advance_lunge",
+    "out": "/home/nathan/hcf-data/motion/clean/IpM7citb5bs_3837-11411__advance_lunge_34-228.csv",
+    "verdict": "warn"
+  },
+  {
+    "file": "rKRYHsJDnJc_13067-15033.csv",
+    "segment": [
+      0,
+      60
+    ],
+    "label": "lunge",
+    "out": "/home/nathan/hcf-data/motion/clean/rKRYHsJDnJc_13067-15033__lunge_0-60.csv",
+    "verdict": "warn"
+  },
+  {
+    "file": "rKRYHsJDnJc_18033-23467.csv",
+    "segment": [
+      0,
+      164
+    ],
+    "label": "lunge",
+    "out": "/home/nathan/hcf-data/motion/clean/rKRYHsJDnJc_18033-23467__lunge_0-164.csv",
+    "verdict": "warn"
+  },
+  {
+    "file": "zTzr6NhNRDg_0-12466.csv",
+    "segment": [
+      0,
+      374
+    ],
+    "label": "advance_lunge",
+    "out": "/home/nathan/hcf-data/motion/clean/zTzr6NhNRDg_0-12466__advance_lunge_0-374.csv",
+    "verdict": "warn"
+  },
+  {
+    "file": "zTzr6NhNRDg_12466-24931.csv",
+    "segment": [
+      0,
+      374
+    ],
+    "label": "lunge",
+    "out": "/home/nathan/hcf-data/motion/clean/zTzr6NhNRDg_12466-24931__lunge_0-374.csv",
+    "verdict": "warn"
+  }
+]

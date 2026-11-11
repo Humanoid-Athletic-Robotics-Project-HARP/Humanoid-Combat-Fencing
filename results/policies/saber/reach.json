@@ -1,0 +1,1706 @@
+{
+  "saber": {
+    "blade_length": 0.75,
+    "blade_radius": 0.012,
+    "blade_mass": 0.1,
+    "guard_thickness": 0.01,
+    "guard_width": 0.07,
+    "guard_height": 0.1,
+    "guard_mass": 0.03,
+    "grip_length": 0.12,
+    "grip_radius": 0.015,
+    "grip_mass": 0.07,
+    "mount_pos": [
+      0.1,
+      0.0,
+      0.0
+    ],
+    "mount_pitch_deg": 30.0,
+    "mount_yaw_deg": 0.0,
+    "collision": false
+  },
+  "stance": {
+    "pelvis_pos": [
+      0.0,
+      0.0,
+      0.76
+    ],
+    "joints": {
+      "left_hip_pitch_joint": -0.312,
+      "right_hip_pitch_joint": -0.312,
+      "left_knee_joint": 0.669,
+      "right_knee_joint": 0.669,
+      "left_ankle_pitch_joint": -0.363,
+      "right_ankle_pitch_joint": -0.363,
+      "left_shoulder_pitch_joint": 0.2,
+      "left_shoulder_roll_joint": 0.2,
+      "left_elbow_joint": 0.6
+    }
+  },
+  "right_shoulder_rel_pelvis": [
+    -0.0,
+    -0.1002,
+    0.2918
+  ],
+  "arm_reach_to_guard_m": 0.5717,
+  "tolerances": {
+    "position_m": 0.02,
+    "angle_deg": 5.0,
+    "collision_depth_m": 0.005
+  },
+  "arm_joint_ranges_rad": {
+    "right_shoulder_pitch_joint": [
+      -3.0892,
+      2.6704
+    ],
+    "right_shoulder_roll_joint": [
+      -2.2515,
+      1.5882
+    ],
+    "right_shoulder_yaw_joint": [
+      -2.618,
+      2.618
+    ],
+    "right_elbow_joint": [
+      -1.0472,
+      2.0944
+    ],
+    "right_wrist_roll_joint": [
+      -1.9722,
+      1.9722
+    ],
+    "right_wrist_pitch_joint": [
+      -1.6144,
+      1.6144
+    ],
+    "right_wrist_yaw_joint": [
+      -1.6144,
+      1.6144
+    ]
+  },
+  "targets": [
+    {
+      "name": "en_garde",
+      "kind": "guard",
+      "guard_offset": [
+        0.55,
+        -0.1,
+        -0.45
+      ],
+      "blade_direction": [
+        0.8,
+        0.1,
+        0.59
+      ],
+      "description": "Hand at waist height in front of the right hip, blade forward and ~35 deg up at the opponent's face (saber en garde in tierce/sixte)."
+    },
+    {
+      "name": "parry_prime",
+      "kind": "parry",
+      "guard_offset": [
+        0.45,
+        0.45,
+        0.0
+      ],
+      "blade_direction": [
+        0.25,
+        0.2,
+        -0.95
+      ],
+      "description": "Hand at shoulder height in front of the left shoulder, pronated; blade hangs down and slightly forward, covering the inside low line."
+    },
+    {
+      "name": "parry_seconde",
+      "kind": "parry",
+      "guard_offset": [
+        0.65,
+        -0.1,
+        -0.25
+      ],
+      "blade_direction": [
+        0.5,
+        -0.2,
+        -0.85
+      ],
+      "description": "Hand at chest height, outside; blade points down-forward to the outside, covering the flank."
+    },
+    {
+      "name": "parry_tierce",
+      "kind": "parry",
+      "guard_offset": [
+        0.5,
+        -0.25,
+        -0.45
+      ],
+      "blade_direction": [
+        0.2,
+        -0.2,
+        0.96
+      ],
+      "description": "Hand at waist height outside the right hip; blade near vertical, tip slightly forward and out."
+    },
+    {
+      "name": "parry_quarte",
+      "kind": "parry",
+      "guard_offset": [
+        0.5,
+        0.35,
+        -0.45
+      ],
+      "blade_direction": [
+        0.2,
+        0.15,
+        0.97
+      ],
+      "description": "Hand at waist height across the body in front of the left hip; blade near vertical, covering the chest."
+    },
+    {
+      "name": "parry_quinte",
+      "kind": "parry",
+      "guard_offset": [
+        0.35,
+        -0.15,
+        0.55
+      ],
+      "blade_direction": [
+        0.15,
+        1.0,
+        0.15
+      ],
+      "description": "Head parry: hand above and right of the head; blade horizontal across the top of the head, tip to the left."
+    },
+    {
+      "name": "parry_sixte",
+      "kind": "parry",
+      "guard_offset": [
+        0.6,
+        -0.2,
+        -0.3
+      ],
+      "blade_direction": [
+        0.5,
+        -0.1,
+        0.86
+      ],
+      "description": "Hand at chest height outside, supinated; blade up and forward, tip at face height."
+    },
+    {
+      "name": "cut_head",
+      "kind": "cut",
+      "guard_offset": [
+        0.9,
+        0.05,
+        0.15
+      ],
+      "blade_direction": [
+        0.9,
+        0.05,
+        -0.4
+      ],
+      "description": "Arm extended at shoulder height; blade forward and angled down onto the top of the opponent's mask."
+    },
+    {
+      "name": "cut_flank",
+      "kind": "cut",
+      "guard_offset": [
+        0.85,
+        0.15,
+        -0.2
+      ],
+      "blade_direction": [
+        0.8,
+        0.5,
+        -0.3
+      ],
+      "description": "Arm extended at chest height; blade sweeps to the left and slightly down onto the opponent's sword-arm side."
+    },
+    {
+      "name": "cut_chest",
+      "kind": "cut",
+      "guard_offset": [
+        0.85,
+        -0.05,
+        -0.05
+      ],
+      "blade_direction": [
+        0.85,
+        -0.45,
+        -0.25
+      ],
+      "description": "Arm extended; blade angled right and slightly down across the opponent's chest (inside line)."
+    },
+    {
+      "name": "cut_cheek",
+      "kind": "cut",
+      "guard_offset": [
+        0.88,
+        -0.05,
+        0.12
+      ],
+      "blade_direction": [
+        0.85,
+        -0.5,
+        0.05
+      ],
+      "description": "Arm extended at shoulder height; blade horizontal, angled right onto the side of the mask."
+    },
+    {
+      "name": "point_thrust",
+      "kind": "thrust",
+      "guard_offset": [
+        0.95,
+        0.05,
+        0.0
+      ],
+      "blade_direction": [
+        1.0,
+        0.02,
+        -0.12
+      ],
+      "description": "Arm fully extended at shoulder height; blade continues the arm line, tip slightly down at the chest."
+    }
+  ],
+  "results": [
+    {
+      "target": "en_garde",
+      "kind": "guard",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0008,
+      "angle_error_deg": 0.16,
+      "target_tip_rel_pelvis": [
+        0.915,
+        -0.082,
+        0.477
+      ],
+      "target_direction": [
+        0.801,
+        0.1,
+        0.591
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.915,
+        -0.082,
+        0.478
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -0.3529,
+        "right_shoulder_roll_joint": -0.0255,
+        "right_shoulder_yaw_joint": -0.8043,
+        "right_elbow_joint": 1.3952,
+        "right_wrist_roll_joint": 0.1868,
+        "right_wrist_pitch_joint": -0.832,
+        "right_wrist_yaw_joint": 1.2161
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_prime",
+      "kind": "parry",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.444,
+        0.307,
+        -0.419
+      ],
+      "target_direction": [
+        0.249,
+        0.2,
+        -0.948
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.444,
+        0.307,
+        -0.419
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -2.4385,
+        "right_shoulder_roll_joint": -0.1814,
+        "right_shoulder_yaw_joint": 1.7966,
+        "right_elbow_joint": 0.6189,
+        "right_wrist_roll_joint": -1.378,
+        "right_wrist_pitch_joint": -0.5357,
+        "right_wrist_yaw_joint": -0.7814
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_seconde",
+      "kind": "parry",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.744,
+        -0.306,
+        -0.485
+      ],
+      "target_direction": [
+        0.497,
+        -0.199,
+        -0.845
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.744,
+        -0.306,
+        -0.485
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -0.9278,
+        "right_shoulder_roll_joint": -0.9392,
+        "right_shoulder_yaw_joint": 0.6649,
+        "right_elbow_joint": -0.1974,
+        "right_wrist_roll_joint": -1.7103,
+        "right_wrist_pitch_joint": -1.0046,
+        "right_wrist_yaw_joint": 0.7506
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_tierce",
+      "kind": "parry",
+      "joint_set": "arm",
+      "reachable": false,
+      "position_error_m": 0.0639,
+      "angle_error_deg": 39.01,
+      "target_tip_rel_pelvis": [
+        0.436,
+        -0.393,
+        0.754
+      ],
+      "target_direction": [
+        0.2,
+        -0.2,
+        0.959
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.486,
+        -0.374,
+        0.788
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 2.5269,
+        "right_shoulder_roll_joint": 1.5882,
+        "right_shoulder_yaw_joint": -0.2886,
+        "right_elbow_joint": -0.5404,
+        "right_wrist_roll_joint": 1.704,
+        "right_wrist_pitch_joint": -1.6144,
+        "right_wrist_yaw_joint": 1.6144
+      },
+      "joints_at_limit": [
+        "right_shoulder_roll_joint",
+        "right_wrist_pitch_joint",
+        "right_wrist_yaw_joint"
+      ],
+      "joints_beyond_soft_limit": [
+        "right_shoulder_pitch_joint",
+        "right_shoulder_roll_joint",
+        "right_wrist_pitch_joint",
+        "right_wrist_yaw_joint"
+      ],
+      "self_collisions": [
+        "right_elbow_link / torso_link",
+        "right_shoulder_yaw_link / torso_link"
+      ]
+    },
+    {
+      "target": "parry_quarte",
+      "kind": "parry",
+      "joint_set": "arm",
+      "reachable": false,
+      "position_error_m": 0.1984,
+      "angle_error_deg": 26.2,
+      "target_tip_rel_pelvis": [
+        0.436,
+        0.212,
+        0.761
+      ],
+      "target_direction": [
+        0.2,
+        0.15,
+        0.968
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.586,
+        0.143,
+        0.871
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 2.6704,
+        "right_shoulder_roll_joint": 1.5882,
+        "right_shoulder_yaw_joint": -2.618,
+        "right_elbow_joint": 1.6331,
+        "right_wrist_roll_joint": 1.4838,
+        "right_wrist_pitch_joint": -1.0304,
+        "right_wrist_yaw_joint": 1.6144
+      },
+      "joints_at_limit": [
+        "right_shoulder_pitch_joint",
+        "right_shoulder_roll_joint",
+        "right_shoulder_yaw_joint",
+        "right_wrist_yaw_joint"
+      ],
+      "joints_beyond_soft_limit": [
+        "right_shoulder_pitch_joint",
+        "right_shoulder_roll_joint",
+        "right_shoulder_yaw_joint",
+        "right_wrist_yaw_joint"
+      ],
+      "self_collisions": [
+        "left_shoulder_yaw_link / right_wrist_pitch_link",
+        "right_elbow_link / torso_link",
+        "right_shoulder_yaw_link / torso_link"
+      ]
+    },
+    {
+      "target": "parry_quinte",
+      "kind": "parry",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.31,
+        0.548,
+        0.716
+      ],
+      "target_direction": [
+        0.147,
+        0.978,
+        0.147
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.31,
+        0.548,
+        0.716
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -2.4368,
+        "right_shoulder_roll_joint": -1.2761,
+        "right_shoulder_yaw_joint": 1.152,
+        "right_elbow_joint": 1.2526,
+        "right_wrist_roll_joint": 0.9003,
+        "right_wrist_pitch_joint": -0.4468,
+        "right_wrist_yaw_joint": 1.6144
+      },
+      "joints_at_limit": [
+        "right_wrist_yaw_joint"
+      ],
+      "joints_beyond_soft_limit": [
+        "right_wrist_yaw_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_sixte",
+      "kind": "parry",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0041,
+      "angle_error_deg": 0.82,
+      "target_tip_rel_pelvis": [
+        0.718,
+        -0.29,
+        0.765
+      ],
+      "target_direction": [
+        0.5,
+        -0.1,
+        0.86
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.716,
+        -0.289,
+        0.769
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -0.6268,
+        "right_shoulder_roll_joint": -0.0664,
+        "right_shoulder_yaw_joint": -1.6173,
+        "right_elbow_joint": 1.3793,
+        "right_wrist_roll_joint": -0.0749,
+        "right_wrist_pitch_joint": -0.8256,
+        "right_wrist_yaw_joint": 1.5504
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [
+        "right_wrist_yaw_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "cut_head",
+      "kind": "cut",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.199,
+        -0.034,
+        0.073
+      ],
+      "target_direction": [
+        0.913,
+        0.051,
+        -0.406
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.199,
+        -0.034,
+        0.073
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -1.6771,
+        "right_shoulder_roll_joint": 0.0251,
+        "right_shoulder_yaw_joint": -0.8662,
+        "right_elbow_joint": 0.8949,
+        "right_wrist_roll_joint": 1.9722,
+        "right_wrist_pitch_joint": -0.2792,
+        "right_wrist_yaw_joint": -0.6119
+      },
+      "joints_at_limit": [
+        "right_wrist_roll_joint"
+      ],
+      "joints_beyond_soft_limit": [
+        "right_wrist_roll_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "cut_flank",
+      "kind": "cut",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.092,
+        0.364,
+        -0.05
+      ],
+      "target_direction": [
+        0.808,
+        0.505,
+        -0.303
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.092,
+        0.364,
+        -0.05
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -1.6116,
+        "right_shoulder_roll_joint": -0.0093,
+        "right_shoulder_yaw_joint": 1.1532,
+        "right_elbow_joint": 1.6832,
+        "right_wrist_roll_joint": 0.815,
+        "right_wrist_pitch_joint": 0.5873,
+        "right_wrist_yaw_joint": 0.5482
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    },
+    {
+      "target": "cut_chest",
+      "kind": "cut",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.127,
+        -0.468,
+        0.075
+      ],
+      "target_direction": [
+        0.855,
+        -0.453,
+        -0.252
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.127,
+        -0.468,
+        0.075
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -1.9869,
+        "right_shoulder_roll_joint": -0.563,
+        "right_shoulder_yaw_joint": 2.3468,
+        "right_elbow_joint": 0.3824,
+        "right_wrist_roll_joint": -1.6499,
+        "right_wrist_pitch_joint": -0.2238,
+        "right_wrist_yaw_joint": 0.5854
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    },
+    {
+      "target": "cut_cheek",
+      "kind": "cut",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.149,
+        -0.509,
+        0.398
+      ],
+      "target_direction": [
+        0.861,
+        -0.506,
+        0.051
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.149,
+        -0.509,
+        0.398
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -1.6121,
+        "right_shoulder_roll_joint": 0.3405,
+        "right_shoulder_yaw_joint": -1.5592,
+        "right_elbow_joint": 0.6809,
+        "right_wrist_roll_joint": 1.1054,
+        "right_wrist_pitch_joint": 0.2901,
+        "right_wrist_yaw_joint": 0.1915
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    },
+    {
+      "target": "point_thrust",
+      "kind": "thrust",
+      "joint_set": "arm",
+      "reachable": true,
+      "position_error_m": 0.008,
+      "angle_error_deg": 0.1,
+      "target_tip_rel_pelvis": [
+        1.288,
+        -0.057,
+        0.202
+      ],
+      "target_direction": [
+        0.993,
+        0.02,
+        -0.119
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.28,
+        -0.057,
+        0.203
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -1.4853,
+        "right_shoulder_roll_joint": -0.101,
+        "right_shoulder_yaw_joint": -1.6445,
+        "right_elbow_joint": 1.3949,
+        "right_wrist_roll_joint": 1.004,
+        "right_wrist_pitch_joint": 0.5361,
+        "right_wrist_yaw_joint": -0.0557
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    },
+    {
+      "target": "en_garde",
+      "kind": "guard",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.915,
+        -0.082,
+        0.477
+      ],
+      "target_direction": [
+        0.801,
+        0.1,
+        0.591
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.915,
+        -0.082,
+        0.477
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -0.0995,
+        "right_shoulder_roll_joint": -0.2511,
+        "right_shoulder_yaw_joint": 0.5169,
+        "right_elbow_joint": 0.7168,
+        "right_wrist_roll_joint": -0.6668,
+        "right_wrist_pitch_joint": -0.008,
+        "right_wrist_yaw_joint": -0.9453,
+        "waist_yaw_joint": -0.029,
+        "waist_roll_joint": 0.391,
+        "waist_pitch_joint": -0.222
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_prime",
+      "kind": "parry",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.444,
+        0.307,
+        -0.419
+      ],
+      "target_direction": [
+        0.249,
+        0.2,
+        -0.948
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.444,
+        0.307,
+        -0.419
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 2.2349,
+        "right_shoulder_roll_joint": -1.3801,
+        "right_shoulder_yaw_joint": 2.5785,
+        "right_elbow_joint": -0.5765,
+        "right_wrist_roll_joint": 1.8968,
+        "right_wrist_pitch_joint": -1.1281,
+        "right_wrist_yaw_joint": 1.0871,
+        "waist_yaw_joint": -2.4941,
+        "waist_roll_joint": -0.3023,
+        "waist_pitch_joint": -0.4798
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [
+        "right_shoulder_yaw_joint",
+        "right_wrist_roll_joint",
+        "waist_yaw_joint",
+        "waist_pitch_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_seconde",
+      "kind": "parry",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.744,
+        -0.306,
+        -0.485
+      ],
+      "target_direction": [
+        0.497,
+        -0.199,
+        -0.845
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.744,
+        -0.306,
+        -0.485
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -2.7574,
+        "right_shoulder_roll_joint": -0.1447,
+        "right_shoulder_yaw_joint": 2.1268,
+        "right_elbow_joint": 0.1992,
+        "right_wrist_roll_joint": -1.9722,
+        "right_wrist_pitch_joint": -0.4332,
+        "right_wrist_yaw_joint": -0.7402,
+        "waist_yaw_joint": -0.4783,
+        "waist_roll_joint": 0.3972,
+        "waist_pitch_joint": 0.4897
+      },
+      "joints_at_limit": [
+        "right_wrist_roll_joint"
+      ],
+      "joints_beyond_soft_limit": [
+        "right_wrist_roll_joint",
+        "waist_pitch_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_tierce",
+      "kind": "parry",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.436,
+        -0.393,
+        0.754
+      ],
+      "target_direction": [
+        0.2,
+        -0.2,
+        0.959
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.436,
+        -0.393,
+        0.754
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -0.1583,
+        "right_shoulder_roll_joint": -0.5508,
+        "right_shoulder_yaw_joint": -0.1995,
+        "right_elbow_joint": 0.4546,
+        "right_wrist_roll_joint": -1.1652,
+        "right_wrist_pitch_joint": -1.4743,
+        "right_wrist_yaw_joint": -1.5979,
+        "waist_yaw_joint": 0.0557,
+        "waist_roll_joint": 0.4559,
+        "waist_pitch_joint": 0.52
+      },
+      "joints_at_limit": [
+        "waist_pitch_joint"
+      ],
+      "joints_beyond_soft_limit": [
+        "right_wrist_pitch_joint",
+        "right_wrist_yaw_joint",
+        "waist_pitch_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_quarte",
+      "kind": "parry",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.436,
+        0.212,
+        0.761
+      ],
+      "target_direction": [
+        0.2,
+        0.15,
+        0.968
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.436,
+        0.212,
+        0.761
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 0.6672,
+        "right_shoulder_roll_joint": -0.301,
+        "right_shoulder_yaw_joint": -0.2083,
+        "right_elbow_joint": 0.4529,
+        "right_wrist_roll_joint": 1.5633,
+        "right_wrist_pitch_joint": -1.3604,
+        "right_wrist_yaw_joint": 1.6114,
+        "waist_yaw_joint": 1.8869,
+        "waist_roll_joint": 0.4454,
+        "waist_pitch_joint": -0.52
+      },
+      "joints_at_limit": [
+        "right_wrist_yaw_joint",
+        "waist_pitch_joint"
+      ],
+      "joints_beyond_soft_limit": [
+        "right_wrist_yaw_joint",
+        "waist_pitch_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_quinte",
+      "kind": "parry",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.31,
+        0.548,
+        0.716
+      ],
+      "target_direction": [
+        0.147,
+        0.978,
+        0.147
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.31,
+        0.548,
+        0.716
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 2.6598,
+        "right_shoulder_roll_joint": -0.7023,
+        "right_shoulder_yaw_joint": 2.6076,
+        "right_elbow_joint": 1.1262,
+        "right_wrist_roll_joint": -1.4095,
+        "right_wrist_pitch_joint": -0.7826,
+        "right_wrist_yaw_joint": -1.376,
+        "waist_yaw_joint": 1.1593,
+        "waist_roll_joint": 0.2925,
+        "waist_pitch_joint": -0.255
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [
+        "right_shoulder_pitch_joint",
+        "right_shoulder_yaw_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "parry_sixte",
+      "kind": "parry",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        0.718,
+        -0.29,
+        0.765
+      ],
+      "target_direction": [
+        0.5,
+        -0.1,
+        0.86
+      ],
+      "achieved_tip_rel_pelvis": [
+        0.718,
+        -0.29,
+        0.765
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 0.6488,
+        "right_shoulder_roll_joint": 0.0486,
+        "right_shoulder_yaw_joint": -2.6088,
+        "right_elbow_joint": 1.2271,
+        "right_wrist_roll_joint": 0.6871,
+        "right_wrist_pitch_joint": -1.4441,
+        "right_wrist_yaw_joint": 0.2685,
+        "waist_yaw_joint": 2.1789,
+        "waist_roll_joint": 0.4569,
+        "waist_pitch_joint": -0.1402
+      },
+      "joints_at_limit": [
+        "right_shoulder_yaw_joint"
+      ],
+      "joints_beyond_soft_limit": [
+        "right_shoulder_yaw_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "cut_head",
+      "kind": "cut",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.199,
+        -0.034,
+        0.073
+      ],
+      "target_direction": [
+        0.913,
+        0.051,
+        -0.406
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.199,
+        -0.034,
+        0.073
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -2.5878,
+        "right_shoulder_roll_joint": -0.0634,
+        "right_shoulder_yaw_joint": -2.5502,
+        "right_elbow_joint": 0.944,
+        "right_wrist_roll_joint": -0.2576,
+        "right_wrist_pitch_joint": 0.8263,
+        "right_wrist_yaw_joint": -0.8499,
+        "waist_yaw_joint": -0.3142,
+        "waist_roll_joint": -0.0621,
+        "waist_pitch_joint": 0.3201
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [
+        "right_shoulder_yaw_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "cut_flank",
+      "kind": "cut",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.092,
+        0.364,
+        -0.05
+      ],
+      "target_direction": [
+        0.808,
+        0.505,
+        -0.303
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.092,
+        0.364,
+        -0.05
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 2.0619,
+        "right_shoulder_roll_joint": -0.4128,
+        "right_shoulder_yaw_joint": 1.051,
+        "right_elbow_joint": 0.3467,
+        "right_wrist_roll_joint": 1.0609,
+        "right_wrist_pitch_joint": -1.1535,
+        "right_wrist_yaw_joint": -1.4238,
+        "waist_yaw_joint": 2.5934,
+        "waist_roll_joint": 0.4106,
+        "waist_pitch_joint": -0.1327
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [
+        "waist_yaw_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "cut_chest",
+      "kind": "cut",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.127,
+        -0.468,
+        0.075
+      ],
+      "target_direction": [
+        0.855,
+        -0.453,
+        -0.252
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.127,
+        -0.468,
+        0.075
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 0.9185,
+        "right_shoulder_roll_joint": -1.0953,
+        "right_shoulder_yaw_joint": 0.6538,
+        "right_elbow_joint": 1.366,
+        "right_wrist_roll_joint": 1.7881,
+        "right_wrist_pitch_joint": 1.13,
+        "right_wrist_yaw_joint": -0.1289,
+        "waist_yaw_joint": 2.1703,
+        "waist_roll_joint": -0.4348,
+        "waist_pitch_joint": -0.0811
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [
+        "right_wrist_roll_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "cut_cheek",
+      "kind": "cut",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.149,
+        -0.509,
+        0.398
+      ],
+      "target_direction": [
+        0.861,
+        -0.506,
+        0.051
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.149,
+        -0.509,
+        0.398
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": -2.3204,
+        "right_shoulder_roll_joint": 0.5812,
+        "right_shoulder_yaw_joint": -2.202,
+        "right_elbow_joint": 1.4882,
+        "right_wrist_roll_joint": 1.4936,
+        "right_wrist_pitch_joint": 0.6247,
+        "right_wrist_yaw_joint": 0.4728,
+        "waist_yaw_joint": -1.1729,
+        "waist_roll_joint": -0.4835,
+        "waist_pitch_joint": 0.0046
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [
+        "waist_roll_joint"
+      ],
+      "self_collisions": []
+    },
+    {
+      "target": "point_thrust",
+      "kind": "thrust",
+      "joint_set": "arm+waist",
+      "reachable": true,
+      "position_error_m": 0.0,
+      "angle_error_deg": 0.0,
+      "target_tip_rel_pelvis": [
+        1.288,
+        -0.057,
+        0.202
+      ],
+      "target_direction": [
+        0.993,
+        0.02,
+        -0.119
+      ],
+      "achieved_tip_rel_pelvis": [
+        1.288,
+        -0.057,
+        0.202
+      ],
+      "joint_positions": {
+        "right_shoulder_pitch_joint": 1.5623,
+        "right_shoulder_roll_joint": -0.4698,
+        "right_shoulder_yaw_joint": -0.1247,
+        "right_elbow_joint": 0.7359,
+        "right_wrist_roll_joint": 0.2151,
+        "right_wrist_pitch_joint": 0.7608,
+        "right_wrist_yaw_joint": -0.8272,
+        "waist_yaw_joint": 2.151,
+        "waist_roll_joint": 0.1542,
+        "waist_pitch_joint": 0.3049
+      },
+      "joints_at_limit": [],
+      "joints_beyond_soft_limit": [],
+      "self_collisions": []
+    }
+  ],
+  "mount_pitch_sweep": {
+    "pitch=0deg,mount_x=0.1m": {
+      "mount_pitch_deg": 0.0,
+      "mount_x_m": 0.1,
+      "num_reachable": 7,
+      "reachable": [
+        "parry_prime",
+        "parry_seconde",
+        "cut_head",
+        "cut_flank",
+        "cut_chest",
+        "cut_cheek",
+        "point_thrust"
+      ],
+      "unreachable": {
+        "en_garde": [
+          0.0479,
+          4.78,
+          []
+        ],
+        "parry_tierce": [
+          0.2811,
+          27.58,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "parry_quarte": [
+          0.3121,
+          6.87,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "parry_quinte": [
+          0.1955,
+          4.33,
+          []
+        ],
+        "parry_sixte": [
+          0.372,
+          1.21,
+          []
+        ]
+      }
+    },
+    "pitch=15deg,mount_x=0.1m": {
+      "mount_pitch_deg": 15.0,
+      "mount_x_m": 0.1,
+      "num_reachable": 8,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "cut_head",
+        "cut_flank",
+        "cut_chest",
+        "cut_cheek",
+        "point_thrust"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.1831,
+          24.87,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link",
+            "right_wrist_pitch_link / torso_link"
+          ]
+        ],
+        "parry_quarte": [
+          0.223,
+          23.9,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "parry_quinte": [
+          0.0979,
+          6.85,
+          []
+        ],
+        "parry_sixte": [
+          0.1056,
+          8.56,
+          []
+        ]
+      }
+    },
+    "pitch=30deg,mount_x=0.1m": {
+      "mount_pitch_deg": 30.0,
+      "mount_x_m": 0.1,
+      "num_reachable": 10,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "parry_quinte",
+        "parry_sixte",
+        "cut_head",
+        "cut_flank",
+        "cut_chest",
+        "cut_cheek",
+        "point_thrust"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.0639,
+          39.01,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "parry_quarte": [
+          0.1984,
+          26.2,
+          [
+            "left_shoulder_yaw_link / right_wrist_pitch_link",
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ]
+      }
+    },
+    "pitch=45deg,mount_x=0.1m": {
+      "mount_pitch_deg": 45.0,
+      "mount_x_m": 0.1,
+      "num_reachable": 9,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "parry_quinte",
+        "parry_sixte",
+        "cut_head",
+        "cut_flank",
+        "cut_chest",
+        "cut_cheek"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.1254,
+          13.21,
+          []
+        ],
+        "parry_quarte": [
+          0.0357,
+          7.29,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "point_thrust": [
+          0.0577,
+          3.49,
+          []
+        ]
+      }
+    },
+    "pitch=60deg,mount_x=0.1m": {
+      "mount_pitch_deg": 60.0,
+      "mount_x_m": 0.1,
+      "num_reachable": 9,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "parry_quinte",
+        "parry_sixte",
+        "cut_head",
+        "cut_flank",
+        "cut_chest",
+        "cut_cheek"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.024,
+          3.41,
+          []
+        ],
+        "parry_quarte": [
+          0.0323,
+          5.22,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "point_thrust": [
+          0.0681,
+          3.8,
+          []
+        ]
+      }
+    },
+    "pitch=0deg,mount_x=0.06m": {
+      "mount_pitch_deg": 0.0,
+      "mount_x_m": 0.06,
+      "num_reachable": 7,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "cut_head",
+        "cut_flank",
+        "cut_chest",
+        "cut_cheek"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.4728,
+          18.3,
+          []
+        ],
+        "parry_quarte": [
+          0.2307,
+          11.63,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "parry_quinte": [
+          0.0677,
+          4.8,
+          []
+        ],
+        "parry_sixte": [
+          0.105,
+          8.73,
+          []
+        ],
+        "point_thrust": [
+          0.0334,
+          0.92,
+          []
+        ]
+      }
+    },
+    "pitch=15deg,mount_x=0.06m": {
+      "mount_pitch_deg": 15.0,
+      "mount_x_m": 0.06,
+      "num_reachable": 8,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "parry_quinte",
+        "cut_head",
+        "cut_flank",
+        "cut_chest",
+        "cut_cheek"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.3009,
+          15.1,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / right_wrist_yaw_link",
+            "right_shoulder_yaw_link / torso_link",
+            "right_wrist_pitch_link / torso_link"
+          ]
+        ],
+        "parry_quarte": [
+          0.1718,
+          21.53,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "parry_sixte": [
+          0.0448,
+          4.5,
+          []
+        ],
+        "point_thrust": [
+          0.0352,
+          0.47,
+          []
+        ]
+      }
+    },
+    "pitch=30deg,mount_x=0.06m": {
+      "mount_pitch_deg": 30.0,
+      "mount_x_m": 0.06,
+      "num_reachable": 9,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "parry_quinte",
+        "parry_sixte",
+        "cut_head",
+        "cut_flank",
+        "cut_chest",
+        "cut_cheek"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.2676,
+          39.94,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "parry_quarte": [
+          0.1679,
+          24.15,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "point_thrust": [
+          0.0442,
+          0.01,
+          []
+        ]
+      }
+    },
+    "pitch=45deg,mount_x=0.06m": {
+      "mount_pitch_deg": 45.0,
+      "mount_x_m": 0.06,
+      "num_reachable": 8,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "parry_quinte",
+        "parry_sixte",
+        "cut_head",
+        "cut_chest",
+        "cut_cheek"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.078,
+          10.11,
+          []
+        ],
+        "parry_quarte": [
+          0.0305,
+          7.61,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "cut_flank": [
+          0.0202,
+          0.42,
+          []
+        ],
+        "point_thrust": [
+          0.0606,
+          0.63,
+          []
+        ]
+      }
+    },
+    "pitch=60deg,mount_x=0.06m": {
+      "mount_pitch_deg": 60.0,
+      "mount_x_m": 0.06,
+      "num_reachable": 7,
+      "reachable": [
+        "en_garde",
+        "parry_prime",
+        "parry_seconde",
+        "parry_quinte",
+        "parry_sixte",
+        "cut_chest",
+        "cut_cheek"
+      ],
+      "unreachable": {
+        "parry_tierce": [
+          0.0252,
+          3.71,
+          []
+        ],
+        "parry_quarte": [
+          0.0333,
+          5.95,
+          [
+            "right_elbow_link / torso_link",
+            "right_shoulder_yaw_link / torso_link"
+          ]
+        ],
+        "cut_head": [
+          0.0297,
+          1.05,
+          []
+        ],
+        "cut_flank": [
+          0.048,
+          1.07,
+          []
+        ],
+        "point_thrust": [
+          0.0946,
+          3.78,
+          []
+        ]
+      }
+    }
+  },
+  "payload": {
+    "pose": {
+      "right_shoulder_pitch_joint": -0.3529,
+      "right_shoulder_roll_joint": -0.0255,
+      "right_shoulder_yaw_joint": -0.8043,
+      "right_elbow_joint": 1.3952,
+      "right_wrist_roll_joint": 0.1868,
+      "right_wrist_pitch_joint": -0.832,
+      "right_wrist_yaw_joint": 1.2161
+    },
+    "heavy_mass_kg": 0.35,
+    "wrist_angular_accel_rad_s2": 100.0,
+    "static_torque_nm": {
+      "no_saber": {
+        "right_shoulder_pitch_joint": -2.586,
+        "right_shoulder_roll_joint": -0.8,
+        "right_shoulder_yaw_joint": 0.117,
+        "right_elbow_joint": -0.79,
+        "right_wrist_roll_joint": 0.004,
+        "right_wrist_pitch_joint": -0.258,
+        "right_wrist_yaw_joint": 0.07
+      },
+      "nominal": {
+        "right_shoulder_pitch_joint": -3.422,
+        "right_shoulder_roll_joint": -0.884,
+        "right_shoulder_yaw_joint": 0.106,
+        "right_elbow_joint": -1.313,
+        "right_wrist_roll_joint": 0.104,
+        "right_wrist_pitch_joint": -0.598,
+        "right_wrist_yaw_joint": 0.305
+      },
+      "heavy": {
+        "right_shoulder_pitch_joint": -4.048,
+        "right_shoulder_roll_joint": -0.946,
+        "right_shoulder_yaw_joint": 0.097,
+        "right_elbow_joint": -1.705,
+        "right_wrist_roll_joint": 0.18,
+        "right_wrist_pitch_joint": -0.852,
+        "right_wrist_yaw_joint": 0.481
+      }
+    },
+    "com_shift_mm": {
+      "no_saber": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nominal": [
+        2.4,
+        -0.9,
+        1.3
+      ],
+      "heavy": [
+        4.2,
+        -1.5,
+        2.3
+      ]
+    },
+    "effort_limit_nm": {
+      "right_shoulder_pitch_joint": 25.0,
+      "right_shoulder_roll_joint": 25.0,
+      "right_shoulder_yaw_joint": 25.0,
+      "right_elbow_joint": 25.0,
+      "right_wrist_roll_joint": 25.0,
+      "right_wrist_pitch_joint": 5.0,
+      "right_wrist_yaw_joint": 5.0
+    },
+    "wrist_cut_torque_nm": {
+      "nominal": {
+        "right_wrist_pitch_joint": 1.347,
+        "right_wrist_yaw_joint": 3.044
+      },
+      "heavy": {
+        "right_wrist_pitch_joint": 2.248,
+        "right_wrist_yaw_joint": 5.189
+      }
+    }
+  },
+  "notes": "Target poses are estimates (fencing references, scaled to the G1's reach), not measurements. Pelvis fixed at mjlab's KNEES_BENT stance facing +x; legs and left arm static. 'reachable' = within tolerance and no self-collision deeper than collision_depth_m involving the right arm or blade."
+}

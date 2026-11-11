@@ -1,0 +1,213 @@
+{
+  "kind": "sim2sim",
+  "export_dir": "/home/nathan/hcf-data/eval/2026-11-10_08-36-30_cut_chest_v3_tip/model_2999",
+  "onnx": "/home/nathan/hcf-data/eval/2026-11-10_08-36-30_cut_chest_v3_tip/model_2999/policy.onnx",
+  "scene_xml": "/home/nathan/hcf-data/eval/2026-11-10_08-36-30_cut_chest_v3_tip/model_2999/scene/scene.xml",
+  "run_dir": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_08-36-30_cut_chest_v3_tip",
+  "checkpoint": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_08-36-30_cut_chest_v3_tip/model_2999.pt",
+  "iteration": 2999,
+  "task": "Fencing-Tracking-Flat-G1-Saber",
+  "simulator": "mujoco (CPU, python bindings)",
+  "reference_source": "onnx",
+  "pd_mode": "actuator",
+  "metadata_full_precision": true,
+  "gains_vs_metadata": {
+    "kp_max_abs_diff": 4.6195748577559925e-05,
+    "kd_max_abs_diff": 4.3134151539447885e-06
+  },
+  "physics": {
+    "timestep": 0.005,
+    "decimation": 4,
+    "step_dt": 0.02,
+    "integrator": 3
+  },
+  "motion_frames": 184,
+  "motion_steps": 184,
+  "hold_steps": 100,
+  "truncated": false,
+  "steps_run": 284,
+  "terminated_at_step": null,
+  "terminated_at_s": null,
+  "termination_terms": [],
+  "has_blade": true,
+  "video": "/home/nathan/hcf-data/eval/2026-11-10_08-36-30_cut_chest_v3_tip/model_2999/sim2sim.mp4",
+  "nominal": {
+    "num_episodes": 1,
+    "success_rate": 1.0,
+    "window_success_rate": 1.0,
+    "recovery_rate": 1.0,
+    "joint_angle_error_rad": 0.07779582408630793,
+    "body_pos_error_m": 0.03990661407149029,
+    "body_pos_error_global_m": 0.04679306680521367,
+    "per_body_pos_error_m": {
+      "pelvis": 0.007398635337932356,
+      "left_hip_roll_link": 0.017472076731080036,
+      "left_knee_link": 0.0776456395966951,
+      "left_ankle_roll_link": 0.11192730573751675,
+      "right_hip_roll_link": 0.010472389567920449,
+      "right_knee_link": 0.06630043425487737,
+      "right_ankle_roll_link": 0.13611188297617505,
+      "torso_link": 0.007167448352407936,
+      "left_shoulder_roll_link": 0.01708719076865824,
+      "left_elbow_link": 0.021768251336071603,
+      "left_wrist_yaw_link": 0.028383560557138376,
+      "right_shoulder_roll_link": 0.01279681720227364,
+      "right_elbow_link": 0.01976567185382188,
+      "right_wrist_yaw_link": 0.024395292728295527
+    },
+    "anchor_pos_error_m": 0.02172447888892623,
+    "anchor_ori_error_rad": 0.050125940862685445,
+    "foot_slip_m_s": 0.044530291430465746,
+    "foot_slip_samples": 368,
+    "blade_tip_error_m": 0.015767234935472687,
+    "blade_tip_error_global_m": 0.03400975469291638,
+    "blade_tip_error_max_m": 0.06355247602289196,
+    "blade_key_frames": [
+      43
+    ],
+    "blade_tip_error_key_m": 0.025920034601858898,
+    "blade_tip_error_key_global_m": 0.07664141484076288,
+    "ground_z_m": 0.03593062482774258,
+    "scored_steps": 184,
+    "final_pelvis_height_error_m": 0.006521685140829403,
+    "final_pelvis_speed_m_s": 0.0001805115561215315
+  },
+  "gap_vs_mjlab": {
+    "metrics_json": "/home/nathan/hcf-data/eval/2026-11-10_08-36-30_cut_chest_v3_tip/model_2999/metrics.json",
+    "mjlab_seconds": null,
+    "mjlab_num_envs": 1024,
+    "metrics": {
+      "success_rate": {
+        "mjlab": 1.0,
+        "mujoco": 1.0,
+        "diff": 0.0
+      },
+      "joint_angle_error_rad": {
+        "mjlab": 0.0775908346889749,
+        "mujoco": 0.07779582408630793,
+        "diff": 0.00020498939733303023
+      },
+      "body_pos_error_m": {
+        "mjlab": 0.04013924432274689,
+        "mujoco": 0.03990661407149029,
+        "diff": -0.00023263025125659642
+      },
+      "body_pos_error_global_m": {
+        "mjlab": 0.0486257379569755,
+        "mujoco": 0.04679306680521367,
+        "diff": -0.0018326711517618333
+      },
+      "anchor_pos_error_m": {
+        "mjlab": 0.023310146692241726,
+        "mujoco": 0.02172447888892623,
+        "diff": -0.0015856678033154964
+      },
+      "anchor_ori_error_rad": {
+        "mjlab": 0.05201812432342211,
+        "mujoco": 0.050125940862685445,
+        "diff": -0.0018921834607366628
+      },
+      "foot_slip_m_s": {
+        "mjlab": 0.04393971427240258,
+        "mujoco": 0.044530291430465746,
+        "diff": 0.0005905771580631686
+      },
+      "recovery_rate": {
+        "mjlab": 1.0,
+        "mujoco": 1.0,
+        "diff": 0.0
+      },
+      "blade_tip_error_m": {
+        "mjlab": 0.016709804553369307,
+        "mujoco": 0.015767234935472687,
+        "diff": -0.00094256961789662
+      },
+      "blade_tip_error_key_m": {
+        "mjlab": 0.03170509601999372,
+        "mujoco": 0.025920034601858898,
+        "diff": -0.0057850614181348195
+      }
+    }
+  },
+  "thresholds": [
+    {
+      "metric": "nominal.success_rate",
+      "op": ">=",
+      "threshold": 0.95,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.joint_angle_error_rad",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.07779582408630793,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.body_pos_error_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.03990661407149029,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_pos_error_m",
+      "op": "<=",
+      "threshold": 0.25,
+      "value": 0.02172447888892623,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_ori_error_rad",
+      "op": "<=",
+      "threshold": 0.2,
+      "value": 0.050125940862685445,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.foot_slip_m_s",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.044530291430465746,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.recovery_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_m",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.015767234935472687,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_key_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.025920034601858898,
+      "status": "pass"
+    }
+  ],
+  "verdict": "PASS",
+  "key_frames": {
+    "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/cut_chest_v3.json",
+    "steps": [
+      43
+    ],
+    "keys": [
+      {
+        "frame": 26,
+        "index": 1,
+        "kind": "cut",
+        "target": "cut_chest",
+        "time_s": 0.866667
+      }
+    ]
+  }
+}

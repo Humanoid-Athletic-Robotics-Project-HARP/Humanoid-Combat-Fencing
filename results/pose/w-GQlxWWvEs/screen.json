@@ -1,0 +1,74 @@
+{
+  "yt_id": "w-GQlxWWvEs",
+  "video": "/home/nathan/hcf-data/videos/raw/w-GQlxWWvEs.mp4",
+  "screen_version": 1,
+  "created": "2026-11-10T00:53:17+00:00",
+  "detect_seconds": 19.5,
+  "width": 640,
+  "height": 356,
+  "processed_fps": 8.333,
+  "num_frames": 290,
+  "duration_s": 34.68,
+  "shot_cuts_s": [],
+  "people_count_median": 1,
+  "people_count_max": 2,
+  "chosen_track_id": 1,
+  "full_body_frac": 0.968,
+  "camera_motion_width_per_s": 0.0097,
+  "camera": "static",
+  "view_ratio_median": 0.523,
+  "view": "oblique",
+  "tracks": [
+    {
+      "track_id": 1,
+      "start_s": 0.0,
+      "end_s": 11.28,
+      "frames": 95,
+      "area_frac": 0.27,
+      "centrality": 0.932,
+      "full_body_frac": 0.968,
+      "score": 70.036
+    },
+    {
+      "track_id": 3,
+      "start_s": 23.4,
+      "end_s": 34.68,
+      "frames": 95,
+      "area_frac": 0.2683,
+      "centrality": 0.947,
+      "full_body_frac": 0.916,
+      "score": 67.832
+    },
+    {
+      "track_id": 2,
+      "start_s": 11.88,
+      "end_s": 22.92,
+      "frames": 93,
+      "area_frac": 0.2688,
+      "centrality": 0.948,
+      "full_body_frac": 0.914,
+      "score": 66.423
+    }
+  ],
+  "ranges": [
+    {
+      "start_s": 0.0,
+      "end_s": 11.4,
+      "track_id": 1,
+      "full_body_frac": 0.968,
+      "camera_motion_width_per_s": 0.0084,
+      "camera": "static",
+      "view_ratio": 0.523,
+      "view": "oblique",
+      "people_median": 1,
+      "usable": true,
+      "reasons": []
+    }
+  ],
+  "usable_ranges": [
+    [
+      0.0,
+      11.4
+    ]
+  ]
+}

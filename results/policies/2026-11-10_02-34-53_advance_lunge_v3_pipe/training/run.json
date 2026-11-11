@@ -1,0 +1,16 @@
+{
+  "run_name": "advance_lunge_v3_pipe",
+  "task": "Mjlab-Tracking-Flat-Unitree-G1",
+  "motion_npz": "/home/nathan/hcf-data/npz/advance_lunge_v3_mjlab.npz",
+  "motion_npz_sha256": "03a627f024e4f973898c7c97d35091a4b1a4d6bbc37ea7b190627dc27f3f6b63",
+  "motion_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/advance_lunge_v3.csv",
+  "motion_csv_sha256": "05048df7c8d7489894fc09e1c4376f1b831cdbee87802e2ffa9f034118c356dc",
+  "repo_commit": "2f8d260",
+  "repo_dirty": true,
+  "iterations": 3000,
+  "num_envs": 4096,
+  "started_at": "2026-11-10T10:34:59+00:00",
+  "resume_from": null,
+  "extra": {},
+  "schema_version": 1
+}

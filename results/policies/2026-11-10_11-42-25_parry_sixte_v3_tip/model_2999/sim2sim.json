@@ -1,0 +1,213 @@
+{
+  "kind": "sim2sim",
+  "export_dir": "/home/nathan/hcf-data/eval/2026-11-10_11-42-25_parry_sixte_v3_tip/model_2999",
+  "onnx": "/home/nathan/hcf-data/eval/2026-11-10_11-42-25_parry_sixte_v3_tip/model_2999/policy.onnx",
+  "scene_xml": "/home/nathan/hcf-data/eval/2026-11-10_11-42-25_parry_sixte_v3_tip/model_2999/scene/scene.xml",
+  "run_dir": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_11-42-25_parry_sixte_v3_tip",
+  "checkpoint": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-10_11-42-25_parry_sixte_v3_tip/model_2999.pt",
+  "iteration": 2999,
+  "task": "Fencing-Tracking-Flat-G1-Saber",
+  "simulator": "mujoco (CPU, python bindings)",
+  "reference_source": "onnx",
+  "pd_mode": "actuator",
+  "metadata_full_precision": true,
+  "gains_vs_metadata": {
+    "kp_max_abs_diff": 4.6195748577559925e-05,
+    "kd_max_abs_diff": 4.3134151539447885e-06
+  },
+  "physics": {
+    "timestep": 0.005,
+    "decimation": 4,
+    "step_dt": 0.02,
+    "integrator": 3
+  },
+  "motion_frames": 200,
+  "motion_steps": 200,
+  "hold_steps": 100,
+  "truncated": false,
+  "steps_run": 300,
+  "terminated_at_step": null,
+  "terminated_at_s": null,
+  "termination_terms": [],
+  "has_blade": true,
+  "video": "/home/nathan/hcf-data/eval/2026-11-10_11-42-25_parry_sixte_v3_tip/model_2999/sim2sim.mp4",
+  "nominal": {
+    "num_episodes": 1,
+    "success_rate": 1.0,
+    "window_success_rate": 1.0,
+    "recovery_rate": 1.0,
+    "joint_angle_error_rad": 0.07292695608266277,
+    "body_pos_error_m": 0.04231686510673791,
+    "body_pos_error_global_m": 0.06299908236554606,
+    "per_body_pos_error_m": {
+      "pelvis": 0.005626666727969882,
+      "left_hip_roll_link": 0.02495844625037918,
+      "left_knee_link": 0.12013782841308292,
+      "left_ankle_roll_link": 0.16254806515540374,
+      "right_hip_roll_link": 0.01662381096693473,
+      "right_knee_link": 0.061757729770758524,
+      "right_ankle_roll_link": 0.10051959575824139,
+      "torso_link": 0.004219049499711054,
+      "left_shoulder_roll_link": 0.010797810452604188,
+      "left_elbow_link": 0.01353615706307092,
+      "left_wrist_yaw_link": 0.018584321145620104,
+      "right_shoulder_roll_link": 0.00920250510138785,
+      "right_elbow_link": 0.01729129767484147,
+      "right_wrist_yaw_link": 0.02663282751432508
+    },
+    "anchor_pos_error_m": 0.03295984255277727,
+    "anchor_ori_error_rad": 0.05210616932391324,
+    "foot_slip_m_s": 0.03503030906442237,
+    "foot_slip_samples": 396,
+    "blade_tip_error_m": 0.011086185170950485,
+    "blade_tip_error_global_m": 0.026505777722442465,
+    "blade_tip_error_max_m": 0.04971797463018955,
+    "blade_key_frames": [
+      45
+    ],
+    "blade_tip_error_key_m": 0.01636559651394446,
+    "blade_tip_error_key_global_m": 0.023933883178997452,
+    "ground_z_m": 0.03593181453645229,
+    "scored_steps": 200,
+    "final_pelvis_height_error_m": 0.004381093625268728,
+    "final_pelvis_speed_m_s": 8.5118340470753e-05
+  },
+  "gap_vs_mjlab": {
+    "metrics_json": "/home/nathan/hcf-data/eval/2026-11-10_11-42-25_parry_sixte_v3_tip/model_2999/metrics.json",
+    "mjlab_seconds": null,
+    "mjlab_num_envs": 1024,
+    "metrics": {
+      "success_rate": {
+        "mjlab": 1.0,
+        "mujoco": 1.0,
+        "diff": 0.0
+      },
+      "joint_angle_error_rad": {
+        "mjlab": 0.0725895286610409,
+        "mujoco": 0.07292695608266277,
+        "diff": 0.0003374274216218637
+      },
+      "body_pos_error_m": {
+        "mjlab": 0.04243248019421805,
+        "mujoco": 0.04231686510673791,
+        "diff": -0.00011561508748014065
+      },
+      "body_pos_error_global_m": {
+        "mjlab": 0.06598177205569758,
+        "mujoco": 0.06299908236554606,
+        "diff": -0.002982689690151516
+      },
+      "anchor_pos_error_m": {
+        "mjlab": 0.03656826079069746,
+        "mujoco": 0.03295984255277727,
+        "diff": -0.0036084182379201857
+      },
+      "anchor_ori_error_rad": {
+        "mjlab": 0.04574046905669771,
+        "mujoco": 0.05210616932391324,
+        "diff": 0.006365700267215529
+      },
+      "foot_slip_m_s": {
+        "mjlab": 0.03652239620415359,
+        "mujoco": 0.03503030906442237,
+        "diff": -0.0014920871397312158
+      },
+      "recovery_rate": {
+        "mjlab": 1.0,
+        "mujoco": 1.0,
+        "diff": 0.0
+      },
+      "blade_tip_error_m": {
+        "mjlab": 0.012170503657094114,
+        "mujoco": 0.011086185170950485,
+        "diff": -0.0010843184861436296
+      },
+      "blade_tip_error_key_m": {
+        "mjlab": 0.015631190551721363,
+        "mujoco": 0.01636559651394446,
+        "diff": 0.0007344059622230968
+      }
+    }
+  },
+  "thresholds": [
+    {
+      "metric": "nominal.success_rate",
+      "op": ">=",
+      "threshold": 0.95,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.joint_angle_error_rad",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.07292695608266277,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.body_pos_error_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.04231686510673791,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_pos_error_m",
+      "op": "<=",
+      "threshold": 0.25,
+      "value": 0.03295984255277727,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_ori_error_rad",
+      "op": "<=",
+      "threshold": 0.2,
+      "value": 0.05210616932391324,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.foot_slip_m_s",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.03503030906442237,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.recovery_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_m",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.011086185170950485,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_key_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.01636559651394446,
+      "status": "pass"
+    }
+  ],
+  "verdict": "PASS",
+  "key_frames": {
+    "sidecar": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/parry_sixte_v3.json",
+    "steps": [
+      45
+    ],
+    "keys": [
+      {
+        "frame": 27,
+        "index": 1,
+        "kind": "parry",
+        "target": "parry_sixte",
+        "time_s": 0.9
+      }
+    ]
+  }
+}
