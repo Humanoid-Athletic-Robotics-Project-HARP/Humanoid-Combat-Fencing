@@ -1,0 +1,9 @@
+# Keep LF everywhere: shell scripts break with CRLF (Windows checkouts under WSL).
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.png binary
+*.jpg binary
+*.mp4 binary
+*.npz binary
+*.onnx binary

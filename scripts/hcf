@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Run the `fencing` CLI from the repo's own venv (kept under $HCF_DATA, off the slow
+# Windows drive when running under WSL).
+#
+#   scripts/hcf --help
+#   scripts/hcf scrape search --max-per-query 20
+set -euo pipefail
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export HCF_DATA="${HCF_DATA:-$HOME/hcf-data}"
+export UV_PROJECT_ENVIRONMENT="$HCF_DATA/venvs/fencing"
+export UV_LINK_MODE="${UV_LINK_MODE:-copy}"
+exec uv run --quiet --project "$REPO_ROOT" fencing "$@"

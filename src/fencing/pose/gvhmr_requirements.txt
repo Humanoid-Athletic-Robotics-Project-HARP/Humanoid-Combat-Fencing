@@ -1,0 +1,40 @@
+# GVHMR runtime deps for the `gvhmr` venv, adapted from third_party/GVHMR/requirements.txt
+# for Blackwell GPUs (RTX 50xx, sm_120) and Python 3.10.
+#
+# Differences from upstream (and why):
+#   torch 2.3.0+cu121 -> 2.7.1+cu128   cu121 kernels do not run on sm_120.
+#   pytorch3d wheel   -> source build with PYTORCH3D_NO_EXTENSION=1 (installed separately by
+#                        scripts/setup_linux_gpu.sh gvhmr). Inference only needs the pure-python
+#                        pytorch3d.transforms; the compiled rasterizer is only used by the demo's
+#                        mesh rendering, which `fencing pose` skips.
+#   dropped jupyter, ipdb, black (dev tools) and chumpy (only needed to unpickle SMPL .pkl
+#   files for rendering/eval; its setup.py breaks under modern pip).
+#
+# Install torch first from the cu128 index, then this file:
+#   uv pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu128
+#   uv pip install -r gvhmr_requirements.txt
+timm==0.9.12
+lightning==2.3.0
+hydra-core==1.3.2
+hydra-zen
+hydra_colorlog
+rich
+numpy==1.23.5
+matplotlib<3.9
+setuptools>=68.0
+tensorboardX
+opencv-python<4.11
+ffmpeg-python
+scikit-image<0.25
+termcolor
+einops
+imageio==2.34.1
+av==13.0.0
+joblib
+trimesh
+smplx
+wis3d
+pycolmap<3.12
+ultralytics==8.2.42
+cython_bbox
+lapx

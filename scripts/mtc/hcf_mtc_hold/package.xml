@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>hcf_mtc_hold</name>
+  <version>0.1.0</version>
+  <description>mujoco_sim_ros2 physics plugin: holds the robot still in a given qpos until a controller first commands torque (deterministic start for scripts/mtc_sim2sim.sh, see docs/mtc.md).</description>
+  <maintainer email="none@example.com">hcf</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>pluginlib</depend>
+  <depend>mujoco_sim_ros2</depend>
+  <depend>mujoco_ament</depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

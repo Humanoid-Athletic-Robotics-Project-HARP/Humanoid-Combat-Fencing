@@ -1,0 +1,99 @@
+# Search queries for `fencing scrape search`, grouped by the motion they target.
+# The group name is the fallback motion tag when a video's own title/description names
+# no motion. Every query is saber-specific: results without a sabre mention are rejected.
+# Each query runs as `ytsearchN:<query>` (N = --max-per-query); no API key needed.
+
+motions:
+  en_garde:
+    - sabre fencing en garde position
+    - saber fencing stance for beginners
+    - sabre en garde tutorial
+    - sabre escrime position de garde
+    - sciabola scherma posizione di guardia
+    - сабля фехтование стойка
+    - 펜싱 사브르 자세
+
+  advance:
+    - sabre fencing advance footwork drill
+    - saber fencing advance technique
+    - sabre escrime marche
+    - сабля фехтование шаг вперед
+
+  retreat:
+    - sabre fencing retreat drill
+    - saber fencing advance retreat drill
+    - sabre escrime retraite marche
+    - сабля фехтование шаг назад
+
+  lunge:
+    - sabre lunge tutorial
+    - saber fencing lunge technique
+    - sabre fencing lunge slow motion
+    - saber lunge drill
+    - sabre escrime fente
+    - sciabola scherma affondo
+    - kard vívás kitörés
+    - сабля фехтование выпад
+    - 펜싱 사브르 런지
+
+  advance_lunge:
+    - sabre advance lunge drill
+    - saber step lunge
+    - sabre fencing advance lunge tutorial
+    - sabre balestra lunge
+    - sabre escrime marche fente
+
+  parry:
+    - sabre parry tutorial
+    - saber fencing parry riposte drill
+    - sabre parry 5 head parry
+    - sabre escrime parade riposte
+    - sciabola scherma parata
+    - сабля фехтование защита
+    - 펜싱 사브르 패리
+
+  cut:
+    - sabre fencing head cut technique
+    - saber fencing cuts tutorial
+    - sabre flank cut chest cut drill
+    - sabre escrime coup de tranchant
+    - sciabola scherma colpi
+    - сабля фехтование удары
+    - 펜싱 사브르 공격 기술
+
+  footwork:
+    - sabre footwork drill
+    - saber fencing footwork tutorial
+    - sabre fencing lesson
+    - sabre fencing slow motion
+    - saber fencing drills for beginners
+    - sabre escrime jeu de jambes
+    - sabre escrime exercices
+    - sciabola scherma lavoro di gambe
+    - sciabola scherma lezione
+    - kard vívás lábmunka
+    - kardvívás edzés
+    - сабля фехтование работа ног
+    - сабля фехтование урок
+    - 펜싱 사브르 풋워크
+    - 펜싱 사브르 레슨
+    - szermierka szabla trening
+    - esgrima sable técnica
+    - Säbelfechten Beinarbeit
+
+# Coaching channels that post saber drills/lessons. Each is searched with every
+# channel_queries entry via <url>/search?query=<q>. Found by running the motion queries
+# above and ranking channels by how many high-scoring saber candidates they produced
+# (2026-11-09). Highlight-reel channels (e.g. Slicer Sabre) are deliberately left out.
+channel_queries:
+  - sabre drill
+  - saber lesson
+channels:
+  - {name: Beth Speedy, url: "https://www.youtube.com/channel/UCQ8j1271zcQSFcQzg061_JA"}
+  - {name: KFC Fencing, url: "https://www.youtube.com/channel/UCan9GN2D6DicIY4sELVT0zw"}
+  - {name: Fencing with Laszlo, url: "https://www.youtube.com/channel/UCvwu0x1_acN6ydnX2ymF7yw"}
+  - {name: B C Fencing, url: "https://www.youtube.com/channel/UCspy6xpw5TQK3wjnt_CeMYQ"}
+  - {name: TheCuttingEdgeSabre, url: "https://www.youtube.com/channel/UCxvIwalTRCcSvYXPnqvjj3A"}
+  - {name: OSM Fencing, url: "https://www.youtube.com/channel/UCPwFBzTAte5xufVaPXmtjqA"}
+  - {name: Tim Morehouse Fencing Club, url: "https://www.youtube.com/channel/UCzHI9iuvaORC0VGT_WtRgqQ"}
+  - {name: Coach Jeff Kallio, url: "https://www.youtube.com/channel/UCi1Qqd1ajnjnvTH9d8wWjxA"}

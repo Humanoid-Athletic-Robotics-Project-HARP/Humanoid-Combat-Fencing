@@ -235,3 +235,16 @@ data/video/
 wandb/
 logs/
 outputs/
+# Pipeline data (videos, pose, retargeted pkl, runs) lives under $HCF_DATA (~/hcf-data), not in the repo
+*.pkl
+hmr4d_results.pt
+data/videos/
+runs/
+
+# MuJoCo writes this on a simulation warning
+MUJOCO_LOG.TXT
+
+# Results copied in from $HCF_DATA by scripts/collect_results.py: checkpoints, ONNX, NPZ and
+# logs are wanted here, so the rules above do not apply under results/.
+!results/
+!results/**

@@ -1,0 +1,5 @@
+<library path="hcf_mtc_hold">
+  <class type="hcf_mtc_hold::HoldPlugin" base_class_type="mujoco_sim_ros2::MujocoPhysicsPlugin">
+    <description>Holds qpos (parameter hold_qpos) with zero velocity until any actuator command is non-zero.</description>
+  </class>
+</library>
