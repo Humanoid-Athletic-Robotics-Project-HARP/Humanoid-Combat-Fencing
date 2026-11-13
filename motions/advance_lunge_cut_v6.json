@@ -1,0 +1,264 @@
+{
+  "base": {
+    "kind": "advance_lunge",
+    "path": "motions/advance_lunge_v5.csv",
+    "source": "FbuFW5CcKkI_243400-255400 (gvhmr retarget, sha256 b1fd168278f9) via advance_lunge_v5.csv",
+    "synthetic": false
+  },
+  "blade": {
+    "keys": [
+      {
+        "action": "en_garde",
+        "angle_error_deg": 0.02,
+        "collisions": [],
+        "frame": 0,
+        "hold_drift_m": 0.0992,
+        "hold_s": 0.0,
+        "index": 0,
+        "joint_set": "arm",
+        "kind": "guard",
+        "move_s_requested": 0.0,
+        "move_s_used": 0.0,
+        "target": "en_garde",
+        "time_s": 0.0,
+        "tip_error_m": 0.0001,
+        "waist_delta_rad": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "action": "cut_head",
+        "angle_error_deg": 0.0,
+        "collisions": [],
+        "frame": 77,
+        "hold_drift_m": 0.0956,
+        "hold_s": 0.3,
+        "index": 1,
+        "joint_set": "arm",
+        "kind": "cut",
+        "move_s_requested": 0.3,
+        "move_s_used": 0.3333,
+        "target": "cut_head",
+        "time_s": 2.5667,
+        "tip_error_m": 0.0,
+        "waist_delta_rad": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "action": "en_garde",
+        "angle_error_deg": 0.01,
+        "collisions": [],
+        "frame": 133,
+        "hold_drift_m": 0.0679,
+        "hold_s": 0.6,
+        "index": 2,
+        "joint_set": "arm",
+        "kind": "guard",
+        "move_s_requested": 0.5,
+        "move_s_used": 0.5,
+        "target": "en_garde",
+        "time_s": 4.4333,
+        "tip_error_m": 0.0001,
+        "waist_delta_rad": [
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "script": [
+      {
+        "action": "en_garde",
+        "at_s": null,
+        "hold_s": 0.0,
+        "move_s": 0.0
+      },
+      {
+        "action": "cut_head",
+        "at_s": 2.566666666666667,
+        "hold_s": 0.3,
+        "move_s": 0.3
+      },
+      {
+        "action": "en_garde",
+        "at_s": 4.433333333333334,
+        "hold_s": 0.6,
+        "move_s": 0.5
+      }
+    ],
+    "summary": {
+      "arm_reach_m": 0.5717,
+      "collision_frames": 0,
+      "collision_pairs": [],
+      "config": {
+        "allow_waist": true,
+        "angle_tolerance_deg": 5.0,
+        "end_hold_s": 2.0,
+        "heading": "x",
+        "position_tolerance_m": 0.02,
+        "restarts": 16,
+        "seed": 0,
+        "soft_limit_factor": 0.9,
+        "velocity_fraction": 0.5,
+        "waist_pitch_bound_rad": 0.2,
+        "waist_yaw_bound_rad": 0.35
+      },
+      "controlled_joints_beyond_soft_limit": [],
+      "controlled_max_speed_fraction_of_motor": 0.43262870523613106,
+      "frames": 199,
+      "keys_off_target": [],
+      "max_angle_error_deg": 0.02,
+      "max_hold_drift_m": 0.0992,
+      "max_tip_error_m": 0.0001,
+      "max_torque_ratio": 1.82,
+      "max_torque_ratio_joint": "right_wrist_yaw_joint",
+      "max_torque_ratio_key": "cut_head",
+      "speed_clamp": {
+        "frames_over": 0,
+        "max_change_rad": 0.0
+      },
+      "target_frame": "base right shoulder, axes: x",
+      "waist_used": false,
+      "wrist_pitch_yaw_max_abs_rad": 1.398465703785457
+    }
+  },
+  "file": "advance_lunge_cut_v6.csv",
+  "fps": 30.0,
+  "frames": 199,
+  "key_frames": [
+    {
+      "frame": 77,
+      "index": 1,
+      "kind": "cut",
+      "target": "cut_head",
+      "time_s": 2.566667
+    }
+  ],
+  "motion": "advance_lunge_cut",
+  "provenance": {
+    "cleanup": "bladework keyframes [en_garde 0s > cut_head 0.3s/0.3s@2.57s > en_garde 0.5s/0.6s@4.43s]; right arm IK per key, min-jerk, speed <= 0.5x motor, soft limits 0.9, end hold 2 s",
+    "hand": "R",
+    "notes": "legs/root/left arm: video-derived footwork; saber arm: hand-keyframed (not from video); key tip err max 0.0 cm, dir 0.0 deg; pass; slip 1.3 cm, pen 0.0 cm, limits 0, max 11.0 rad/s, 6.60 s; rebuilt by `fencing motion rebuild` (motions/recipes/goal1_gvhmr.toml, motion advance_lunge_cut; gvhmr retarget CSV)",
+    "segment": "whole base (199 frames) + bladework",
+    "source_clip": "FbuFW5CcKkI_243400-255400 (gvhmr retarget, sha256 b1fd168278f9) via advance_lunge_v5.csv"
+  },
+  "published_utc": "2026-11-12T22:39:53+00:00",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.9547738693467337,
+          "right": 0.8291457286432161
+        },
+        "no_contact_frames": 0,
+        "pattern": {
+          "left": "#############...############################################",
+          "right": "##########...#######...##############....###################"
+        },
+        "phases": {
+          "left": 2,
+          "right": 4
+        }
+      },
+      "duration_s": 6.6,
+      "foot_slip": {
+        "contact_phases": 6,
+        "max_deviation_m": 0.012655644260295876,
+        "mean_slide_speed_mps": 0.00439485305351967,
+        "total_slide_m": 0.0520057611333161
+      },
+      "fps": 30.0,
+      "frames": 199,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "right_wrist_pitch_joint",
+        "max_fraction_of_motor_limit": 0.43262870523613106,
+        "max_rad_s": 11.017501030870358
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 8.068631451826555e-06
+      },
+      "planted_float_p95_m": 0.015061078676091327,
+      "plausibility": {
+        "pelvis_height_min_m": 0.667259,
+        "pelvis_high_sustained_m": 0.788594,
+        "pelvis_low_sustained_m": 0.667839,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 21.872565222019624,
+        "torso_tilt_sustained_deg": 21.012513143778925
+      },
+      "root": {
+        "height_max_m": 0.794167,
+        "height_min_m": 0.667259,
+        "max_ground_speed_mps": 0.9596777482571949,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "pass"
+  },
+  "rebuild": {
+    "base_file": "advance_lunge_v5.csv",
+    "base_sha256": "a1560bf6b5577643891e3e6dcb6cf81ecc9b18c18f8761edfbb60f44108424b3",
+    "base_status": "new",
+    "motion": "advance_lunge_cut",
+    "pose_method": "gvhmr",
+    "recipe": "motions/recipes/goal1_gvhmr.toml",
+    "reproduces": null,
+    "source": "motion:advance_lunge",
+    "steps": [
+      {
+        "config": {
+          "end_hold_s": 2.0
+        },
+        "cut": "cut_head",
+        "info": {
+          "blade_ok": true,
+          "collision_frames": 0,
+          "keys": "en_garde@0.00s(arm) tip 0.0cm dir 0.0deg move 0.00s; cut_head@2.57s(arm) tip 0.0cm dir 0.0deg move 0.33s; en_garde@4.43s(arm) tip 0.0cm dir 0.0deg move 0.50s",
+          "keys_off_target": [],
+          "script": "en_garde 0s > cut_head 0.3s/0.3s@2.57s > en_garde 0.5s/0.6s@4.43s"
+        },
+        "op": "blade",
+        "recipe": "advance_lunge_cut"
+      }
+    ]
+  },
+  "version": 6
+}

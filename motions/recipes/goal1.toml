@@ -1,0 +1,264 @@
+# Goal 1 motion recipe: how each of the 17 final motions is built from the retarget CSVs.
+#
+#   scripts/hcf motion rebuild                     # every motion -> HCF_DATA/motion/rebuild/goal1/ (scratch)
+#   scripts/hcf motion rebuild --compare           # ... and diff against the versions named in `reproduces`
+#   scripts/hcf motion rebuild --publish           # new versions in motions/ (never overwrites)
+#
+# Read by fencing.motion.rebuild. One table per motion, built in dependency order:
+#
+#   source      "clip:<clip_id>"  -> HCF_DATA/retarget/csv/<clip_id>.csv (or --csv-dir). That folder now holds
+#                                    GVHMR CSVs; this recipe's MediaPipe CSVs are in previous/ and have to be
+#                                    staged by hand (docs/pipeline.md, "Reproduction")
+#               "motion:<name>"   -> the final output of another motion in this file
+#   steps       run in order; every op is one existing function (fencing.motion.rebuild.OPS)
+#   checkpoint  the step's output is written as CSV and read back before the next step. The
+#               historical motions were published at these points, and the CSV format rounds to
+#               1e-6, so the round trip is part of the result. The names are the published files
+#               they reproduce; they are also how other motions refer to an intermediate result.
+#   reproduces  the published file the final output matches on the data it was built from
+#   allow_warn  publish on a `motion check` warn verdict (the historical version was published so)
+#   tuned_on    pose_method of the CSV the clip-specific choices were made on. When the CSV now
+#               has another pose_method, the rebuild prints `tied_to_mediapipe` for that motion.
+#   tied_to_mediapipe   choices to make again on GVHMR data. Nothing here is picked automatically.
+#
+# Clean config keys are fencing.motion.pipeline.CleanConfig fields; a key not given is the
+# current default, `false` on a number field means off (None).
+
+schema = 1
+
+# ---------------------------------------------------------------- footwork (video)
+
+[motions.en_garde]
+reproduces = "en_garde_v3"
+source = "clip:IpM7citb5bs_3837-11411"
+tuned_on = "fallback_mediapipe"
+allow_warn = false
+tied_to_mediapipe = [
+  "frames 18-43: the en garde `motion batch` auto-segmentation found in the MediaPipe CSV. Frame numbers index the clip; check them with `scripts/hcf motion segment` on the new CSV.",
+  "clean config heading=pelvis, straighten=false, contact_rounds=2, plant_hover_m=off: not chosen for this clip, they reproduce the cleanup code of 2026-11-09 (before line heading, straightening and plant_still_feet existed). The current defaults (drop the config line) are probably the better start on GVHMR data.",
+  "set_foot_heading (right foot down the line): patches MediaPipe's leg twist (front foot 47 deg off the line, COM outside the support polygon). Check the front-foot yaw on GVHMR data; on a foot that already points down the line the turn is near 0 and the step is harmless.",
+  "lunge's rear-arm pose is the mean left arm of this motion's en_garde_v2 checkpoint, so a change here changes lunge.",
+]
+
+[[motions.en_garde.steps]]
+op = "clean"
+label = "en_garde"
+frames = [18, 43]
+config = { heading = "pelvis", straighten = false, contact_rounds = 2, plant_hover_m = false }
+checkpoint = "en_garde_v1"
+
+[[motions.en_garde.steps]]
+op = "set_foot_heading"
+foot = "right"
+target_yaw_deg = 0.0
+checkpoint = "en_garde_v2"
+
+[[motions.en_garde.steps]]
+op = "append_end_hold"
+seconds = 1.5  # 0.5 s end hold from the clean + 1.5 s = the eval's 2 s hold
+
+
+[motions.advance]
+reproduces = "advance_v1"
+source = "clip:GKsaQ3jsvuI_196546-206606"
+tuned_on = "fallback_mediapipe"
+allow_warn = true
+tied_to_mediapipe = [
+  "frames 56-81: one advance cut by hand between two near-stops of the alternating drill, on the MediaPipe CSV. Re-pick on the new CSV (`motion segment`, `motion render`).",
+  "plant_hover_m=off: plant_still_feet did not exist when advance_v1 was built. Not a data choice; consider the default (0.02) on GVHMR data.",
+  "end hold 0.5 s: shorter than the eval's 2 s hold (docs/pipeline.md, known errors). advance_v1 has never been retrained with a longer one.",
+]
+
+[[motions.advance.steps]]
+op = "clean"
+label = "advance"
+frames = [56, 81]
+config = { plant_hover_m = false }
+
+
+[motions.retreat]
+reproduces = "retreat_v1"
+source = "clip:GKsaQ3jsvuI_196546-206606"
+tuned_on = "fallback_mediapipe"
+allow_warn = false
+tied_to_mediapipe = [
+  "frames 32-60: one retreat cut by hand between two near-stops of the alternating drill, on the MediaPipe CSV. Re-pick on the new CSV.",
+  "plant_hover_m=off: plant_still_feet did not exist when retreat_v1 was built. Not a data choice; consider the default (0.02) on GVHMR data.",
+  "end hold 0.5 s: shorter than the eval's 2 s hold (docs/pipeline.md, known errors).",
+]
+
+[[motions.retreat.steps]]
+op = "clean"
+label = "retreat"
+frames = [32, 60]
+config = { plant_hover_m = false }
+
+
+[motions.lunge]
+reproduces = "lunge_v5"
+source = "clip:53FZTK_8qOI_0-20000"
+tuned_on = "fallback_mediapipe"
+allow_warn = true
+tied_to_mediapipe = [
+  "frames 222-321: the 2nd of the clip's 4 lunges, cut at 10.70 s just before the drill's reset retreat. Which lunge, and where it starts and ends, were judged on the MediaPipe CSV; re-pick on the new one.",
+  "rear_arm_pose (left arm -> en_garde_v2 mean): the retarget pinned the raised foil/epee rear arm at its joint limits in every frame. Partly the source fencer's style (stays), partly retarget saturation (may change with GVHMR). Kept as a saber rear arm either way; the rear arm does not score.",
+  "clear_arm_torso_collision (right arm): patches an oblique-front depth error that put the sword arm inside the torso. On data without the collision it changes nothing (frames_fixed 0).",
+  "neutralize_wrists (both arms): video pose has no measured wrist rotation. GVHMR's SMPL-X body does output wrist angles, but they are not observed either; decide again whether to trust them.",
+]
+
+[[motions.lunge.steps]]
+op = "clean"
+label = "lunge"
+frames = [222, 321]
+checkpoint = "lunge_v2"
+
+[[motions.lunge.steps]]
+op = "rear_arm_pose"
+side = "left"
+pose_from = "en_garde_v2"
+
+[[motions.lunge.steps]]
+op = "clear_arm_torso_collision"
+side = "right"
+checkpoint = "lunge_v3"
+
+[[motions.lunge.steps]]
+op = "neutralize_wrists"
+sides = ["left", "right"]
+checkpoint = "lunge_v4"
+
+[[motions.lunge.steps]]
+op = "append_end_hold"
+seconds = 1.5  # 0.5 s end hold from the clean + 1.5 s = 2 s
+
+
+[motions.advance_lunge]
+reproduces = "advance_lunge_v4"
+source = "clip:aY1P3wzvNBM_0-20000"
+tuned_on = "fallback_mediapipe"
+allow_warn = true
+tied_to_mediapipe = [
+  "frames 10-148: rep 1 of the drill, cut as the front foot lands at the end of the recovery (4.93 s), on the MediaPipe CSV. Re-pick on the new one.",
+  "mirroring: the source fencer is left-handed (sidecar handedness_guess L). The guess always comes from MediaPipe, also on GVHMR clips, so it should not change; check the mirror step in the report.",
+  "neutralize_wrists (both arms): as lunge; decide again on GVHMR wrist angles.",
+]
+
+[[motions.advance_lunge.steps]]
+op = "clean"
+label = "advance_lunge"
+frames = [10, 148]
+config = { end_hold_s = 2.0 }
+checkpoint = "advance_lunge_v3"
+
+[[motions.advance_lunge.steps]]
+op = "neutralize_wrists"
+sides = ["left", "right"]
+
+# ---------------------------------------------------------------- bladework (keyframed saber arm)
+#
+# Legs, root and left arm come from the base motion; the right arm is keyframed by
+# fencing.saber.recipes (script timings in recipes.STATIC_RECIPES / recipe_script). Nothing
+# here is clip-specific: the targets follow the base's shoulder, so they follow a new base.
+# end_hold_s is `motion blade --end-hold` (default 2 s).
+
+[motions.extension]
+reproduces = "extension_v3"
+source = "motion:en_garde"
+[[motions.extension.steps]]
+op = "blade"
+recipe = "extension"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_prime]
+reproduces = "parry_prime_v3"
+source = "motion:en_garde"
+[[motions.parry_prime.steps]]
+op = "blade"
+recipe = "parry_prime"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_seconde]
+reproduces = "parry_seconde_v3"
+source = "motion:en_garde"
+[[motions.parry_seconde.steps]]
+op = "blade"
+recipe = "parry_seconde"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_tierce_high]
+reproduces = "parry_tierce_high_v3"
+source = "motion:en_garde"
+[[motions.parry_tierce_high.steps]]
+op = "blade"
+recipe = "parry_tierce_high"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_quinte]
+reproduces = "parry_quinte_v3"
+source = "motion:en_garde"
+[[motions.parry_quinte.steps]]
+op = "blade"
+recipe = "parry_quinte"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_sixte]
+reproduces = "parry_sixte_v3"
+source = "motion:en_garde"
+[[motions.parry_sixte.steps]]
+op = "blade"
+recipe = "parry_sixte"
+config = { end_hold_s = 2.0 }
+
+[motions.cut_head]
+reproduces = "cut_head_v4"
+source = "motion:en_garde"
+[[motions.cut_head.steps]]
+op = "blade"
+recipe = "cut_head"  # 0.3 s move since v4 (recipes.STATIC_RECIPES)
+config = { end_hold_s = 2.0 }
+
+[motions.cut_flank]
+reproduces = "cut_flank_v3"
+source = "motion:en_garde"
+[[motions.cut_flank.steps]]
+op = "blade"
+recipe = "cut_flank"
+config = { end_hold_s = 2.0 }
+
+[motions.cut_chest]
+reproduces = "cut_chest_v3"
+source = "motion:en_garde"
+[[motions.cut_chest.steps]]
+op = "blade"
+recipe = "cut_chest"
+config = { end_hold_s = 2.0 }
+
+[motions.thrust]
+reproduces = "thrust_v3"
+source = "motion:en_garde"
+[[motions.thrust.steps]]
+op = "blade"
+recipe = "thrust"
+config = { end_hold_s = 2.0 }
+
+[motions.advance_lunge_cut]
+reproduces = "advance_lunge_cut_v5"
+source = "motion:advance_lunge"
+allow_warn = true
+tied_to_mediapipe = [
+  "The cut lands at the lunge touchdown detected on the base (recipes.lunge_timing: 3.10 s on the MediaPipe base), so it follows a new base without a hand-set time. Check the key time in the report; `hit_at_s = <s>` on the step overrides it.",
+]
+[[motions.advance_lunge_cut.steps]]
+op = "blade"
+recipe = "advance_lunge_cut"
+cut = "cut_head"
+config = { end_hold_s = 2.0 }
+
+# ---------------------------------------------------------------- entry (synthetic)
+
+[motions.stand_to_en_garde]
+reproduces = "stand_to_en_garde_v1"
+source = "motion:parry_quinte"
+[[motions.stand_to_en_garde.steps]]
+op = "entry"
+frame = 0  # standby pose -> parry_quinte frame 0 (the en garde guard every saber motion starts from)

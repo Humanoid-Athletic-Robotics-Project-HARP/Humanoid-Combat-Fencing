@@ -1,0 +1,212 @@
+# Goal 1 motion recipe on GVHMR data: the same 17 motions as goal1.toml, every choice made again
+# on the GVHMR retarget CSVs of 2026-11-12.
+#
+#   scripts/hcf motion rebuild --recipe motions/recipes/goal1_gvhmr.toml            # -> HCF_DATA/motion/rebuild/goal1_gvhmr/
+#   scripts/hcf motion rebuild --recipe motions/recipes/goal1_gvhmr.toml --publish  # new versions in motions/
+#
+# Format: goal1.toml's header. goal1.toml stays as it is: it reproduces the MediaPipe-era motions
+# (en_garde_v3 ... stand_to_en_garde_v1) from their CSVs, which are kept in
+# HCF_DATA/retarget/csv/previous/*.fallback_mediapipe.csv. The rebuild does not read previous/: copy
+# them under their plain <clip>.csv / .json names into a folder and pass --csv-dir (docs/pipeline.md,
+# "Reproduction"). This file has no `reproduces` (there
+# is nothing to reproduce) and no checkpoints (no intermediate version is published).
+#
+# What changed against goal1.toml, and why (numbers: docs/log.md, 2026-11-12 GVHMR rebuild row):
+#   - Every footwork clean uses the current CleanConfig defaults (heading line, straighten,
+#     3 contact rounds, plant_still_feet) plus a 2 s end hold, the eval's hold. goal1.toml's
+#     en garde config and advance/retreat plant_hover_m=off reproduced old cleanup code.
+#   - Frame ranges were picked on the GVHMR CSVs with `motion segment`, the joint and foot speed
+#     series and a `motion check` of each candidate.
+#   - en_garde: no set_foot_heading. It patched MediaPipe's leg twist (CoM outside the support
+#     polygon). The GVHMR guard has its CoM inside double support without it.
+#   - lunge: only neutralize_wrists is kept; rear_arm_pose and clear_arm_torso_collision patched
+#     MediaPipe errors (arm at its limits, arm inside the torso) that the GVHMR clip does not have.
+#   - advance_lunge: a different clip; aY1P3wzvNBM fails the motion check on GVHMR (see there).
+#   - Every motion passes the motion check, so allow_warn is false throughout.
+
+schema = 1
+
+# ---------------------------------------------------------------- footwork (video)
+
+[motions.en_garde]
+source = "clip:IpM7citb5bs_3837-11411"
+tuned_on = "gvhmr"
+allow_warn = false
+# Frames 3-39: the still guard before the clip's first advance (right foot starts at frame 39).
+
+[[motions.en_garde.steps]]
+op = "clean"
+label = "en_garde"
+frames = [3, 39]
+config = { end_hold_s = 2.0 }
+
+[motions.advance]
+source = "clip:GKsaQ3jsvuI_196546-206606"
+tuned_on = "gvhmr"
+allow_warn = false
+# Frames 57-80: the drill's 2nd advance, between two near-stops (same clip as advance_v1). The
+# 1st, 4th-6th advances warn on torso tilt (31-33 deg > 30) on GVHMR; the 7th on foot slip.
+
+[[motions.advance.steps]]
+op = "clean"
+label = "advance"
+frames = [57, 80]
+config = { end_hold_s = 2.0 }
+
+[motions.retreat]
+source = "clip:GKsaQ3jsvuI_186486-196546"
+tuned_on = "gvhmr"
+allow_warn = false
+# Frames 7-41: the 1st retreat of the same fencer's previous drill clip. Every retreat of
+# GKsaQ3jsvuI_196546-206606 (retreat_v1's clip) warns on torso tilt (31-34 deg > 30) on GVHMR.
+
+[[motions.retreat.steps]]
+op = "clean"
+label = "retreat"
+frames = [7, 41]
+config = { end_hold_s = 2.0 }
+
+[motions.lunge]
+source = "clip:53FZTK_8qOI_0-20000"
+tuned_on = "gvhmr"
+allow_warn = false
+# Frames 365-444: the 3rd of the clip's 4 lunges (lunge_v5 used the 2nd). On GVHMR the 2nd warns
+# on torso tilt (36 deg) and ends with the CoM outside double support; the 1st warns on tilt
+# (38 deg) and foot slip; the 4th on tilt, slip and float. The 3rd passes.
+# No rear_arm_pose: on GVHMR the raised rear arm is off its joint limits, so the fencer's arm stays.
+# No clear_arm_torso_collision: on GVHMR the sword arm does not enter the torso (frames_fixed 0).
+# neutralize_wrists kept: GVHMR's wrist angles are a body-model prior, not observed in video
+# (they moved up to 0.82 rad here), and the wrist motors are the weakest (5 Nm).
+
+[[motions.lunge.steps]]
+op = "clean"
+label = "lunge"
+frames = [365, 444]
+config = { end_hold_s = 2.0 }
+
+[[motions.lunge.steps]]
+op = "neutralize_wrists"
+sides = ["left", "right"]
+
+[motions.advance_lunge]
+source = "clip:FbuFW5CcKkI_243400-255400"
+tuned_on = "gvhmr"
+allow_warn = false
+# Frames 224-348: advance, lunge and recovery to guard of a right-handed sabre fencer. Not
+# advance_lunge_v4's clip: on GVHMR every rep of aY1P3wzvNBM_0-20000 (and _0-12000) fails the
+# motion check, pelvis 0.47-0.49 m for >= 0.2 s in the lunge ("implausible", < 0.5 m).
+# This lunge is shallower than v4's (front-back sole distance 0.95 m against 1.11 m).
+# neutralize_wrists kept, as lunge.
+
+[[motions.advance_lunge.steps]]
+op = "clean"
+label = "advance_lunge"
+frames = [224, 348]
+config = { end_hold_s = 2.0 }
+
+[[motions.advance_lunge.steps]]
+op = "neutralize_wrists"
+sides = ["left", "right"]
+
+# ---------------------------------------------------------------- bladework (keyframed saber arm)
+#
+# As goal1.toml: legs, root and left arm from the base, the right arm keyframed by
+# fencing.saber.recipes; the targets follow the base's right shoulder.
+
+[motions.extension]
+source = "motion:en_garde"
+# blade_path "line" (extension_v5): the joint-space move (extension_v4) took the tip 2.24x the straight
+# distance (extension_v3: 1.22), swinging the wrist pitch 2.7 rad; see thrust below.
+[[motions.extension.steps]]
+op = "blade"
+recipe = "extension"
+config = { end_hold_s = 2.0, blade_path = "line" }
+
+[motions.parry_prime]
+source = "motion:en_garde"
+[[motions.parry_prime.steps]]
+op = "blade"
+recipe = "parry_prime"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_seconde]
+source = "motion:en_garde"
+[[motions.parry_seconde.steps]]
+op = "blade"
+recipe = "parry_seconde"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_tierce_high]
+source = "motion:en_garde"
+[[motions.parry_tierce_high.steps]]
+op = "blade"
+recipe = "parry_tierce_high"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_quinte]
+source = "motion:en_garde"
+[[motions.parry_quinte.steps]]
+op = "blade"
+recipe = "parry_quinte"
+config = { end_hold_s = 2.0 }
+
+[motions.parry_sixte]
+source = "motion:en_garde"
+[[motions.parry_sixte.steps]]
+op = "blade"
+recipe = "parry_sixte"
+config = { end_hold_s = 2.0 }
+
+[motions.cut_head]
+source = "motion:en_garde"
+[[motions.cut_head.steps]]
+op = "blade"
+recipe = "cut_head"
+config = { end_hold_s = 2.0 }
+
+[motions.cut_flank]
+source = "motion:en_garde"
+# blade_path "line" (cut_flank_v5): the joint-space move (cut_flank_v4) dipped the tip to 0.34 m;
+# see thrust below.
+[[motions.cut_flank.steps]]
+op = "blade"
+recipe = "cut_flank"
+config = { end_hold_s = 2.0, blade_path = "line" }
+
+[motions.cut_chest]
+source = "motion:en_garde"
+[[motions.cut_chest.steps]]
+op = "blade"
+recipe = "cut_chest"
+config = { end_hold_s = 2.0 }
+
+[motions.thrust]
+source = "motion:en_garde"
+# blade_path "line" (thrust_v5): the tip moves on the straight line between the keys. The GVHMR guard
+# is side-on (pelvis yaw 84 deg; en_garde_v3: 0), so every point_thrust solution raises the arm
+# sideways and is >= 3 rad from the guard in joint space; the joint-space move of thrust_v4 swept the
+# tip to 0.07 m above the floor. thrust_v4 is this step without blade_path (superseded).
+# `motion blade-all` / `blade` (and so `pipeline all`) read every blade_path from this file.
+[[motions.thrust.steps]]
+op = "blade"
+recipe = "thrust"
+config = { end_hold_s = 2.0, blade_path = "line" }
+
+[motions.advance_lunge_cut]
+source = "motion:advance_lunge"
+allow_warn = false
+# The cut lands at the lunge touchdown detected on the base (recipes.lunge_timing).
+
+[[motions.advance_lunge_cut.steps]]
+op = "blade"
+recipe = "advance_lunge_cut"
+cut = "cut_head"
+config = { end_hold_s = 2.0 }
+
+# ---------------------------------------------------------------- entry (synthetic)
+
+[motions.stand_to_en_garde]
+source = "motion:parry_quinte"
+[[motions.stand_to_en_garde.steps]]
+op = "entry"
+frame = 0  # standby pose -> parry_quinte frame 0 (the guard every saber motion starts from)

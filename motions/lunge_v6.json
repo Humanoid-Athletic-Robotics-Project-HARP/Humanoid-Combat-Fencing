@@ -1,0 +1,507 @@
+{
+  "config": {
+    "contact": {
+      "height_enter_m": 0.03,
+      "height_exit_m": 0.05,
+      "max_gap_s": 0.07,
+      "min_duration_s": 0.1,
+      "speed_enter_mps": 0.2,
+      "speed_exit_mps": 0.35,
+      "speed_smoothing_hz": 6.0
+    },
+    "contact_rounds": 3,
+    "drift_cutoff_hz": 0.3,
+    "ease_s": 0.25,
+    "end_hold_s": 2.0,
+    "fix_slide": true,
+    "ground_smoothing_hz": 1.5,
+    "hand": null,
+    "heading": "line",
+    "hold_s": 0.5,
+    "joint_limit_margin_rad": 0.02,
+    "lateral_keep": 0.25,
+    "max_joint_speed": null,
+    "mirror_left_handed": true,
+    "plant_hover_m": 0.02,
+    "slide_blend_s": 0.15,
+    "smooth_hz": 8.0,
+    "straighten": true,
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "time_scale": 1.0,
+    "velocity_fraction": 0.5,
+    "yaw_cutoff_hz": 0.5
+  },
+  "file": "lunge_v6.csv",
+  "fps": 30.0,
+  "frames": 154,
+  "hand": "R",
+  "hand_source": "sidecar",
+  "mirrored": false,
+  "provenance": {
+    "cleanup": "straighten line (travel; 11 deg heading drift removed, lateral x0.25), smooth 8 Hz, joint limits, vertical drift, ground align, plant still feet, foot slide (root + leg IK), speed <= 0.5x motor, joint limits final, floor penetration, hold 0.5 s (end 2 s), plant still feet final, heading line -> +x, wrist pitch/yaw -> neutral",
+    "hand": "R (sidecar)",
+    "notes": "pass; slip 1.8 cm, pen 0.0 cm, limits 0, max 15.6 rad/s, 5.10 s; rebuilt by `fencing motion rebuild` (motions/recipes/goal1_gvhmr.toml, motion lunge; gvhmr retarget CSV)",
+    "segment": "frames 365-444 (12.17-14.80 s) + holds; 2 recipe steps",
+    "source_clip": "53FZTK_8qOI_0-20000 (gvhmr retarget, sha256 d26e9113fd8d)"
+  },
+  "published_utc": "2026-11-12T22:39:41+00:00",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.8636363636363636,
+          "right": 0.7792207792207793
+        },
+        "no_contact_frames": 13,
+        "pattern": {
+          "left": "#############.....#########.#####..#########################",
+          "right": "#########........##############......#######################"
+        },
+        "phases": {
+          "left": 4,
+          "right": 3
+        }
+      },
+      "duration_s": 5.1,
+      "foot_slip": {
+        "contact_phases": 7,
+        "max_deviation_m": 0.01790294605557977,
+        "mean_slide_speed_mps": 0.009805040366161208,
+        "total_slide_m": 0.0826891737546262
+      },
+      "fps": 30.0,
+      "frames": 154,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "left_knee_joint",
+        "max_fraction_of_motor_limit": 0.4950435000000001,
+        "max_rad_s": 15.58806
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 3.995496454019948e-07
+      },
+      "planted_float_p95_m": 0.018285872986212866,
+      "plausibility": {
+        "pelvis_height_min_m": 0.557896,
+        "pelvis_high_sustained_m": 0.794188,
+        "pelvis_low_sustained_m": 0.563214,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 25.757726443931144,
+        "torso_tilt_sustained_deg": 25.12154729548975
+      },
+      "root": {
+        "height_max_m": 0.794188,
+        "height_min_m": 0.557896,
+        "max_ground_speed_mps": 1.176117651130192,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "pass"
+  },
+  "raw_quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.46755407653910147,
+          "right": 0.6356073211314476
+        },
+        "no_contact_frames": 160,
+        "pattern": {
+          "left": "#########...##..##....####..#...........##......###..##..#..",
+          "right": "########..#####..###.####..##...#.###..###..##.###..###..##."
+        },
+        "phases": {
+          "left": 10,
+          "right": 12
+        }
+      },
+      "duration_s": 20.0,
+      "foot_slip": {
+        "contact_phases": 22,
+        "max_deviation_m": 0.05235224643727139,
+        "mean_slide_speed_mps": 0.03373666945061039,
+        "total_slide_m": 0.7455803948584897
+      },
+      "fps": 30.0,
+      "frames": 601,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "right_shoulder_yaw_joint",
+        "max_fraction_of_motor_limit": 0.6583467567567568,
+        "max_rad_s": 24.35883
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 0.002119451426615425
+      },
+      "planted_float_p95_m": 0.041167035506015796,
+      "plausibility": {
+        "pelvis_height_min_m": 0.5674835288875026,
+        "pelvis_high_sustained_m": 0.821768009524776,
+        "pelvis_low_sustained_m": 0.5694327757526829,
+        "retarget_ik_error_median": 0.8393,
+        "retarget_joint_limit_frac": 0.0448,
+        "torso_tilt_max_deg": 41.960260421524914,
+        "torso_tilt_sustained_deg": 40.902304063061635
+      },
+      "root": {
+        "height_max_m": 0.885347,
+        "height_min_m": 0.589168,
+        "max_ground_speed_mps": 1.431352660946979,
+        "start_xy": [
+          -0.006578,
+          -0.00959
+        ]
+      }
+    },
+    "reasons": [
+      "foot slip (m) 0.052 > 0.05",
+      "planted-foot float p95 (m) 0.041 > 0.02",
+      "joint speed / motor limit (right_shoulder_yaw_joint) 0.658 > 0.6",
+      "torso tilt 42 deg > 30"
+    ],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "fail"
+  },
+  "rebuild": {
+    "motion": "lunge",
+    "pose_method": "gvhmr",
+    "recipe": "motions/recipes/goal1_gvhmr.toml",
+    "reproduces": null,
+    "source": "clip:53FZTK_8qOI_0-20000",
+    "source_csv": "/home/nathan/hcf-data/retarget/csv/53FZTK_8qOI_0-20000.csv",
+    "source_sha256": "d26e9113fd8df68b5caa6b9a4f42cf12c0f7b7f355cbbee5de37a297aba17a1d",
+    "steps": [
+      {
+        "config": {
+          "end_hold_s": 2.0
+        },
+        "frames": [
+          365,
+          444
+        ],
+        "info": {
+          "hand": "R",
+          "hand_source": "sidecar",
+          "mirrored": false,
+          "segment": {
+            "end": 444,
+            "label": "lunge",
+            "source": "manual",
+            "start": 365
+          },
+          "steps": [
+            {
+              "end": 444,
+              "label": "lunge",
+              "source": "manual",
+              "start": 365,
+              "step": "segment"
+            },
+            {
+              "heading_source": "line",
+              "rotated_deg": 20.14779584113856,
+              "step": "canonicalize",
+              "translated_xy": [
+                0.147556,
+                0.103747
+              ]
+            },
+            {
+              "lateral_after_m": 0.035800587443289636,
+              "lateral_before_m": 0.14320234977315854,
+              "line_deg": 0.0,
+              "line_source": "travel",
+              "max_correction_deg": 10.801087732278468,
+              "mean_heading_to_line_deg": 83.0250615606884,
+              "slow_yaw_range_deg": 15.538908499914797,
+              "step": "straighten"
+            },
+            {
+              "heading_source": "line",
+              "rotated_deg": -0.0,
+              "step": "canonicalize_straight",
+              "translated_xy": [
+                -0.0,
+                -0.0
+              ]
+            },
+            {
+              "cutoff_hz": 8.0,
+              "max_joint_change_rad": 0.03792456376303738,
+              "mean_joint_change_rad": 0.002124329511042649,
+              "step": "smooth"
+            },
+            {
+              "clamped_values": 128,
+              "margin_rad": 0.02,
+              "max_violation_rad": 0.024293912448943883,
+              "per_joint_frames": {
+                "left_ankle_roll_joint": 56,
+                "right_ankle_pitch_joint": 5,
+                "right_ankle_roll_joint": 67
+              },
+              "step": "joint_limits"
+            },
+            {
+              "cutoff_hz": 0.3,
+              "drift_range_m": 0.04371939237057197,
+              "step": "vertical_drift"
+            },
+            {
+              "correction_range_m": 0.03318748987217633,
+              "mean_correction_m": 0.043794097080504885,
+              "smoothing_hz": 1.5,
+              "step": "ground_align"
+            },
+            {
+              "ik_solves": 47,
+              "max_lowered_m": 0.08945538715834463,
+              "planted_phases": [
+                2,
+                0
+              ],
+              "step": "plant_still_feet",
+              "worst_ik_error_m": 0.15125662517526775
+            },
+            {
+              "blend_s": 0.15,
+              "contact_phases": [
+                4,
+                2
+              ],
+              "ik_solves": 116,
+              "max_root_shift_m": 0.022698416641517317,
+              "slip_after_m": 0.03921625025862757,
+              "slip_before_m": 0.06584722056422139,
+              "step": "foot_slide",
+              "worst_ik_error_m": 0.03964549862585887
+            },
+            {
+              "cutoff_hz": 0.3,
+              "drift_range_m": 0.00575612122714236,
+              "step": "vertical_drift_round2"
+            },
+            {
+              "correction_range_m": 0.026313872294900894,
+              "mean_correction_m": 0.003842962371162496,
+              "smoothing_hz": 1.5,
+              "step": "ground_align_round2"
+            },
+            {
+              "ik_solves": 17,
+              "max_lowered_m": 0.036022199634287044,
+              "planted_phases": [
+                1,
+                0
+              ],
+              "step": "plant_still_feet_round2",
+              "worst_ik_error_m": 0.015488698661480792
+            },
+            {
+              "blend_s": 0.15,
+              "contact_phases": [
+                4,
+                2
+              ],
+              "ik_solves": 91,
+              "max_root_shift_m": 0.01945315754040262,
+              "slip_after_m": 0.025503478221372448,
+              "slip_before_m": 0.03921625025862757,
+              "step": "foot_slide_round2",
+              "worst_ik_error_m": 0.025512598207925362
+            },
+            {
+              "cutoff_hz": 0.3,
+              "drift_range_m": 0.001086353622094387,
+              "step": "vertical_drift_round3"
+            },
+            {
+              "correction_range_m": 0.009628042671666634,
+              "mean_correction_m": -8.749640365531255e-05,
+              "smoothing_hz": 1.5,
+              "step": "ground_align_round3"
+            },
+            {
+              "ik_solves": 0,
+              "max_lowered_m": 0.0,
+              "planted_phases": [
+                0,
+                0
+              ],
+              "step": "plant_still_feet_round3",
+              "worst_ik_error_m": 0.0
+            },
+            {
+              "blend_s": 0.15,
+              "contact_phases": [
+                4,
+                2
+              ],
+              "ik_solves": 41,
+              "max_root_shift_m": 0.014468528289875927,
+              "slip_after_m": 0.018014454350749966,
+              "slip_before_m": 0.03485669673788315,
+              "step": "foot_slide_round3",
+              "worst_ik_error_m": 0.017966116539764654
+            },
+            {
+              "frames_over": 0,
+              "max_speed_before": 15.58808738728368,
+              "step": "joint_speed"
+            },
+            {
+              "clamped_values": 0,
+              "margin_rad": 0.0,
+              "max_violation_rad": 0.0,
+              "step": "joint_limits_final"
+            },
+            {
+              "frames_lifted": 77,
+              "max_depth_m": 0.030576370829453754,
+              "step": "floor_penetration"
+            },
+            {
+              "ease_s": 0.25,
+              "end_hold_s": 2.0,
+              "start_hold_s": 0.5,
+              "step": "hold"
+            },
+            {
+              "ik_solves": 66,
+              "max_lowered_m": 0.03057627708510731,
+              "planted_phases": [
+                1,
+                0
+              ],
+              "step": "plant_still_feet_final",
+              "worst_ik_error_m": 0.017842809931290806
+            },
+            {
+              "heading_source": "line",
+              "rotated_deg": -0.5669281308886945,
+              "step": "canonicalize_final",
+              "translated_xy": [
+                0.007373511864586486,
+                0.004155894352171182
+              ]
+            }
+          ],
+          "verdict": "pass"
+        },
+        "label": "lunge",
+        "op": "clean"
+      },
+      {
+        "info": {
+          "joints": [
+            "left_wrist_pitch_joint",
+            "left_wrist_yaw_joint",
+            "right_wrist_pitch_joint",
+            "right_wrist_yaw_joint"
+          ],
+          "max_change_rad": 0.8238254811400636,
+          "target_rad": 0.0
+        },
+        "op": "neutralize_wrists",
+        "sides": [
+          "left",
+          "right"
+        ]
+      }
+    ]
+  },
+  "segment": {
+    "end": 444,
+    "label": "lunge",
+    "source": "manual",
+    "start": 365
+  },
+  "version": 6
+}
