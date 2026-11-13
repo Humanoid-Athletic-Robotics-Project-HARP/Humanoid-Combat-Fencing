@@ -9,18 +9,28 @@ Outputs (docs/pipeline.md): retarget/<clip_id>.pkl (GMR pickle: root_pos, root_r
 dof_pos, fps), retarget/csv/<clip_id>.csv (headerless 36 columns, root quat xyzw, z up,
 30 fps, G1 29-DoF order) and retarget/csv/<clip_id>.json (sidecar for `fencing motion`).
 
-Input: pose.json's pose_method picks the branch. `gvhmr` clips go through GMR's own SMPL-X
-loader (needs the licence-gated model, untested here); `fallback_mediapipe` clips go
-keypoints_world.npz -> fencing.pose.joint_frames -> GMR frame by frame. The worker runs in
-the `gmr` venv; logs in logs/retarget/<clip_id>.log. No mirroring: left-handed sources keep
-their handedness_guess and `fencing motion` mirrors them.
+Input: pose.json's pose_method picks the branch. `gvhmr` clips go hmr4d_results.pt -> SMPL-X
+(HCF_DATA/gvhmr/inputs/checkpoints/body_models/smplx/SMPLX_NEUTRAL.npz, licence-gated, the
+same file GVHMR uses) -> GMR; `fallback_mediapipe` clips go keypoints_world.npz ->
+fencing.pose.joint_frames -> GMR frame by frame. The worker runs in the `gmr` venv; logs in
+logs/retarget/<clip_id>.log. No mirroring: left-handed sources keep their handedness_guess and
+`fencing motion` mirrors them.
+
+A clip whose CSV was made from another pose_method than its pose.json now has (a fallback
+clip upgraded to GVHMR) is redone without --force. Whenever an existing CSV is replaced, the old
+CSV and sidecar are first copied to retarget/csv/previous/<clip_id>.<old pose_method>.{csv,json}
+("unknown" without a sidecar; a numeric suffix .1, .2 keeps earlier backups), because published
+motions may cite them (a copy, so a failed run keeps the old pair in place). The new sidecar's
+pose_method is the input actually used.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import time
+from pathlib import Path
 
 from fencing import paths
 from fencing.pose import gvhmr
@@ -28,6 +38,7 @@ from fencing.pose.venvs import WorkerError, eprint, run_in_venv
 from fencing.retarget.convert import build_sidecar
 
 CSV_DIR = paths.RETARGET / "csv"
+USED_POSE_METHOD = {"gvhmr": "gvhmr", "fallback": "fallback_mediapipe"}  # worker --method -> sidecar pose_method
 
 
 def pose_clips() -> list[str]:
@@ -56,15 +67,45 @@ def choose_method(pose_summary: dict, requested: str) -> str:
     return "gvhmr" if pose_summary.get("pose_method") == "gvhmr" else "fallback"
 
 
+def archive_previous(out_csv: Path, out_json: Path, pose_method: str | None) -> Path:
+    """Copy an existing CSV + sidecar to CSV_DIR/previous/ before they are replaced. A copy, so
+    a failed retarget leaves the old pair in place (and it is retried on the next run). Named
+    <clip_id>.<pose_method>.{csv,json}; an existing backup is never overwritten, the pair gets
+    the first free numeric suffix instead (<clip_id>.<pose_method>.1.csv, .2, ...)."""
+    archive = out_csv.parent / "previous"
+    archive.mkdir(parents=True, exist_ok=True)
+    stem = f"{out_csv.stem}.{pose_method or 'unknown'}"
+    pairs = ((out_csv, ".csv"), (out_json, ".json"))
+    taken = lambda name: any((archive / f"{name}{suffix}").exists() for _, suffix in pairs)  # noqa: E731
+    unique, number = stem, 0
+    while taken(unique):
+        number += 1
+        unique = f"{stem}.{number}"
+    for src, suffix in pairs:
+        if src.exists():
+            shutil.copy2(src, archive / f"{unique}{suffix}")
+    return archive
+
+
 def retarget_one(clip_id: str, args) -> dict:
     pose_dir = paths.POSE / clip_id
     out_csv = CSV_DIR / f"{clip_id}.csv"
     out_json = out_csv.with_suffix(".json")
-    if out_csv.exists() and out_json.exists() and not args.force:
-        eprint(f"[retarget] {clip_id}: done already ({out_csv})")
-        return json.loads(out_json.read_text())
     summary = json.loads((pose_dir / "pose.json").read_text())
+    previous = json.loads(out_json.read_text()) if out_csv.exists() and out_json.exists() else None
+    same_input = previous is not None and previous.get("pose_method") == summary.get("pose_method")
+    if same_input and not args.force:
+        eprint(f"[retarget] {clip_id}: done already ({out_csv})")
+        return previous
     method = choose_method(summary, args.method)
+    if method == "gvhmr":
+        missing = [str(p) for p in (pose_dir / "hmr4d_results.pt", gvhmr.SMPLX_MODEL) if not p.exists()]
+        if missing:
+            raise FileNotFoundError(f"the gvhmr branch needs {', '.join(missing)}")
+    if out_csv.exists():
+        old_method = (previous or {}).get("pose_method")
+        archive = archive_previous(out_csv, out_json, old_method)
+        eprint(f"[retarget] {clip_id}: pose_method {old_method} -> {USED_POSE_METHOD[method]}; old CSV copied to {archive}")
     height = args.height or summary.get("human_height_m")
     if args.height:
         summary["human_height_m"] = args.height
@@ -89,6 +130,7 @@ def retarget_one(clip_id: str, args) -> dict:
     if method == "gvhmr" and not args.height:
         summary["human_height_m"] = stats.get("human_height_m")
     sidecar = build_sidecar(summary, stats, notes=f"retargeted with GMR smplx_to_g1 ({method} input)")
+    sidecar["pose_method"] = USED_POSE_METHOD[method]  # the input actually used, not pose.json's claim
     out_json.write_text(json.dumps(sidecar, indent=2) + "\n")
     return sidecar
 

@@ -19,6 +19,19 @@ Differences from Mjlab-Tracking-Flat-Unitree-G1:
     eval gate measures it, so a wrist rotation error the 0.4 rad body-orientation term
     barely notices is paid for at the tip, 0.75 m out (train and play configs);
   * runs are logged under experiment "g1_saber_tracking".
+
+Fencing-Tracking-Flat-G1-Saber-Entry (ENTRY_TASK_ID) is the saber task plus one reward term,
+"feet_pos": the two ankle roll links' positions with std FEET_REWARD_STD_M, for the entry from
+standby (docs/mtc.md, "Entry from standby"). Observations, actions, events and every other
+term are the saber task's, so its ONNX runs in the same controller.
+
+Fencing-Tracking-Flat-G1-Saber-Entry-Joint and -Joint05 (ENTRY_JOINT_TASK_IDS) are the entry task
+plus one more term, "joint_pos" (joint_position_error_exp, std JOINT_REWARD_STD_RAD), weight 1.0
+and 0.5. The entry reference ends in the guard, whose CoM lies outside the G1's double support, so
+a policy cannot hold it exactly with both feet placed. Nothing upstream pays for joint angles, and
+stand_to_en_garde_v1_feet balanced it with waist roll and pitch and both arms (0.14 rad mean joint
+error in the end hold, against 0.06 for v1_tip, which moved its feet instead). This term makes the
+joint-angle cost of that choice explicit (docs/mtc.md, "Entry from standby").
 """
 
 from __future__ import annotations
@@ -52,6 +65,27 @@ BLADE_TIP_REWARD = "blade_tip_pos"
 # ~0.04 of motion_body_ori (one of 14 bodies, std 0.4 rad) but ~0.7 of this term.
 BLADE_TIP_REWARD_WEIGHT = 1.0
 BLADE_TIP_REWARD_STD_M = 0.15
+
+ENTRY_TASK_ID = "Fencing-Tracking-Flat-G1-Saber-Entry"
+FEET_REWARD = "feet_pos"
+FEET_BODIES = ("left_ankle_roll_link", "right_ankle_roll_link")
+# motion_body_pos averages the squared error over 14 bodies with std 0.3 m, so two feet 11 cm
+# off (stand_to_en_garde_v1_tip shuffled instead of stepping) cost ~2% of it. On the two feet
+# alone with std 0.1 m the same miss costs 0.70 of this term; 3 cm costs 0.09, under the 7-18 cm
+# foot errors every footwork policy has, so tracking the foot is paid for over its whole range.
+FEET_REWARD_WEIGHT = 1.0
+FEET_REWARD_STD_M = 0.1
+
+JOINT_REWARD = "joint_pos"
+# exp(-mean_j e_j^2 / std^2) over all 29 joints. With std 0.15 rad the v1_feet end hold (mean
+# |e| 0.14 rad, mean e^2 ~0.03) scores ~0.26 and v1_tip's (0.06 rad) ~0.77: the steep part spans
+# the 0.06-0.14 rad range the two entries left, and the eval's 0.1 rad mean-error gate sits in it.
+JOINT_REWARD_STD_RAD = 0.15
+ENTRY_JOINT_WEIGHTS = {
+    "Fencing-Tracking-Flat-G1-Saber-Entry-Joint": 1.0,
+    "Fencing-Tracking-Flat-G1-Saber-Entry-Joint05": 0.5,
+}
+ENTRY_JOINT_TASK_IDS = tuple(ENTRY_JOINT_WEIGHTS)
 
 
 def saber_action_scale(base: dict[str, float]) -> dict[str, float]:
@@ -174,6 +208,49 @@ def saber_tracking_env_cfg(saber: SaberSpec = NOMINAL_SABER, has_state_estimatio
     return cfg
 
 
+def feet_reward_cfg():
+    from mjlab.managers.reward_manager import RewardTermCfg
+    from mjlab.tasks.tracking.mdp import motion_relative_body_position_error_exp
+
+    return RewardTermCfg(
+        func=motion_relative_body_position_error_exp,
+        weight=FEET_REWARD_WEIGHT,
+        params={"command_name": "motion", "std": FEET_REWARD_STD_M, "body_names": FEET_BODIES},
+    )
+
+
+def entry_tracking_env_cfg(play: bool = False):
+    """The saber task (with state estimation) plus the feet_pos term."""
+    cfg = saber_tracking_env_cfg(play=play)
+    cfg.rewards[FEET_REWARD] = feet_reward_cfg()
+    return cfg
+
+
+def joint_position_error_exp(env, command_name: str, std: float):
+    """exp(-mean_j (q_ref - q_robot)^2 / std^2) per env, over every joint of the motion command.
+
+    The same joints and reference as evaluate's joint_angle_error_rad gate (command.joint_pos
+    against command.robot_joint_pos), squared instead of absolute like the other tracking terms.
+    """
+    command = env.command_manager.get_term(command_name)
+    error = (command.joint_pos - command.robot_joint_pos).square().mean(dim=-1)
+    return (-error / std**2).exp()
+
+
+def joint_reward_cfg(weight: float):
+    from mjlab.managers.reward_manager import RewardTermCfg
+
+    return RewardTermCfg(func=joint_position_error_exp, weight=weight,
+                         params={"command_name": "motion", "std": JOINT_REWARD_STD_RAD})
+
+
+def entry_joint_tracking_env_cfg(task_id: str, play: bool = False):
+    """The entry task plus the joint_pos term at ENTRY_JOINT_WEIGHTS[task_id]."""
+    cfg = entry_tracking_env_cfg(play=play)
+    cfg.rewards[JOINT_REWARD] = joint_reward_cfg(ENTRY_JOINT_WEIGHTS[task_id])
+    return cfg
+
+
 def saber_rl_cfg():
     from mjlab.tasks.tracking.config.g1.rl_cfg import unitree_g1_tracking_ppo_runner_cfg
 
@@ -188,15 +265,20 @@ def register() -> list[str]:
     from mjlab.tasks.tracking.rl import MotionTrackingOnPolicyRunner
 
     registered = set(list_tasks())
-    for task_id, has_state_estimation in ((TASK_ID, True), (TASK_ID_NO_STATE_ESTIMATION, False)):
+    builders = {
+        TASK_ID: functools.partial(saber_tracking_env_cfg, has_state_estimation=True),
+        TASK_ID_NO_STATE_ESTIMATION: functools.partial(saber_tracking_env_cfg, has_state_estimation=False),
+        ENTRY_TASK_ID: entry_tracking_env_cfg,
+        **{task_id: functools.partial(entry_joint_tracking_env_cfg, task_id) for task_id in ENTRY_JOINT_TASK_IDS},
+    }
+    for task_id, build in builders.items():
         if task_id in registered:
             continue
         register_mjlab_task(
             task_id=task_id,
-            env_cfg=saber_tracking_env_cfg(has_state_estimation=has_state_estimation),
-            play_env_cfg=saber_tracking_env_cfg(has_state_estimation=has_state_estimation,
-                                                play=True),
+            env_cfg=build(),
+            play_env_cfg=build(play=True),
             rl_cfg=saber_rl_cfg(),
             runner_cls=MotionTrackingOnPolicyRunner,
         )
-    return [TASK_ID, TASK_ID_NO_STATE_ESTIMATION]
+    return list(builders)

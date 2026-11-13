@@ -38,8 +38,8 @@ from fencing.motion.fixes import hardware_velocity_limits, rate_limit
 from fencing.motion.io import JOINT_NAMES, Motion
 from fencing.motion.kinematics import load_g1
 from fencing.saber.reach import (
-    ARM_JOINTS, CANONICAL_TARGETS, SOFT_LIMIT_FACTOR, WRIST_PITCH_YAW_JOINTS, ArmModel, BladeTarget, arm_reach,
-    build_arm_model, self_collisions, solve_ik, stance_qpos,
+    ARM_JOINTS, CANONICAL_TARGETS, EFFORT_LIMIT_NM, SOFT_LIMIT_FACTOR, WRIST_PITCH_YAW_JOINTS, ArmModel, BladeTarget,
+    _skew, arm_reach, build_arm_model, self_collisions, solve_ik, stance_qpos,
 )
 from fencing.saber.spec import NOMINAL_SABER, SaberSpec
 
@@ -51,11 +51,32 @@ WAIST_COLUMNS = [JOINT_NAMES.index(name) for name in WAIST_IK_JOINTS]
 CONTROLLED_COLUMNS = ARM_COLUMNS + WAIST_COLUMNS
 MIN_JERK_PEAK_SPEED = 1.875  # max ds/dtau of the quintic 10t^3 - 15t^4 + 6t^5
 SPEED_MARGIN = 1.05  # sampled min-jerk can peak slightly above the continuous bound
+TORQUE_SAMPLES = 101  # points along a move for its inverse-dynamics torque demand
 # reach.arm_reach(nominal saber, KNEES_BENT stance, 20000 samples, seed 0): the value in
 # HCF_DATA/eval/saber/reach.json. Sampling it again costs seconds, so the nominal saber
 # reuses it; any other saber is re-sampled the same way.
 NOMINAL_ARM_REACH_M = 0.5717
 EXTRA_RESTARTS_AFTER_VALID = 3
+BLADE_PATHS = ("joint", "line")
+# blade_path="line": samples along a move's blade line, IK iterations per sample, and the gain of the
+# nullspace pull toward the joint-space interpolation (prototype on thrust/en_garde_v4: 60 and 180
+# samples give the same path; gain 1.0 needed the shortest move, 0.52 s, at 1.3 cm tracking error).
+LINE_SAMPLES = 60
+LINE_IK_ITERATIONS = 30
+LINE_NULLSPACE_GAIN = 1.0
+LINE_DAMPING = 0.03
+LINE_DIRECTION_WEIGHT = 0.5  # as reach.solve_ik: 1 rad of direction error ~ 0.5 m
+LINE_MAX_STEP_RAD = 0.2
+# A tracked line whose end is farther than this from the key's pose has reached another solution
+# family; the move then stays a joint-space one (reported in the summary) rather than jump.
+LINE_END_TOLERANCE_RAD = 0.1
+# ... and so has a line the tip cannot follow (parry_quinte from the guard: 1.5 m off on the synthetic
+# base, the blade has to go over the head).
+LINE_TRACKING_TOLERANCE_M = 0.05
+# ... and so does a move over which the base body alone carries the tip farther than this: the line is
+# solved on the body at the reach frame, so a moving base (a lunge) would put the tip off it. The GVHMR
+# guard's sway moves it 0.7-1.7 cm over thrust_v5's and cut_flank_v5's moves.
+LINE_BODY_SHIFT_TOLERANCE_M = 0.03
 
 # Targets the reach table lacks. Same conventions as reach.CANONICAL_TARGETS; estimates
 # from fencing references, not measurements.
@@ -119,10 +140,20 @@ class BladeConfig:
     # motion ends, so a policy only learns to stand still for as long as the reference does,
     # and the eval holds the last frame for 2 s.
     end_hold_s: float = 0.0
+    # How the arm moves between two keyed poses. "joint": minimum-jerk in joint space (every motion
+    # published before thrust_v5). "line": the blade tip follows the straight line between the two
+    # keys' tips, the blade direction turns at a constant rate (slerp), and the arm's redundant DoF
+    # are pulled toward the joint-space interpolation; a new target is solved from the end of that
+    # line, so the key lands in the solution family the move reaches. On the side-on GVHMR guard
+    # (en_garde_v4) every point_thrust solution is >= 3 rad from the guard in joint space and a
+    # joint-space move swept the tip to 7 cm above the floor (thrust_v4); see docs/saber.md.
+    blade_path: str = "joint"
 
     def __post_init__(self) -> None:
         if self.end_hold_s < 0:
             raise ValueError(f"end_hold_s must be >= 0, got {self.end_hold_s}")
+        if self.blade_path not in BLADE_PATHS:
+            raise ValueError(f"blade_path must be one of {BLADE_PATHS}, got {self.blade_path!r}")
 
 
 @dataclass
@@ -178,6 +209,12 @@ def minimum_jerk(tau: np.ndarray) -> np.ndarray:
     """Quintic 0 -> 1 with zero velocity and acceleration at both ends."""
     tau = np.clip(np.asarray(tau, dtype=float), 0.0, 1.0)
     return tau**3 * (10.0 - 15.0 * tau + 6.0 * tau**2)
+
+
+def minimum_jerk_derivatives(tau: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """ds/dtau and d2s/dtau2 of minimum_jerk."""
+    tau = np.clip(np.asarray(tau, dtype=float), 0.0, 1.0)
+    return 30.0 * tau**2 * (1.0 - tau) ** 2, 60.0 * tau - 180.0 * tau**2 + 120.0 * tau**3
 
 
 def min_move_frames(delta: np.ndarray, max_speed: np.ndarray, fps: float) -> int:
@@ -288,6 +325,171 @@ def _errors(ctx, qpos, tip_target, dir_target) -> tuple[float, float]:
     return float(np.linalg.norm(tip - tip_target)), angle
 
 
+def move_torque_ratio(qpos: np.ndarray, arm_from: np.ndarray, arm_to: np.ndarray, move_s: float,
+                      saber: SaberSpec = NOMINAL_SABER) -> dict[str, float]:
+    """Peak |torque| / effort limit per right-arm joint for a minimum-jerk move of the 7 arm
+    joints from arm_from to arm_to in move_s, the rest of the body pinned at qpos (inverse
+    dynamics with the saber). Velocity-product and inertial torques scale with 1/move_s^2.
+
+    The joint speed cap cannot see this: a straight-arm swing moves few joints, none fast, but
+    swings the whole arm and blade as one long lever (cut_head_v3: 0.37x motor speed, 1.9x the
+    shoulder pitch and 5.2x the wrist pitch effort limit)."""
+    if move_s <= 0:
+        raise ValueError(f"move_s must be > 0, got {move_s}")
+    ctx = _context(saber, SOFT_LIMIT_FACTOR)
+    model, data = ctx.arm.model, ctx.data
+    dofs = ctx.arm.dof_adr
+    delta = np.asarray(arm_to, float) - np.asarray(arm_from, float)
+    limits = np.array([EFFORT_LIMIT_NM[name] for name in ARM_JOINTS])
+    peak = np.zeros(len(ARM_JOINTS))
+    tau = np.linspace(0.0, 1.0, TORQUE_SAMPLES)
+    position = minimum_jerk(tau)
+    speed, acceleration = minimum_jerk_derivatives(tau)
+    for s, ds, dds in zip(position, speed, acceleration):
+        data.qpos[:] = qpos
+        data.qpos[ctx.arm.qpos_adr] = arm_from + s * delta
+        data.qvel[:] = 0.0
+        data.qvel[dofs] = ds / move_s * delta
+        data.qacc[:] = 0.0
+        data.qacc[dofs] = dds / move_s**2 * delta
+        mujoco.mj_inverse(model, data)
+        peak = np.maximum(peak, np.abs(data.qfrc_inverse[dofs]))
+    return {name: float(value) for name, value in zip(ARM_JOINTS, peak / limits)}
+
+
+# ---------------------------------------------------------------- blade_path="line"
+
+
+def _slerp(a: np.ndarray, b: np.ndarray, s: float) -> np.ndarray:
+    a, b = a / np.linalg.norm(a), b / np.linalg.norm(b)
+    omega = math.acos(float(np.clip(a @ b, -1.0, 1.0)))
+    if omega < 1e-9:
+        return a
+    return (math.sin((1 - s) * omega) * a + math.sin(s * omega) * b) / math.sin(omega)
+
+
+def track_blade_line(ctx: _Context, body_qpos: np.ndarray, arm_from: np.ndarray, tip_to: np.ndarray,
+                     dir_to: np.ndarray, arm_toward: np.ndarray | None = None,
+                     samples: int = LINE_SAMPLES) -> tuple[np.ndarray, float]:
+    """(arm path (samples + 1, 7) at s = k / samples, worst tip distance from the line).
+
+    IK continuation with the body pinned at body_qpos: the tip on the straight line from arm_from's
+    tip to tip_to, the blade direction slerped to dir_to. With arm_toward, the arm's redundant DoF
+    are pulled toward the joint-space line arm_from -> arm_toward (nullspace of the blade task), so
+    the arm does not wander through its 2 free DoF on the way."""
+    arm, model = ctx.arm, ctx.arm.model
+    data = mujoco.MjData(model)
+    dofs = arm.dof_adr
+    jacp, jacr = np.zeros((3, model.nv)), np.zeros((3, model.nv))
+    tip_from, dir_from = _blade_tip(ctx, _with_arm(body_qpos, arm, arm_from))
+    q = np.asarray(arm_from, float).copy()
+    outside = (q < arm.lower - 1e-9) | (q > arm.upper + 1e-9)
+    if outside.any():
+        # Clipping would move the arm in one frame at the move's first sample. Keyed poses come from
+        # IK inside these limits, so this only happens to an arm pose from elsewhere.
+        names = [ARM_JOINTS[j] for j in np.flatnonzero(outside)]
+        raise ValueError(f"blade line start pose is outside the soft joint limits on {names}: "
+                         f"{q[outside].round(4).tolist()}")
+    path, worst = [q.copy()], 0.0
+    for k in range(1, samples + 1):
+        s = k / samples
+        tip_goal, dir_goal = tip_from + s * (tip_to - tip_from), _slerp(dir_from, dir_to, s)
+        reference = None if arm_toward is None else arm_from + s * (arm_toward - arm_from)
+        for _ in range(LINE_IK_ITERATIONS):
+            data.qpos[:] = body_qpos
+            data.qpos[arm.qpos_adr] = q
+            mujoco.mj_kinematics(model, data)
+            mujoco.mj_comPos(model, data)
+            tip = data.site_xpos[arm.tip_site]
+            direction = data.site_xmat[arm.tip_site].reshape(3, 3)[:, 0]
+            error = np.concatenate([tip_goal - tip, LINE_DIRECTION_WEIGHT * (dir_goal - direction)])
+            mujoco.mj_jacSite(model, data, jacp, jacr, arm.tip_site)
+            jac = np.vstack([jacp[:, dofs], LINE_DIRECTION_WEIGHT * (-_skew(direction) @ jacr[:, dofs])])
+            pinv = jac.T @ np.linalg.inv(jac @ jac.T + LINE_DAMPING**2 * np.eye(6))
+            step = pinv @ error
+            if reference is not None:
+                step += (np.eye(len(q)) - pinv @ jac) @ (LINE_NULLSPACE_GAIN * (reference - q))
+            largest = np.abs(step).max()
+            if largest > LINE_MAX_STEP_RAD:
+                step *= LINE_MAX_STEP_RAD / largest
+            q = np.clip(q + step, arm.lower, arm.upper)
+        tip, _ = _blade_tip(ctx, _with_arm(body_qpos, arm, q))
+        worst = max(worst, float(np.linalg.norm(tip - tip_goal)))
+        path.append(q.copy())
+    return np.array(path), worst
+
+
+def _with_arm(body_qpos: np.ndarray, arm: ArmModel, arm_q: np.ndarray) -> np.ndarray:
+    qpos = body_qpos.copy()
+    qpos[arm.qpos_adr[:len(ARM_JOINTS)]] = arm_q
+    return qpos
+
+
+def line_move(ctx: _Context, body_qpos: np.ndarray, arm_from: np.ndarray, arm_to: np.ndarray) -> dict:
+    """The blade-line path between two arm poses on one body. The tracked end is corrected onto
+    arm_to linearly in s (zero at the start), so the path starts and ends exactly on the keys."""
+    tip_to, dir_to = _blade_tip(ctx, _with_arm(body_qpos, ctx.arm, arm_to))
+    path, worst = track_blade_line(ctx, body_qpos, arm_from, tip_to, dir_to, arm_toward=arm_to)
+    mismatch = np.asarray(arm_to, float) - path[-1]
+    s = np.linspace(0.0, 1.0, len(path))[:, None]
+    return {"path": path + s * mismatch, "tracking_max_m": worst,
+            "end_mismatch_rad": float(np.abs(mismatch).max())}
+
+
+def path_at(path: np.ndarray, s: float) -> np.ndarray:
+    """Arm pose at s in [0, 1] on a path sampled at s = k / (len - 1)."""
+    grid = np.linspace(0.0, 1.0, len(path))
+    return np.array([np.interp(s, grid, path[:, j]) for j in range(path.shape[1])])
+
+
+def _min_jerk_path(path: np.ndarray, samples: int = 2001) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """tau, q, dq/dtau and d2q/dtau2 of a path run on the minimum-jerk time profile. The path's
+    s-derivatives are finite differences on its own samples (differentiating the piecewise-linear
+    interpolation would put acceleration spikes at every sample)."""
+    tau = np.linspace(0.0, 1.0, samples)
+    s = minimum_jerk(tau)
+    ds, dds = minimum_jerk_derivatives(tau)
+    grid = np.linspace(0.0, 1.0, len(path))
+    d1 = np.gradient(path, grid, axis=0)
+    d2 = np.gradient(d1, grid, axis=0)
+
+    def at(values: np.ndarray) -> np.ndarray:
+        return np.stack([np.interp(s, grid, values[:, j]) for j in range(values.shape[1])], axis=1)
+
+    p1 = at(d1)
+    return tau, at(path), p1 * ds[:, None], at(d2) * (ds**2)[:, None] + p1 * dds[:, None]
+
+
+def path_move_frames(path: np.ndarray, max_speed: np.ndarray, fps: float) -> int:
+    """Fewest frames for the min-jerk run along `path` whose joint speeds stay under max_speed."""
+    _, q, _, _ = _min_jerk_path(path)
+    # Speeds of the pose sequence itself (what the assembled frames sample), not of the smoothed derivative.
+    ratio = float(np.max(np.abs(np.diff(q, axis=0)) * (len(q) - 1) / max_speed))
+    return int(math.ceil(ratio * fps * SPEED_MARGIN)) if ratio > 0 else 0
+
+
+def path_torque_ratio(qpos: np.ndarray, path: np.ndarray, move_s: float,
+                      saber: SaberSpec = NOMINAL_SABER) -> dict[str, float]:
+    """move_torque_ratio for a move along a sampled arm path instead of a straight joint line."""
+    if move_s <= 0:
+        raise ValueError(f"move_s must be > 0, got {move_s}")
+    ctx = _context(saber, SOFT_LIMIT_FACTOR)
+    model, data, dofs = ctx.arm.model, ctx.data, ctx.arm.dof_adr
+    tau, q, dq, ddq = _min_jerk_path(path, TORQUE_SAMPLES * 10 + 1)
+    limits = np.array([EFFORT_LIMIT_NM[name] for name in ARM_JOINTS])
+    peak = np.zeros(len(ARM_JOINTS))
+    for k in range(0, len(tau), 10):
+        data.qpos[:] = qpos
+        data.qpos[ctx.arm.qpos_adr] = q[k]
+        data.qvel[:] = 0.0
+        data.qvel[dofs] = dq[k] / move_s
+        data.qacc[:] = 0.0
+        data.qacc[dofs] = ddq[k] / move_s**2
+        mujoco.mj_inverse(model, data)
+        peak = np.maximum(peak, np.abs(data.qfrc_inverse[dofs]))
+    return {name: float(value) for name, value in zip(ARM_JOINTS, peak / limits)}
+
+
 @dataclass
 class _Solution:
     arm_q: np.ndarray  # (7,) absolute
@@ -296,6 +498,7 @@ class _Solution:
     position_error_m: float
     angle_error_deg: float
     collisions: list[str]
+    line_seeded: bool = False  # solved from the end of a blade line (blade_path "line")
 
     def ok(self, config: BladeConfig) -> bool:
         return (self.position_error_m <= config.position_tolerance_m
@@ -386,7 +589,7 @@ def _key_values(i: int, keys: list[BladeKey], solutions: dict[int, _Solution], b
     return lambda t: (sol.arm_q, base_waist[t] + sol.waist_delta)
 
 
-def _assemble(base: Motion, keys, spans, solutions) -> Motion:
+def _assemble(base: Motion, keys, spans, solutions, paths: dict[int, np.ndarray] | None = None) -> Motion:
     out = base.copy()
     base_arm = base.joint_pos[:, ARM_COLUMNS]
     base_waist = base.joint_pos[:, WAIST_COLUMNS]
@@ -401,7 +604,7 @@ def _assemble(base: Motion, keys, spans, solutions) -> Motion:
         if t < reach:
             s = float(minimum_jerk((t - start) / (reach - start)))
             arm_old, waist_old = values[i](t)
-            arm_new = (1 - s) * arm_old + s * arm_new
+            arm_new = path_at(paths[i], s) if paths and i in paths else (1 - s) * arm_old + s * arm_new
             waist_new = (1 - s) * waist_old + s * waist_new
         out.joint_pos[t, ARM_COLUMNS] = arm_new
         out.joint_pos[t, WAIST_COLUMNS] = waist_new
@@ -445,8 +648,14 @@ def apply_blade_script(base: Motion, keys: list[BladeKey], config: BladeConfig =
         padded = _pad_base(base, n_frames)
         qpos = g1.qpos_from_motion(padded)
         solutions = _solve_all(ctx, keys, spans, qpos, padded, config, solutions)
+        lines = _line_moves(ctx, keys, spans, solutions, qpos) if config.blade_path == "line" else {}
         needed = [min_move_frames(_move_delta(i, keys, spans, solutions, padded), speed_cap, fps)
                   if i or spans[0][1] > 0 else 0 for i in range(len(keys))]
+        for i, line in lines.items():
+            if line["used"]:
+                waist = min_move_frames(_move_delta(i, keys, spans, solutions, padded)[len(ARM_JOINTS):],
+                                        speed_cap[len(ARM_JOINTS):], fps)
+                needed[i] = max(path_move_frames(line["path"], speed_cap[:len(ARM_JOINTS)], fps), waist)
         current = [reach - start for start, reach, _ in spans]
         if all(n <= c for n, c in zip(needed, current)):
             break
@@ -454,12 +663,61 @@ def apply_blade_script(base: Motion, keys: list[BladeKey], config: BladeConfig =
     else:
         raise SchedulingError(f"speed stretch did not converge for script {[k.action for k in keys]}")
 
-    motion = _assemble(padded, keys, spans, solutions)
+    paths = {i: line["path"] for i, line in lines.items() if line["used"]}
+    motion = _assemble(padded, keys, spans, solutions, paths)
     motion, clamp = _clamp_speed(motion, speed_cap)
     motion.meta = {**base.meta, "bladework": True}
     reports = _key_reports(ctx, keys, spans, solutions, motion, padded, config)
-    summary = _summary(ctx, motion, padded, reports, clamp, config)
+    summary = _summary(ctx, motion, padded, reports, clamp, config, paths)
+    if config.blade_path == "line":
+        summary["line_moves"] = [{"key": i, "action": keys[i].action, "used": line["used"],
+                                  "tracking_max_m": round(line["tracking_max_m"], 4),
+                                  "end_mismatch_rad": round(line["end_mismatch_rad"], 4),
+                                  "body_shift_m": round(line["body_shift_m"], 4)}
+                                 for i, line in sorted(lines.items())]
     return BladeResult(motion, reports, summary, list(keys))
+
+
+def _line_moves(ctx, keys, spans, solutions, qpos) -> dict[int, dict]:
+    """blade_path="line": the path of every move between two keyed arm-only poses, solved on the body
+    at the key's reach frame. A move whose tracked end lands in another family, or whose tip cannot
+    follow the line, stays joint-space."""
+    lines = {}
+    for i in range(1, len(keys)):
+        if BASE_ACTION in (keys[i].action, keys[i - 1].action):
+            continue
+        line = _line_check(ctx, qpos, spans[i], solutions[i - 1], solutions[i])
+        if line is not None:
+            lines[i] = line
+    return lines
+
+
+def _line_check(ctx, qpos, span, before: _Solution, after: _Solution) -> dict | None:
+    """line_move between two keyed poses plus whether the move can use it; None where no line is
+    solved (no move, or a waist turn: the line is solved for the arm alone)."""
+    start, reach, _ = span
+    if reach <= start or np.any(before.waist_delta != 0) or np.any(after.waist_delta != 0):
+        return None
+    line = line_move(ctx, qpos[min(reach, len(qpos) - 1)], before.arm_q, after.arm_q)
+    line["body_shift_m"] = _body_tip_shift(ctx, qpos, start, reach, before.arm_q)
+    line["used"] = (line["end_mismatch_rad"] <= LINE_END_TOLERANCE_RAD
+                    and line["tracking_max_m"] <= LINE_TRACKING_TOLERANCE_M
+                    and line["body_shift_m"] <= LINE_BODY_SHIFT_TOLERANCE_M)
+    return line
+
+
+def _line_used(ctx, qpos, span, before: _Solution, after: _Solution) -> bool:
+    line = _line_check(ctx, qpos, span, before, after)
+    return line is not None and line["used"]
+
+
+def _body_tip_shift(ctx, qpos, start: int, reach: int, arm_q: np.ndarray) -> float:
+    """How far the base body alone moves the tip of a fixed arm pose over a move. The line is solved
+    on the body at the reach frame; a body that moves during the move carries the tip off it."""
+    last = len(qpos) - 1
+    tip_start, _ = _blade_tip(ctx, _with_arm(qpos[min(start, last)], ctx.arm, arm_q))
+    tip_reach, _ = _blade_tip(ctx, _with_arm(qpos[min(reach, last)], ctx.arm, arm_q))
+    return float(np.linalg.norm(tip_reach - tip_start))
 
 
 def _solve_all(ctx, keys, spans, qpos, padded, config, previous_round: dict[int, _Solution]) -> dict[int, _Solution]:
@@ -476,15 +734,33 @@ def _solve_all(ctx, keys, spans, qpos, padded, config, previous_round: dict[int,
         previous = by_action.get(target.name)
         if previous is not None and _reuse_ok(ctx, previous, frame_qpos, target, config):
             solutions[i] = previous  # same target again (e.g. back to guard): identical pose
-        elif i in previous_round and _reuse_ok(ctx, previous_round[i], frame_qpos, target, config):
-            solutions[i] = previous_round[i]  # only the timing moved; the pose still fits
+        elif (i in previous_round and _reuse_ok(ctx, previous_round[i], frame_qpos, target, config)
+              and not (previous_round[i].line_seeded
+                       and not _line_used(ctx, qpos, spans[i], solutions[i - 1], previous_round[i]))):
+            # Only the timing moved; the pose still fits. A pose solved from a blade line is kept only
+            # while its move can still use that line: otherwise it is solved again below, and falls
+            # back to the joint-space solution.
+            solutions[i] = previous_round[i]
         else:
             # A repeated target that no longer fits (the body moved under it) is re-solved from
             # its earlier pose, not from the previous key: the arm has 2 redundant DoF, and a warm
             # start from the cut lands in another solution family (advance_lunge_cut_v4: wrist
             # yaw -1.12 in the first guard, +1.45 in the last), which a policy cannot tell apart.
             seed = previous.arm_q if previous is not None else warm
-            solutions[i] = _solve_key(ctx, frame_qpos, target, seed, config, rng)
+            solution = None
+            if config.blade_path == "line" and previous is None and i > 0 and keys[i - 1].action != BASE_ACTION:
+                # Solve from where the blade line from the previous key ends: the family the move reaches.
+                # Kept only if the move can then use the line; otherwise the key is solved as in joint
+                # space, from the same random state, so a fallen-back move is the joint-space one.
+                state = rng.bit_generator.state
+                tip_target, dir_target = target_in_world(ctx, frame_qpos, target, config)
+                line_end = track_blade_line(ctx, frame_qpos, warm, tip_target, dir_target)[0][-1]
+                solved = _solve_key(ctx, frame_qpos, target, line_end, config, rng)
+                if _line_used(ctx, qpos, spans[i], solutions[i - 1], solved):
+                    solution = replace(solved, line_seeded=True)
+                else:
+                    rng.bit_generator.state = state
+            solutions[i] = solution if solution is not None else _solve_key(ctx, frame_qpos, target, seed, config, rng)
         by_action.setdefault(target.name, solutions[i])
         warm = solutions[i].arm_q
     return solutions
@@ -548,7 +824,8 @@ def _key_reports(ctx, keys, spans, solutions, motion: Motion, padded: Motion, co
     return reports
 
 
-def _summary(ctx, motion: Motion, padded: Motion, reports, clamp: dict, config: BladeConfig) -> dict:
+def _summary(ctx, motion: Motion, padded: Motion, reports, clamp: dict, config: BladeConfig,
+             paths: dict[int, np.ndarray] | None = None) -> dict:
     g1 = load_g1()
     qpos = g1.qpos_from_motion(motion)
     collision_frames, pairs = 0, set()
@@ -569,6 +846,7 @@ def _summary(ctx, motion: Motion, padded: Motion, reports, clamp: dict, config: 
     speeds = np.abs(np.diff(joints, axis=0)) * motion.fps
     fraction = speeds / hardware_velocity_limits()[CONTROLLED_COLUMNS]
     targets = [r for r in reports if r.action != BASE_ACTION]
+    torque = _peak_torque_demand(motion, qpos, targets, config, paths)
     return {
         "frames": motion.n_frames,
         "max_tip_error_m": max((r.tip_error_m for r in targets), default=0.0),
@@ -583,10 +861,33 @@ def _summary(ctx, motion: Motion, padded: Motion, reports, clamp: dict, config: 
         "speed_clamp": clamp,
         "waist_used": any(r.joint_set == "arm+waist" for r in targets),
         "wrist_pitch_yaw_max_abs_rad": float(np.abs(motion.joint_pos[:, WRIST_PITCH_YAW_COLUMNS]).max(initial=0.0)),
+        **torque,
         "config": {k: v for k, v in asdict(config).items() if k != "saber"},
         "target_frame": f"base right shoulder, axes: {config.heading}",
         "arm_reach_m": round(ctx.reach, 4),
     }
+
+
+def _peak_torque_demand(motion: Motion, qpos: np.ndarray, targets: list[KeyReport], config: BladeConfig,
+                        paths: dict[int, np.ndarray] | None = None) -> dict:
+    """Worst move_torque_ratio over the keyed moves of the final motion (body pinned at each reach);
+    a blade-line move is measured along its path (path_torque_ratio)."""
+    worst = {"max_torque_ratio": 0.0, "max_torque_ratio_joint": None, "max_torque_ratio_key": None}
+    for report in targets:
+        frames = int(round(report.move_s_used * motion.fps))
+        if frames <= 0:
+            continue
+        reach, start = report.frame, report.frame - frames
+        if paths and report.index in paths:
+            ratios = path_torque_ratio(qpos[reach], paths[report.index], frames / motion.fps, config.saber)
+        else:
+            ratios = move_torque_ratio(qpos[reach], motion.joint_pos[start, ARM_COLUMNS],
+                                       motion.joint_pos[reach, ARM_COLUMNS], frames / motion.fps, config.saber)
+        joint = max(ratios, key=ratios.get)
+        if ratios[joint] > worst["max_torque_ratio"]:
+            worst = {"max_torque_ratio": round(ratios[joint], 3), "max_torque_ratio_joint": joint,
+                     "max_torque_ratio_key": report.action}
+    return worst
 
 
 def script_summary(keys: list[BladeKey]) -> str:

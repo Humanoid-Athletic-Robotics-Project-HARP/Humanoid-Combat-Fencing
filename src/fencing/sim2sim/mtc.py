@@ -24,6 +24,7 @@ module turns that recording into the sim2sim report:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -48,6 +49,45 @@ RELEASE_MIN_MOTION_RAD = 1e-3
 # controller runs the whole motion one tick behind activation. sim2sim (like mjlab) observes
 # frame k at step k. Pairing tick k with frame k scored MTC 20 ms late (docs/mtc.md).
 CONTROLLER_REFERENCE_LAG_STEPS = 1
+# Where a run's score and recordings go, by start (docs/mtc.md): the held start's are the
+# documented results; a start from standby (--standby) must never delete or overwrite them.
+OUTPUTS = {False: ("mtc.json", "runs"), True: ("mtc_standby.json", "runs_standby")}
+CHAIN_OUTPUTS = ("mtc_entry.json", "runs_entry")
+# The chained start (docs/mtc.md, "Entry from standby"): the operator switches to the motion
+# policy this long after the entry reference ends, so the entry is scored with its full hold.
+CHAIN_ENTRY_HOLD_S = 2.0
+CHAIN_SWITCH_MARGIN_S = 0.5
+
+
+def run_outputs(standby: bool, chain: bool = False) -> tuple[str, str]:
+    """(score JSON name in the export dir, directory under $HCF_DATA/mtc for the recordings)."""
+    return CHAIN_OUTPUTS if chain else OUTPUTS[bool(standby)]
+
+
+def chain_motion_view(recording: dict) -> dict:
+    """The recording as the motion policy (walking_controller1) sees it, for score_recording: its
+    activation and controller stats in the scorer's place, and the entry (walking_controller) in
+    standby_controller's column of `activity` (rows: stamp, previous controller active, policy
+    active), so the switch report reads entry -> motion as it reads standby -> policy."""
+    if len(recording.get("activation1_t", ())) == 0:
+        raise RecordingIncomplete("walking_controller1 never became active in the recording (the R1 + X switch)")
+    view = dict(recording)
+    view["activation_t"] = recording["activation1_t"]
+    view["activity"] = recording["activity_chain"]
+    for key in ("stat_t", "stat_period", "stat_samples"):
+        view[key] = recording.get(key.replace("stat", "stat1"), np.zeros((0,)))
+    return view
+
+
+def chain_entry_hold_seconds(entry_activation: float, motion_activation: float, entry_frames: int,
+                             hold_seconds: float = CHAIN_ENTRY_HOLD_S) -> float:
+    """End hold the entry can be scored with: what fits between the end of its reference and the
+    switch to the motion policy, less two policy steps (no scored state after the switch)."""
+    fits = motion_activation - entry_activation - entry_frames * POLICY_PERIOD_S - 2 * POLICY_PERIOD_S
+    if fits < 0:
+        raise RecordingIncomplete(f"switched to the motion {motion_activation - entry_activation:.2f} s after the "
+                                  f"entry, before the entry reference ended ({entry_frames * POLICY_PERIOD_S:.2f} s)")
+    return min(hold_seconds, round(fits, 6))
 
 
 def tick_phase(joint_t: np.ndarray, effort: np.ndarray, activation_t: float, period: float = POLICY_PERIOD_S,
@@ -291,6 +331,19 @@ def write_start_qpos(export_dir: Path, out: Path, mtc_mjcf: Path) -> Path:
     return out
 
 
+def write_standing_qpos(out: Path, mtc_mjcf: Path) -> Path:
+    """For a start from standby: MTC's MJCF in its own default pose, standing on the floor
+    (fencing.sim2sim.mtc_standby.standing_qpos), held until standby_controller first commands."""
+    import mujoco
+
+    from fencing.sim2sim.mtc_standby import standing_qpos
+
+    qpos = standing_qpos(mujoco.MjModel.from_xml_path(str(mtc_mjcf)))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(" ".join(f"{v:.9g}" for v in qpos) + "\n")
+    return out
+
+
 def site_in_body(mjcf: Path, site: str = SITE_NAME, body: str = SITE_BODY):
     """Fixed pose of `site` in `body` from MTC's MJCF (unitree_description g1.xml)."""
     import mujoco
@@ -376,7 +429,9 @@ class Replayer:
 
 
 def score_recording(export_dir: Path, recording: dict, mtc_mjcf: Path, seconds: float | None,
-                    hold_seconds: float, settle_seconds: float = 0.0) -> dict:
+                    hold_seconds: float, settle_seconds: float = 0.0, standby_urdf: Path | None = None) -> dict:
+    """standby_urdf: the run started from standby (mtc_sim2sim.sh --standby); adds `standby`, the
+    transition report, with joint velocity limits from this URDF (the controller's robot model)."""
     import mujoco
 
     from fencing.sim2sim import rollout as sim
@@ -464,7 +519,93 @@ def score_recording(export_dir: Path, recording: dict, mtc_mjcf: Path, seconds: 
     }
     if key_frames:
         result["key_frames"] = key_frames.report()
+    if standby_urdf is not None:
+        result["standby"] = standby_report(recording, replay, state, reference, columns, times, activation,
+                                           min(scorer.total_steps, recorded_steps), motion_steps, mtc_mjcf,
+                                           standby_urdf)
     return result
+
+
+def standby_report(recording: dict, replay: Replayer, state, reference, columns, times, activation: float,
+                   num_steps: int, motion_steps: int, mtc_mjcf: Path, urdf: Path) -> dict:
+    """The switch from standby_controller to the policy (docs/mtc.md, "Start from standby").
+
+    Ground truth throughout (simulator pelvis track and joint states). The transition window
+    runs from the switch to convergence, or to the end of the recording if it never converged."""
+    import mujoco
+
+    from fencing.sim2sim import mtc_standby as sb
+    from fencing.sim2sim.rollout import FOOT_BODIES
+
+    names = list(state.contract.joint_names)
+    joint_t, joint_pos = recording["joint_t"], recording["joint_pos"][:, columns]
+    bt, pos, quat, lin, _ = replay.base_track()
+    start_state = sb.standby_state_report(recording.get("activity", np.zeros((0, 3))), bt, pos, quat, lin,
+                                          joint_t, recording["joint_vel"][:, columns], activation)
+    errors = sb.step_joint_errors(joint_t, joint_pos, reference.joint_pos[:motion_steps], times, num_steps)
+    window = int(round(sb.CONVERGED_WINDOW_S / POLICY_PERIOD_S))
+    converged = sb.convergence_step(errors, sb.CONVERGED_JOINT_ERROR_RAD, window)
+
+    q_switch, _ = interpolate_samples(joint_t, joint_pos, np.array([activation]))
+    offset = q_switch[0] - reference.joint_pos[0]
+    largest = np.argsort(-np.abs(offset))[:3]
+
+    first_s = (activation, activation + 1.0)
+    model = mujoco.MjModel.from_xml_path(str(mtc_mjcf))
+    effort_limits = np.array([model.jnt_actfrcrange[model.joint(n).id, 1] for n in names])
+    velocity_limits = sb.urdf_limits(Path(urdf).read_text(), names, "velocity")
+
+    # Transition window: switch to the first state of the converged window (or the last step).
+    end_step = converged if converged is not None else num_steps - 1
+    track_times = np.concatenate([[activation], times[1:end_step + 2]])
+    anchor, pelvis, feet = [], [], []
+    body_names = list(state.contract.body_names)
+    foot_ids = [state.body_ids[body_names.index(n)] for n in FOOT_BODIES]
+    for t in track_times:
+        replay.set_state(float(t))
+        anchor.append(state.anchor_pose(replay.data)[0].copy())
+        pelvis.append(replay.data.qpos[replay.qadr:replay.qadr + 3].copy())
+        feet.append(replay.data.xpos[foot_ids].copy())
+    anchor, pelvis, feet = np.array(anchor), np.array(pelvis), np.array(feet)
+    anchor_index = body_names.index(state.contract.anchor_body_name)
+    ref_anchor_end = reference.body_pos_w[min(end_step, motion_steps - 1), anchor_index]
+    return {
+        "start_state": start_state,
+        "switch": {
+            "activation_sim_s": activation,
+            "joint_offset_from_first_frame_rad": {
+                "mean_abs": float(np.abs(offset).mean()),
+                "largest": {names[i]: float(offset[i]) for i in largest}},
+        },
+        "convergence": {
+            "line_rad": sb.CONVERGED_JOINT_ERROR_RAD, "window_s": sb.CONVERGED_WINDOW_S,
+            "step": converged,
+            "after_switch_s": None if converged is None else float(times[converged + 1] - activation),
+            "joint_error_first_step_rad": float(errors[0]),
+            "joint_error_peak_rad": float(errors.max()),
+            # Same per-step definition as joint_angle_error_rad, every motion step, no termination.
+            "whole_motion_joint_error_rad": float(errors[:motion_steps].mean()),
+        },
+        "first_second": {
+            "joint_velocity_fraction_of_limit": sb.peak_fraction(joint_t, recording["joint_vel"][:, columns],
+                                                                 velocity_limits, names, *first_s),
+            # /joint_states effort is the torque the simulator applied, clamped at the limit.
+            "torque_fraction_of_limit": sb.peak_fraction(joint_t, recording["joint_effort"][:, columns],
+                                                         effort_limits, names, *first_s),
+        },
+        "transition": {
+            "until_s": float(track_times[-1] - activation),
+            "anchor_xy_displacement_m": float(np.linalg.norm(anchor[-1, :2] - anchor[0, :2])),
+            "anchor_xy_max_displacement_m": float(np.linalg.norm(anchor[:, :2] - anchor[0, :2], axis=1).max()),
+            # Against the reference as MotionCommandTerm::reset placed it at the switch.
+            "anchor_error_at_end_m": float(np.linalg.norm(anchor[-1] - ref_anchor_end)),
+            "pelvis_height_at_switch_m": float(pelvis[0, 2]),
+            "pelvis_min_height_m": float(pelvis[:, 2].min()),
+            "foot_lift_max_m": {n: float((feet[:, i, 2] - feet[0, i, 2]).max()) for i, n in enumerate(FOOT_BODIES)},
+            "foot_xy_moved_m": {n: float(np.linalg.norm(feet[-1, i, :2] - feet[0, i, :2]))
+                                for i, n in enumerate(FOOT_BODIES)},
+        },
+    }
 
 
 def timing_report(recording: dict, activation: float, phase: float, worst_gap: float) -> dict:
@@ -544,8 +685,21 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--write-start-qpos", type=Path, metavar="TXT",
                         help="write the reference's first frame as a qpos of MTC's MJCF (for mtc_sim2sim.sh) and exit")
     parser.add_argument("--plan", action="store_true",
-                        help="print '<export dir> <seconds to record past activation>' and exit (for mtc_sim2sim.sh)")
-    parser.add_argument("--out", type=Path, help="output JSON (default: <export dir>/mtc.json)")
+                        help="print '<export dir> <seconds to record past activation> <output JSON name> <runs dir "
+                             "name>' and exit (for mtc_sim2sim.sh)")
+    parser.add_argument("--standby", action="store_true",
+                        help="the run starts from standby_controller and the operator's switch (docs/mtc.md, 'Start "
+                             "from standby'): --write-start-qpos writes the model's default standing pose, scoring "
+                             "adds the transition report and the after-convergence score, and the default output "
+                             "is <export dir>/mtc_standby.json")
+    parser.add_argument("--urdf", type=Path, help="with --standby: the controller's robot URDF, for joint velocity "
+                        "limits (default: $HCF_DATA/mtc/g1_mujoco.urdf; the saber URDF has the same joints)")
+    parser.add_argument("--entry", help="with --standby: the chained start (docs/mtc.md, 'Entry from standby'), "
+                        "this entry policy (export dir or run, as target) runs first as walking_controller and the "
+                        "target runs as walking_controller1; the target is scored from the second switch, the entry "
+                        "up to it, and the default output is <export dir>/mtc_entry.json")
+    parser.add_argument("--out", type=Path, help="output JSON (default: <export dir>/mtc.json, or mtc_standby.json "
+                        "with --standby)")
     parser.add_argument("--extra", type=Path, help="JSON merged into the report (run settings)")
     return parser
 
@@ -553,43 +707,70 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     from fencing.sim2sim import mtc_plant
     from fencing.sim2sim.cli import resolve_export_dir, summary_line
-    from fencing.train import thresholds
 
     parser = build_parser()
     args = parser.parse_args(argv)
 
+    if args.entry and not args.standby:
+        parser.error("--entry needs --standby: the chained start begins under standby_controller")
     export_dir = resolve_export_dir(args.target, args.checkpoint)
+    entry_dir = resolve_export_dir(args.entry, None) if args.entry else None
+    out_name, runs_dir = run_outputs(args.standby, chain=entry_dir is not None)
     if args.plan:
         frames = int(json.loads((export_dir / "export.json").read_text())["motion_frames"])
-        print(export_dir, record_seconds(frames, args.seconds, args.hold_seconds))
+        plan = [export_dir, record_seconds(frames, args.seconds, args.hold_seconds), out_name, runs_dir]
+        if entry_dir is not None:
+            entry_frames = int(json.loads((entry_dir / "export.json").read_text())["motion_frames"])
+            plan += [entry_dir, record_seconds(entry_frames, None, CHAIN_ENTRY_HOLD_S, CHAIN_SWITCH_MARGIN_S)]
+        print(*plan)
         return 0
     plant = mtc_plant.policy_plant(export_dir)
     mtc_mjcf = args.mtc_mjcf or (mtc_plant.MODELS_DIR / mtc_plant.SABER_MJCF_NAME if plant == mtc_plant.SABER
                                  else mtc_plant.ROOTFS_G1_MJCF)
     mtc_plant.require_plant(plant, mtc_mjcf)
+    if entry_dir is not None:
+        # One simulator, one plant: both policies must have been trained on it.
+        mtc_plant.require_plant(mtc_plant.policy_plant(entry_dir), mtc_mjcf)
     if args.write_start_qpos:
-        print(write_start_qpos(export_dir, args.write_start_qpos, mtc_mjcf))
+        if args.standby:
+            print(write_standing_qpos(args.write_start_qpos, mtc_mjcf))
+        else:
+            print(write_start_qpos(export_dir, args.write_start_qpos, mtc_mjcf))
         return 0
     if args.recording is None:
         parser.error("--recording is required unless --plan or --write-start-qpos")
-    out = args.out or export_dir / "mtc.json"
+    out = args.out or export_dir / out_name
     extra = json.loads(args.extra.read_text()) if args.extra else {}
+    standby_urdf = (args.urdf or mtc_plant.BASE_URDF) if args.standby else None
+    entry_result = None
     try:
-        result = score_recording(export_dir, load_recording(args.recording), mtc_mjcf, args.seconds,
-                                 args.hold_seconds, args.settle_seconds)
+        recording = load_recording(args.recording)
+        scored = chain_motion_view(recording) if entry_dir is not None else recording
+        result = score_recording(export_dir, scored, mtc_mjcf, args.seconds,
+                                 args.hold_seconds, args.settle_seconds, standby_urdf=standby_urdf)
+        if entry_dir is not None:
+            entry_frames = int(json.loads((entry_dir / "export.json").read_text())["motion_frames"])
+            entry_hold = chain_entry_hold_seconds(float(recording["activation_t"][0]),
+                                                  float(scored["activation_t"][0]), entry_frames)
+            entry_result = score_recording(entry_dir, recording, mtc_mjcf, None, entry_hold,
+                                           standby_urdf=standby_urdf)
     except RecordingIncomplete as error:
         out.write_text(json.dumps({"kind": "mtc_sim2sim", "export_dir": str(export_dir), "plant": plant,
                                    "recording": str(args.recording), **extra, "nominal": {},
                                    "invalid_reasons": [str(error)], "verdict": "INVALID"}, indent=2) + "\n")
         print(f"[mtc]   INVALID {error}\n[mtc] INVALID -> {out}")
         return EXIT_INVALID
-    checks = thresholds.check(result, thresholds.load_thresholds(None, None))
-    nominal_checks = [c for c in checks if c.metric.startswith("nominal.")]
-    incomplete = list(thresholds.incomplete_reasons(result))
+    nominal_checks, judged = _judge(result)
     invalid = timing_problems(result["timing"])
-    if not result["recording_complete"]:
-        incomplete.append(f"recording ended after {result['steps_run']} of "
-                          f"{result['motion_steps'] + result['hold_steps']} policy steps")
+    # The run tests the switch from a robot standing under standby; anything else is not that test.
+    # Chained, that is the first switch (to the entry). Whether the entry's hold is still at the
+    # second switch is a result, reported in standby.start_state, not a broken test.
+    first = entry_result if entry_result is not None else result
+    if args.standby and not first["standby"]["start_state"]["still"]:
+        invalid += [f"not standing still under standby_controller before the switch: {r}"
+                    for r in first["standby"]["start_state"]["reasons"]]
+    if entry_result is not None:
+        invalid += [f"entry: {p}" for p in timing_problems(entry_result["timing"])]
     report = {
         "kind": "mtc_sim2sim",
         "export_dir": str(export_dir),
@@ -601,9 +782,30 @@ def main(argv: list[str] | None = None) -> int:
         "thresholds": [c.__dict__ for c in nominal_checks],
         "invalid_reasons": invalid,
         # INVALID, not FAIL: the policy was not judged, the recording was too coarse to judge it.
-        "verdict": "INVALID" if invalid else thresholds.verdict(nominal_checks, thresholds.not_applicable(result),
-                                                                incomplete),
+        "verdict": "INVALID" if invalid else judged,
     }
+    if args.standby:
+        report["after_convergence"] = after_convergence(export_dir, scored, mtc_mjcf, args.seconds,
+                                                        args.hold_seconds, result)
+    if entry_result is not None:
+        entry_checks, entry_verdict = _judge(entry_result)
+        report["entry"] = {
+            "export_dir": str(entry_dir),
+            # Which entry policy ran: the eval dir name alone does not survive a re-export.
+            "run": entry_dir.parent.name,
+            "onnx_sha256": hashlib.sha256((entry_dir / "policy.onnx").read_bytes()).hexdigest(),
+            "scored_hold_seconds": entry_result["hold_steps"] * POLICY_PERIOD_S,
+            **{k: entry_result[k] for k in ("motion_steps", "steps_run", "terminated_at_s", "termination_terms",
+                                            "recording_complete", "nominal", "timing", "standby")},
+            "thresholds": [c.__dict__ for c in entry_checks],
+            "verdict": entry_verdict,
+        }
+    if invalid:
+        # The nested verdicts come from the same broken test; leaving a PASS there misleads anyone
+        # who reads one block without the top level.
+        for part in ("after_convergence", "entry"):
+            if part in report and report[part].get("verdict") is not None:
+                report[part]["verdict"] = "INVALID"
     sim2sim_json = export_dir / "sim2sim.json"
     if sim2sim_json.is_file():
         report["gap_vs_sim2sim"] = sim2sim_gap(result["nominal"], json.loads(sim2sim_json.read_text()))
@@ -625,10 +827,51 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[mtc] gap vs sim2sim.json (mtc - sim2sim): {gaps}")
     for check in nominal_checks:
         print(f"[mtc]   {check.line()}")
+    if args.standby:
+        conv, late = result["standby"]["convergence"], report["after_convergence"]
+        print(f"[mtc] standby start: {result['standby']['start_state']}")
+        print(f"[mtc] converged (joint error < {conv['line_rad']} rad for {conv['window_s']} s) at step {conv['step']}, "
+              f"{conv['after_switch_s']} s after the switch")
+        if late["nominal"]:
+            print(f"[mtc] after convergence: {summary_line(late['nominal'])} -> {late['verdict']}")
+    if entry_result is not None:
+        e = report["entry"]
+        print(f"[mtc] entry {entry_dir.parent.name}: {summary_line(e['nominal'])} -> {e['verdict']}; switched to the "
+              f"motion {result['timing']['activation_sim_s'] - e['timing']['activation_sim_s']:.2f} s after the entry")
     for reason in invalid:
         print(f"[mtc]   INVALID {reason}")
     print(f"[mtc] {report['verdict']} -> {out}")
     return EXIT_INVALID if invalid else 0
+
+
+def _judge(result: dict):
+    """Nominal threshold checks and verdict of a scored result, as for every MTC run (INVALID aside)."""
+    from fencing.train import thresholds
+
+    checks = thresholds.check(result, thresholds.load_thresholds(None, None))
+    nominal_checks = [c for c in checks if c.metric.startswith("nominal.")]
+    incomplete = list(thresholds.incomplete_reasons(result))
+    if not result["recording_complete"]:
+        incomplete.append(f"recording ended after {result['steps_run']} of "
+                          f"{result['motion_steps'] + result['hold_steps']} policy steps")
+    return nominal_checks, thresholds.verdict(nominal_checks, thresholds.not_applicable(result), incomplete)
+
+
+def after_convergence(export_dir: Path, recording: dict, mtc_mjcf: Path, seconds: float | None, hold_seconds: float,
+                      result: dict) -> dict:
+    """The same recording scored from the convergence step on, with the existing settle window
+    (docs/mtc.md, scoring conventions): steps before it are neither scored nor checked for
+    termination, and the reference is placed on the robot's anchor there. The transition's own
+    displacement is reported separately (standby.transition)."""
+    step = result["standby"]["convergence"]["step"]
+    if step is None or step >= result["motion_steps"]:
+        return {"settle_seconds": None, "nominal": {}, "verdict": None,
+                "reason": "never converged" if step is None else "converged only in the end hold"}
+    late = score_recording(export_dir, recording, mtc_mjcf, seconds, hold_seconds, settle_seconds=step * POLICY_PERIOD_S)
+    checks, verdict = _judge(late)
+    return {"settle_seconds": late["settle_seconds"], "steps_scored": late["steps_run"] - step,
+            "terminated_at_s": late["terminated_at_s"], "termination_terms": late["termination_terms"],
+            "nominal": late["nominal"], "thresholds": [c.__dict__ for c in checks], "verdict": verdict}
 
 
 if __name__ == "__main__":

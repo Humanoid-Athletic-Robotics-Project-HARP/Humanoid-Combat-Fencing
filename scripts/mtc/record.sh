@@ -12,6 +12,14 @@
 # <seconds> past the activation (or a wall-clock cap); then every process this script started
 # is stopped and the bag is flattened to out/bag.npz. <urdf> <mjcf> override the robot models.
 # $MTC_LAUNCH_ARGS is passed to the launch (e.g. "ext_pos_corr:=true").
+# $MTC_STANDBY_SWITCH_S (start from standby, docs/mtc.md "Start from standby"): spawn
+# standby_controller active and walking_controller inactive, as upstream's real.launch.py, and
+# send the operator's R1 + A switch (switch_after.py) that many sim seconds after standby is
+# active. The hold then releases at standby's first command, not the policy's.
+# $MTC_CHAIN_POLICY + $MTC_CHAIN_SWITCH_S (the chained start, docs/mtc.md "Entry from standby";
+# needs $MTC_STANDBY_SWITCH_S): <policy.onnx> is the entry policy (walking_controller), and
+# $MTC_CHAIN_POLICY runs as walking_controller1, switched to (R1 + X) $MTC_CHAIN_SWITCH_S sim
+# seconds after the entry became active. <seconds> then count from walking_controller1's activation.
 set -o pipefail
 POLICY="${1:?policy.onnx}"; OUT="${2:?out dir}"; SECONDS_AFTER="${3:?seconds}"; HOLD_QPOS="${4:?start qpos file or -}"
 URDF="${5:-}"; MJCF="${6:-}"
@@ -41,6 +49,13 @@ if [ "$HOLD_QPOS" != "-" ]; then
   # which makes the start independent of activation time (docs/mtc.md, delay3 runs).
   # $MTC_LAUNCH_ARGS comes later on the command line and overrides it.
   HOLD_ARGS=(hold_qpos_file:="$HOLD_QPOS" spawn_delay:=3)
+fi
+STANDBY_S="${MTC_STANDBY_SWITCH_S:-}"
+[ -n "$STANDBY_S" ] && HOLD_ARGS+=(start_controller:=standby_controller)
+CHAIN_POLICY="${MTC_CHAIN_POLICY:-}"; CHAIN_S="${MTC_CHAIN_SWITCH_S:-}"; SCORED=walking_controller
+if [ -n "$CHAIN_POLICY" ]; then
+  [ -n "$STANDBY_S" ] && [ -n "$CHAIN_S" ] || { echo "MTC_CHAIN_POLICY needs MTC_STANDBY_SWITCH_S and MTC_CHAIN_SWITCH_S"; exit 2; }
+  HOLD_ARGS+=(chain_policy_path:="$CHAIN_POLICY"); SCORED=walking_controller1
 fi
 export ROS_DOMAIN_ID="${MTC_ROS_DOMAIN_ID:-77}" ROS_LOCALHOST_ONLY=1 RCUTILS_COLORIZED_OUTPUT=0
 TOPICS=(/clock /joint_states /mid360 /imu_in_pelvis /odom /controller_manager/activity
@@ -94,10 +109,18 @@ ros2 launch "$HERE/mujoco_custom.launch.py" policy_path:="$POLICY" "${HOLD_ARGS[
 LAUNCH_PID=$!
 WALL_CAP="${MTC_WALL_CAP_S:-$((SECONDS_AFTER * 4 + 120))}"
 
+WAIT_STATUS=0
+if [ -n "$STANDBY_S" ]; then
+  # Standby first; the policy is activated only by the switch, like the operator's button.
+  python3 "$HERE/switch_after.py" "$STANDBY_S" "$WALL_CAP" ${CHAIN_S:+"$CHAIN_S"} >"$WORK/switch.log" 2>&1 || {
+    SWITCH_STATUS=$?; echo "standby switch failed (status $SWITCH_STATUS), see $OUT/switch.log"; WAIT_STATUS=5; }
+fi
 # Wait until the walking controller is active, then until sim time passes activation + seconds.
-python3 "$HERE/wait_sim_time.py" "$SECONDS_AFTER" "$WALL_CAP" \
-  >"$WORK/wait.log" 2>&1
-WAIT_STATUS=$?
+if [ "$WAIT_STATUS" -eq 0 ]; then
+  python3 "$HERE/wait_sim_time.py" "$SECONDS_AFTER" "$WALL_CAP" "$SCORED" \
+    >"$WORK/wait.log" 2>&1
+  WAIT_STATUS=$?
+fi
 ros2 control list_controllers >"$WORK/controllers.txt" 2>&1
 cleanup; trap - EXIT
 cp -r "$WORK/bag" "$WORK"/*.log "$WORK/controllers.txt" "$OUT/" 2>/dev/null

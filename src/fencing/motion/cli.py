@@ -11,6 +11,7 @@
     fencing motion blade-all [--base-en-garde X.csv] [--base-advance-lunge Y.csv] [--publish]
     fencing motion blade-list
     fencing motion key-frames [motions/cut_head_v3.json ...] [--write]
+    fencing motion rebuild [--recipe motions/recipes/goal1.toml] [--only NAME ...] [--compare] [--publish]
 """
 
 from __future__ import annotations
@@ -96,7 +97,7 @@ def _write_clean_output(result, out_csv: Path, extra: dict) -> Path:
 
 def _maybe_publish(result, label: str, clip: str, config, allow_warn: bool, render: bool) -> Path | None:
     from fencing.motion.pipeline import config_dict, provenance_for
-    from fencing.motion.publish import publish_motion
+    from fencing.motion.publish import publish_if_new, publish_message
 
     verdict = result.report["verdict"]
     allowed = ("pass", "warn") if allow_warn else ("pass",)
@@ -104,9 +105,9 @@ def _maybe_publish(result, label: str, clip: str, config, allow_warn: bool, rend
         print(f"  not published: verdict {verdict} ({'; '.join(result.report['reasons'])})", file=sys.stderr)
         return None
     prov = provenance_for(result, clip, config)
-    path = publish_motion(result.motion, label, prov, record={**result.record(), "config": config_dict(config)})
-    print(f"  published {path}")
-    if render:
+    path, is_new = publish_if_new(result.motion, label, prov, record={**result.record(), "config": config_dict(config)})
+    print(f"  {publish_message(path, is_new)}")
+    if render and is_new:
         _render_pair(None, path, path.with_suffix(".png"))
     return path
 
@@ -303,7 +304,7 @@ def cmd_trim(args) -> int:
 
 def cmd_publish(args) -> int:
     from fencing.motion.io import read_csv
-    from fencing.motion.publish import Provenance, publish_motion
+    from fencing.motion.publish import Provenance, publish_if_new, publish_message
     from fencing.motion.quality import quality_report, summary_line
 
     motion = read_csv(args.csv, fps=args.fps)
@@ -312,26 +313,61 @@ def cmd_publish(args) -> int:
         print(f"refusing to publish a failing motion ({'; '.join(report['reasons'])}); --force overrides", file=sys.stderr)
         return 1
     prov = Provenance(args.source, args.segment, args.hand_note, args.cleanup, args.notes or summary_line(report))
-    path = publish_motion(motion, args.name, prov, record={"quality": report, "input": str(args.csv)})
-    print(f"published {path}")
+    path, is_new = publish_if_new(motion, args.name, prov, record={"quality": report, "input": str(args.csv)})
+    print(publish_message(path, is_new))
+    return 0
+
+
+def cmd_entry(args) -> int:
+    """Standby pose -> a motion's first frame, held (docs/mtc.md, "Entry from standby")."""
+    from fencing.motion import entry
+    from fencing.motion.io import read_csv, write_csv
+    from fencing.motion.publish import Provenance, publish_if_new, publish_message
+    from fencing.motion.quality import quality_report, summary_line
+
+    target = read_csv(args.target)
+    result = entry.build_entry(target, frame=args.frame)
+    report = quality_report(result.motion)
+    record = {"entry": {"target": Path(args.target).name, "frame": args.frame, **result.report}, "quality": report}
+    out = Path(args.out) if args.out else paths.DATA / "motion" / "entry" / f"{args.name}.csv"
+    write_csv(result.motion, out)
+    out.with_suffix(".json").write_text(json.dumps(record, indent=2) + "\n")
+    phases = ", ".join(f"{p['label']} {p['start_s']:.2f}-{p['end_s']:.2f}" for p in result.report["phases"])
+    print(f"{args.name} -> {out}  ({result.report['duration_s']:.2f} s: {phases})")
+    print(f"  check: {report['verdict']} {summary_line(report)}")
+    if not args.publish:
+        return 0
+    if report["verdict"] != "pass":
+        print(f"refusing to publish: quality {report['verdict']} ({'; '.join(report['reasons'])})", file=sys.stderr)
+        return 1
+    prov = Provenance(f"synthetic: standby_controller default_position -> {Path(args.target).name} frame {args.frame}",
+                      "whole motion", "R", "fencing.motion.entry (leg IK, CoM over the stance sole)",
+                      summary_line(report))
+    path, is_new = publish_if_new(result.motion, args.name, prov, record=record, allow_unknown_name=True)
+    print(publish_message(path, is_new))
     return 0
 
 
 # ---------------------------------------------------------------- bladework (Phase 1.4d)
 
 
-def _blade_config(args):
+def _blade_config(args, recipe: str | None = None):
+    from fencing.motion import rebuild
     from fencing.saber.keyframes import BladeConfig
 
+    blade_path = args.blade_path
+    if blade_path == "recipe":  # the recipe says which motions move the tip on the line (thrust, cut_flank, extension)
+        blade_path = rebuild.blade_paths(rebuild.load_recipe(rebuild.GVHMR_RECIPE)).get(recipe, "joint")
     return BladeConfig(velocity_fraction=args.velocity_fraction, heading=args.heading, allow_waist=not args.no_waist,
-                       end_hold_s=args.end_hold)
+                       end_hold_s=args.end_hold, blade_path=blade_path)
 
 
-def _run_blade(name: str, base, args, script) -> int:
+def _run_blade(name: str, base, args, script, recipe: str | None = None) -> int:
     """Run one blade script, write HCF_DATA/motion/blade/<name>.csv, optionally render + publish."""
+    from fencing.motion.publish import identical_version, publish_message
     from fencing.saber import recipes
 
-    result = recipes.run_script(name, base, script, _blade_config(args))
+    result = recipes.run_script(name, base, script, _blade_config(args, recipe))
     out_dir = Path(args.out_dir) if getattr(args, "out_dir", None) else recipes.BLADE_DIR
     out = Path(args.out) if getattr(args, "out", None) else out_dir / f"{name}.csv"
     recipes.write_outputs(result, out)
@@ -350,6 +386,10 @@ def _run_blade(name: str, base, args, script) -> int:
         print(f"  contact sheet {png}")
     ok = result.quality["verdict"] in PUBLISHABLE and result.blade_ok
     if args.publish:
+        same = identical_version(result.blade.motion, name, paths.MOTIONS_DIR)
+        if same is not None:  # publish_motion would write nothing; say so rather than "published"
+            print(f"  {publish_message(same, False)}")
+            return 0 if ok else 1
         published = recipes.publish(result, allow_warn=args.allow_warn)
         if published is None:
             print(f"  not published: verdict {result.quality['verdict']}, keys off target {s['keys_off_target'] or '-'}, "
@@ -365,7 +405,7 @@ def cmd_blade(args) -> int:
     if args.script in recipes.RECIPES:
         base = recipes.load_base(recipes.base_kind(args.script), args.base)
         script = recipes.recipe_script(args.script, base, args.cut, args.hit_at)
-        return _run_blade(args.name or args.script, base, args, script)
+        return _run_blade(args.name or args.script, base, args, script, recipe=args.script)
     path = Path(args.script)
     if not path.exists():
         print(f"error: --script {args.script!r} is neither a recipe ({', '.join(recipes.RECIPES)}) nor a JSON file", file=sys.stderr)
@@ -392,7 +432,7 @@ def cmd_blade_all(args) -> int:
         if kind not in bases:
             bases[kind] = recipes.load_base(kind, sources[kind])
         script = recipes.recipe_script(name, bases[kind], args.cut, args.hit_at)
-        worst = max(worst, _run_blade(name, bases[kind], args, script))
+        worst = max(worst, _run_blade(name, bases[kind], args, script, recipe=name))
     return worst
 
 
@@ -429,6 +469,39 @@ def cmd_key_frames(args) -> int:
     return 0
 
 
+def cmd_rebuild(args) -> int:
+    """Every motion of a recipe from the retarget CSVs (docs/pipeline.md, "Rebuilding every motion and policy")."""
+    from fencing.motion import rebuild
+
+    if args.publish and args.from_published:
+        print("error: --from-published is for verification only and cannot be combined with --publish", file=sys.stderr)
+        return 2
+    try:
+        recipe = rebuild.load_recipe(args.recipe)
+        out = Path(args.out) if args.out else rebuild.REBUILD_DIR / Path(args.recipe).stem
+        job = rebuild.Rebuild(recipe, out, csv_dir=args.csv_dir, anchors=tuple(args.from_published or ()),
+                              compare=args.compare)
+        recipe.order(args.only)  # unknown names fail before any work
+    except rebuild.RecipeError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    def show(outcome) -> None:
+        print("\n".join(rebuild.outcome_lines(outcome, recipe)), flush=True)
+
+    outcomes = job.run(args.only, on_outcome=show)
+    status = job.publish(allow_warn_all=args.allow_warn) if args.publish else None
+    print(f"\noutputs: {out} (summary.json, <motion>.report.json)")
+    print(rebuild.summary_table(outcomes, recipe, status))
+    failed = [o.name for o in outcomes if o.error or (o.quality or {}).get("verdict") == "fail"]
+    unpublished = [n for n, s in (status or {}).items() if s.kind == "refused"]
+    if not args.publish:
+        print("scratch only: nothing in motions/ was written (--publish writes new versions)")
+    elif not any(s.kind == "new" for s in status.values()):
+        print("nothing new to publish: every motion built is identical to a published version in motions/")
+    return 1 if failed or unpublished else 0
+
+
 def _add_blade_options(p: argparse.ArgumentParser) -> None:
     g = p.add_argument_group("bladework options")
     g.add_argument("--velocity-fraction", type=float, default=0.5, help="joint speed cap as a fraction of the motor limit (default 0.5)")
@@ -437,6 +510,9 @@ def _add_blade_options(p: argparse.ArgumentParser) -> None:
     g.add_argument("--end-hold", type=float, default=2.0,
                    help="static hold after the last key, s (default 2.0: the eval holds the last frame 2 s, and "
                         "training only teaches standing as long as the reference does)")
+    g.add_argument("--blade-path", choices=["recipe", "joint", "line"], default="recipe",
+                   help="how the arm moves between keys: joint space, the tip on the straight line, or recipe "
+                        "(default: what motions/recipes/goal1_gvhmr.toml sets for the recipe; else joint)")
     g.add_argument("--cut", default="cut_head", help="advance_lunge_cut: which cut lands at touchdown (default cut_head)")
     g.add_argument("--hit-at", type=float, help="advance_lunge_cut: time the cut lands, s (default: detected front-foot touchdown)")
     g.add_argument("--render", action="store_true", help="contact sheet PNG with the saber, frames at the keys")
@@ -523,6 +599,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--force", action="store_true")
     p.set_defaults(func=cmd_publish)
 
+    p = sub.add_parser("entry", help="entry motion: upstream standby pose -> a motion's first frame, held")
+    p.add_argument("target", type=Path, help="the motion to enter (its frame --frame is the end pose)")
+    p.add_argument("--frame", type=int, default=0)
+    p.add_argument("--name", default="stand_to_en_garde", help="motion name for output/publish")
+    p.add_argument("--out", help="output CSV (default HCF_DATA/motion/entry/<name>.csv)")
+    p.add_argument("--publish", action="store_true", help="publish as motions/<name>_v<N>.csv")
+    p.set_defaults(func=cmd_entry)
+
     p = sub.add_parser("blade", help="keyframe the saber arm over a base motion (Phase 1.4d)")
     p.add_argument("base", help="base motion CSV, 'auto' (newest published base, else synthetic) or 'synthetic'")
     p.add_argument("--script", required=True, help="recipe name (see blade-list) or a JSON file of keys [{action, move_s, hold_s, at_s}]")
@@ -547,6 +631,20 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("sidecars", nargs="*", help="motion sidecars or CSVs (default: newest version of every recipe)")
     p.add_argument("--write", action="store_true", help="update the sidecars (only the key_frames field)")
     p.set_defaults(func=cmd_key_frames)
+
+    from fencing.motion.rebuild import DEFAULT_RECIPE
+
+    p = sub.add_parser("rebuild", help="rebuild every motion of a recipe from the retarget CSVs (scratch unless --publish)")
+    p.add_argument("--recipe", default=str(DEFAULT_RECIPE), help="recipe TOML (default motions/recipes/goal1.toml)")
+    p.add_argument("--only", nargs="*", help="only these motions (and what they are built on)")
+    p.add_argument("--out", help="output dir (default HCF_DATA/motion/rebuild/<recipe name>)")
+    p.add_argument("--csv-dir", help="retarget CSV dir (default HCF_DATA/retarget/csv)")
+    p.add_argument("--compare", action="store_true", help="diff each checkpoint and final motion against the published file it names")
+    p.add_argument("--from-published", nargs="*", metavar="NAME",
+                   help="start from motions/NAME.csv instead of rebuilding up to that checkpoint (verification only)")
+    p.add_argument("--publish", action="store_true", help="publish each motion whose check passes as a new version in motions/")
+    p.add_argument("--allow-warn", action="store_true", help="publish on a 'warn' verdict for every motion (the recipe's allow_warn sets it per motion)")
+    p.set_defaults(func=cmd_rebuild)
     return parser
 
 

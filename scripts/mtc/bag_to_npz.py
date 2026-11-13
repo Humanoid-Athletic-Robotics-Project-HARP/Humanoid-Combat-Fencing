@@ -34,10 +34,17 @@ def main() -> int:
     types = {t.name: t.type for t in reader.get_all_topics_and_types()}
     arrays = {"joint_t": [], "joint_pos": [], "joint_vel": [], "joint_effort": [],
               "mid360": [], "imu_in_pelvis": [], "odom": [], "clock": [], "activation_t": [],
-              "clock_wall": [], "stat_t": [], "stat_period": [], "stat_samples": []}
+              "clock_wall": [], "stat_t": [], "stat_period": [], "stat_samples": [],
+              # One row per /controller_manager/activity message: stamp, standby active, walking active.
+              "activity": [],
+              # The chained start (docs/mtc.md "Entry from standby"): walking_controller1's
+              # activation stamps and stats, one row per activity message of stamp, walking
+              # active, walking1 active. Empty without walking_controller1.
+              "activation1_t": [], "activity_chain": [], "stat1_t": [], "stat1_period": [], "stat1_samples": []}
     joint_names = None
     stat_names = {}  # names_version -> names (pal_statistics splits names and values)
     prefix = "walking_controller.stats/periodicity/"
+    prefix1 = "walking_controller1.stats/periodicity/"
     while reader.has_next():
         topic, data, received_ns = reader.read_next()
         msg = deserialize_message(data, get_message(types[topic]))
@@ -53,9 +60,16 @@ def main() -> int:
             arrays["clock"].append(msg.clock.sec + 1e-9 * msg.clock.nanosec)
             arrays["clock_wall"].append(1e-9 * received_ns)  # wall clock: real-time factor
         elif topic == "/controller_manager/activity":
-            for controller in msg.controllers:
-                if controller.name == "walking_controller" and controller.state.id == ACTIVE:
-                    arrays["activation_t"].append(stamp(msg.header))
+            active = {c.name for c in msg.controllers if c.state.id == ACTIVE}
+            if "walking_controller" in active:
+                arrays["activation_t"].append(stamp(msg.header))
+            arrays["activity"].append([stamp(msg.header), "standby_controller" in active,
+                                       "walking_controller" in active])
+            if "walking_controller1" in active:
+                arrays["activation1_t"].append(stamp(msg.header))
+            if any(c.name == "walking_controller1" for c in msg.controllers):
+                arrays["activity_chain"].append([stamp(msg.header), "walking_controller" in active,
+                                                 "walking_controller1" in active])
         elif topic == "/controller_manager/statistics/names":
             stat_names[msg.names_version] = list(msg.names)
         elif topic == "/controller_manager/statistics/values":
@@ -65,6 +79,11 @@ def main() -> int:
                 arrays["stat_period"].append([msg.values[names.index(prefix + k)]
                                               for k in ("average", "min", "max", "current_value")])
                 arrays["stat_samples"].append(msg.values[names.index(prefix + "sample_count")])
+            if names and prefix1 + "average" in names:
+                arrays["stat1_t"].append(stamp(msg.header))
+                arrays["stat1_period"].append([msg.values[names.index(prefix1 + k)]
+                                               for k in ("average", "min", "max", "current_value")])
+                arrays["stat1_samples"].append(msg.values[names.index(prefix1 + "sample_count")])
     if joint_names is None:
         raise SystemExit("no /joint_states in the bag: the simulator never ran")
     result = {k: np.asarray(v, dtype=np.float64) for k, v in arrays.items()}

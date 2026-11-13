@@ -9,12 +9,13 @@
 #   mjlab     primary training stack (uv)
 #   isaaclab  Isaac Sim 4.5 + Isaac Lab v2.1.0 in conda env "env_isaaclab"
 #   wbt       BeyondMimic whole_body_tracking into env_isaaclab (+ Unitree description files)
-#   gvhmr     GVHMR in conda env "gvhmr" (checkpoints are a manual download)
+#   gvhmr     GVHMR in uv venv $HCF_DATA/venvs/gvhmr, pytorch3d built with CUDA (checkpoints are a manual download)
 #   gmr       GMR (uv)
 #
-# Requires: conda (Miniconda/Anaconda) for isaaclab/wbt/gvhmr; sudo for apt packages.
+# Requires: conda (Miniconda/Anaconda) for isaaclab/wbt; sudo for apt packages (not for gvhmr).
 # Written against the upstream install docs at the pinned commits; not yet run end to end.
 set -euo pipefail
+shopt -s inherit_errexit  # so set -e also applies inside $(...) (the gvhmr helpers run there)
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TP="$REPO_ROOT/third_party"
@@ -74,12 +75,127 @@ stage_wbt() {
   python -m pip install -e "$TP/whole_body_tracking/source/whole_body_tracking"
 }
 
+# CUDA 12.8 build toolchain for pytorch3d's compiled ops, without sudo or a system CUDA:
+# nvcc/cccl/cudart from NVIDIA's redist tarballs (12.8.0 components, the same CUDA as the torch
+# wheel), plus the library headers that already ship in the venv's nvidia-* wheels.
+# Prints the CUDA_HOME it built. No pip wheel of CUDA 12 contains nvcc itself (only ptxas).
+gvhmr_cuda_home() {
+  local data="$1" site="$2" cuda="$1/cuda-12.8"
+  local base=https://developer.download.nvidia.com/compute/cuda/redist
+  local -a parts=(
+    "cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-12.8.61-archive.tar.xz 145f8779bd56bdfa214447e5cb1b3a206ec1b7398da460e257f2898fd8604c54"
+    "cuda_cccl/linux-x86_64/cuda_cccl-linux-x86_64-12.8.55-archive.tar.xz dce4f2e7720d4432ab0861ede2243f9cbd46bc675008932bc9dcdb871fc7d60b"
+    "cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-12.8.57-archive.tar.xz 5bd3ac35ea8e8ab880e595d5054ee373abf6d9e53dcb8cef0a5c75358dbc0ae2"
+  )
+  # Complete means the marker exists. An older install without one counts as complete only if
+  # nvcc plus the cudart and cccl (cub, thrust) headers are all there; it gets the marker.
+  if [[ ! -e "$cuda/.complete" && -x "$cuda/bin/nvcc" && -e "$cuda/include/cuda_runtime.h" \
+        && -e "$cuda/include/cub/cub.cuh" && -e "$cuda/include/thrust/version.h" ]]; then
+    touch "$cuda/.complete" || return 1
+  fi
+  if [[ ! -e "$cuda/.complete" ]]; then
+    local tmp part rel sha stage="$cuda.staging"
+    tmp="$(mktemp -d)" || return 1
+    rm -rf "$stage"
+    mkdir -p "$stage" || return 1
+    for part in "${parts[@]}"; do
+      read -r rel sha <<<"$part"
+      curl -fsSL -o "$tmp/part.tar.xz" "$base/$rel" || return 1
+      echo "$sha  $tmp/part.tar.xz" | sha256sum -c --quiet || return 1
+      tar -xJf "$tmp/part.tar.xz" -C "$stage" --strip-components=1 || return 1
+    done
+    rm -rf "$tmp" "$cuda"
+    mv "$stage" "$cuda" || return 1
+    touch "$cuda/.complete" || return 1
+  fi
+  ln -sfn lib "$cuda/lib64"
+  local d h
+  for d in cublas cusparse cusolver curand cufft nvtx nvjitlink cuda_nvrtc; do
+    for h in "$site/nvidia/$d/include/"*; do
+      [[ "$(basename "$h")" == __* ]] && continue
+      [[ -e "$cuda/include/$(basename "$h")" ]] || ln -s "$h" "$cuda/include/"
+    done
+  done
+  # glibc >= 2.41 declares sinpi/cospi/rsqrt noexcept and CUDA 12.8's math_functions.h does
+  # not, which fails every .cu compile. Match glibc (later CUDA releases do the same).
+  local glibc mf="$cuda/include/crt/math_functions.h"
+  glibc="$(ldd --version | head -1 | awk '{print $NF}')"
+  if [[ "$(printf '%s\n' 2.41 "$glibc" | sort -V | head -1)" == 2.41 ]] && ! grep -q _HCF_GLIBC_NOEXCEPT "$mf"; then
+    cp "$mf" "$mf.orig"
+    sed -i -E 's/^(extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ (double|float) +(rsqrtf?|sinpif?|cospif?)\((double|float) x\));/\1 _HCF_GLIBC_NOEXCEPT;/' "$mf"
+    sed -i '0,/^#define __MATH_FUNCTIONS_H__/s//&\n\/* hcf: glibc >= 2.41 declares these noexcept; match it (scripts\/setup_linux_gpu.sh gvhmr). *\/\n#if defined(__cplusplus)\n#define _HCF_GLIBC_NOEXCEPT noexcept(true)\n#else\n#define _HCF_GLIBC_NOEXCEPT\n#endif/' "$mf"
+  fi
+  echo "$cuda"
+}
+
+# CUDA 12.8 accepts gcc <= 14. On a newer system gcc (Ubuntu 26.04 has 15), unpack Ubuntu's own
+# gcc-14 packages into HCF_DATA (no sudo) and print its bin dir; print nothing if gcc is fine.
+gvhmr_host_gcc() {
+  local data="$1" gcc14="$1/gcc-14"
+  (( $(gcc -dumpversion | cut -d. -f1) <= 14 )) && return 0
+  # An install without the marker is complete only if the compiler binaries are all there.
+  if [[ ! -e "$gcc14/.complete" && -x "$gcc14/usr/bin/g++-14" && -x "$gcc14/usr/bin/gcc-14" \
+        && -x "$gcc14/usr/bin/cpp-14" ]]; then
+    touch "$gcc14/.complete" || return 1
+  fi
+  if [[ ! -e "$gcc14/.complete" ]]; then
+    local tmp deb stage="$gcc14.staging"
+    tmp="$(mktemp -d)" || return 1
+    (cd "$tmp" && apt-get download gcc-14 g++-14 cpp-14 gcc-14-base libgcc-14-dev libstdc++-14-dev \
+      gcc-14-x86-64-linux-gnu g++-14-x86-64-linux-gnu cpp-14-x86-64-linux-gnu >&2) || return 1
+    rm -rf "$stage"
+    mkdir -p "$stage" || return 1
+    for deb in "$tmp"/*.deb; do dpkg -x "$deb" "$stage" || return 1; done
+    rm -rf "$tmp" "$gcc14"
+    mv "$stage" "$gcc14" || return 1
+    touch "$gcc14/.complete" || return 1
+  fi
+  echo "$gcc14/usr/bin"
+}
+
 stage_gvhmr() {
-  need_conda
-  env_exists gvhmr || conda create -y -n gvhmr python=3.10
-  conda activate gvhmr
-  (cd "$TP/GVHMR" && pip install -r requirements.txt && pip install -e . && mkdir -p inputs/checkpoints outputs)
-  echo "GVHMR installed. Checkpoints and SMPL/SMPL-X models are manual downloads: see docs/setup.md, step GVHMR."
+  # uv venv at $HCF_DATA/venvs/gvhmr, where src/fencing/paths.py looks for it.
+  command -v uv >/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh
+  export PATH="$HOME/.local/bin:$PATH"
+  local data="${HCF_DATA:-$HOME/hcf-data}"
+  local venv="$data/venvs/gvhmr" py="$data/venvs/gvhmr/bin/python"
+  [[ -x "$py" ]] || uv venv --python 3.10 "$venv"
+  # torch 2.7.1+cu128 is the oldest torch with kernels for RTX 50-series (sm_120). Do not downgrade.
+  uv pip install --python "$py" torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu128
+  uv pip install --python "$py" -r "$REPO_ROOT/src/fencing/pose/gvhmr_requirements.txt"
+  uv pip install --python "$py" --no-deps -e "$TP/GVHMR"
+  # chumpy unpickles SMPL .pkl files; its setup.py imports pip, so it needs the venv's own build tools.
+  uv pip install --python "$py" pip==26.3 setuptools wheel
+  uv pip install --python "$py" --no-build-isolation chumpy==0.70
+  local site cuda gccbin
+  site="$("$py" -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+  # torch >= 2.6 defaults torch.load to weights_only=True; GVHMR (written for torch 2.3) and
+  # ultralytics 8.2 load full pickles. Restore the old default in this venv only. This trusts
+  # every checkpoint under inputs/checkpoints: only put files from the upstream projects there.
+  echo 'import os; os.environ.setdefault("TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD", "1")' >"$site/hcf_torch_load_compat.pth"
+
+  # pytorch3d with its compiled ops: demo.py imports pytorch3d.renderer and pytorch3d.ops.knn,
+  # which need pytorch3d._C, and it renders on the GPU.
+  cuda="$(gvhmr_cuda_home "$data" "$site")"
+  gccbin="$(gvhmr_host_gcc "$data")"
+  [[ -d "$data/src/pytorch3d" ]] || git clone --depth 1 --branch v0.7.9 \
+    https://github.com/facebookresearch/pytorch3d.git "$data/src/pytorch3d"
+  local -a build_env=(PATH="$venv/bin:$cuda/bin:$PATH" CUDA_HOME="$cuda" CUB_HOME="$cuda/include"
+    FORCE_CUDA=1 TORCH_CUDA_ARCH_LIST="$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader | head -1)"
+    MAX_JOBS=8)
+  [[ -n "$gccbin" ]] && build_env+=(CC="$gccbin/gcc-14" CXX="$gccbin/g++-14")
+  if "$py" -c "from pytorch3d import _C" 2>/dev/null; then
+    echo "pytorch3d compiled ops already importable; skipping build"
+  else
+    env "${build_env[@]}" nice -n 19 "$py" -m pip install --no-build-isolation --no-deps --force-reinstall \
+      "$data/src/pytorch3d"
+  fi
+  "$py" -c 'import torch; from pytorch3d import _C; from pytorch3d.ops import knn_points; p = torch.rand(1, 64, 3, device="cuda"); knn_points(p, p, K=2); print("pytorch3d CUDA ops OK")'
+
+  # GVHMR reads inputs/checkpoints both from the cwd and from its package root.
+  mkdir -p "$data/gvhmr/inputs/checkpoints/body_models/"{smplx,smpl}
+  [[ -e "$TP/GVHMR/inputs" ]] || ln -s "$data/gvhmr/inputs" "$TP/GVHMR/inputs"
+  echo "GVHMR installed. Checkpoints and SMPL/SMPL-X models are manual downloads into $data/gvhmr/inputs/checkpoints: see docs/setup.md, step GVHMR."
 }
 
 stage_gmr() {

@@ -13,6 +13,15 @@ mujoco.launch.py (left unmodified). Differences:
                  modified plant such as the G1 holding a saber.
 - spawn_delay:=   seconds to wait before starting the spawners (default 0). A test hook: it
                  makes activation late on purpose, to check that the start does not depend on it.
+- start_controller:= walking_controller (default, as upstream's mujoco.launch.py) or
+                 standby_controller: spawn state_estimator + standby_controller active and
+                 walking_controller inactive, the lists of upstream's real.launch.py (lines 54-59).
+                 The policy then starts only when something calls /controller_manager/
+                 switch_controller, as the operator's R1 + A does (scripts/mtc/switch_after.py).
+- chain_policy_path:= a second policy (the chained start, docs/mtc.md "Entry from standby"):
+                 adds a second MotionTrackingController, walking_controller1, spawned inactive,
+                 with this policy.path. The name is the one unitree_bringup's joy.yaml already
+                 switches to on R1 + X; upstream's controllers.yaml does not define it.
 - ext_pos_corr:= as upstream.
 - no teleop      joy_linux/joy_teleop only serve the gamepad; nothing to read headless.
 
@@ -30,6 +39,7 @@ from launch_ros.actions import Node
 from legged_bringup.launch_utils import generate_temp_config, get_controller_names, resolve_policy_paths
 
 PACKAGE = 'motion_tracking_controller'
+CHAIN_CONTROLLER = 'walking_controller1'
 
 
 def spawner(names, param_file, inactive=False):
@@ -39,6 +49,16 @@ def spawner(names, param_file, inactive=False):
     if inactive:
         args.append('--inactive')
     return Node(package='controller_manager', executable='spawner', arguments=args, output='screen')
+
+
+def chain_controller_params(policy_path):
+    """walking_controller1: walking_controller's type and parameters, another policy."""
+    return [
+        (f'controller_manager.ros__parameters.{CHAIN_CONTROLLER}.type', 'motion_tracking_controller/MotionTrackingController'),
+        (f'{CHAIN_CONTROLLER}.update_rate', '50'),  # as walking_controller in config/g1/controllers.yaml
+        (f'{CHAIN_CONTROLLER}.policy.path', policy_path),
+        (f'{CHAIN_CONTROLLER}.motion.start_step', '0'),
+    ]
 
 
 def setup(context):
@@ -55,9 +75,16 @@ def setup(context):
     if LaunchConfiguration('ext_pos_corr').perform(context).lower() in ["true", "1", "yes"]:
         kv_pairs.append(('state_estimator.estimation.contact.height_sensor_noise', 1e10))
         kv_pairs.append(('state_estimator.estimation.position.topic', "/mid360"))
+    chain_policy_path = LaunchConfiguration('chain_policy_path').perform(context)
+    if chain_policy_path:
+        kv_pairs += chain_controller_params(os.path.abspath(chain_policy_path))
     temp_config = generate_temp_config(controllers_config_path, PACKAGE, kv_pairs)
-    all_controllers = get_controller_names(controllers_config_path, PACKAGE)
-    active = ["state_estimator", "walking_controller"]
+    # get_controller_names reads the package's own file, which has no walking_controller1.
+    all_controllers = get_controller_names(controllers_config_path, PACKAGE) + ([CHAIN_CONTROLLER] if chain_policy_path else [])
+    start_controller = LaunchConfiguration('start_controller').perform(context)
+    if start_controller not in ("walking_controller", "standby_controller"):
+        raise ValueError(f"start_controller must be walking_controller or standby_controller, not {start_controller!r}")
+    active = ["state_estimator", start_controller]
     inactive = [c for c in all_controllers if c not in active]
 
     if urdf:
@@ -98,5 +125,7 @@ def generate_launch_description():
         DeclareLaunchArgument('ext_pos_corr', default_value='false'),
         DeclareLaunchArgument('hold_qpos_file', default_value=''),
         DeclareLaunchArgument('spawn_delay', default_value='0'),
+        DeclareLaunchArgument('start_controller', default_value='walking_controller'),
+        DeclareLaunchArgument('chain_policy_path', default_value=''),
         OpaqueFunction(function=setup),
     ])

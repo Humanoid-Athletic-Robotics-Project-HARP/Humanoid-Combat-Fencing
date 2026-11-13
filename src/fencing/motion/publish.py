@@ -11,6 +11,7 @@ from __future__ import annotations
 import datetime as dt
 import fcntl
 import re
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -57,6 +58,25 @@ def existing_versions(name: str, motions_dir: Path) -> list[int]:
         if match and match.group("name") == name:
             versions.append(int(match.group("version")))
     return sorted(versions)
+
+
+def identical_file(csv: Path, name: str, motions_dir: Path) -> Path | None:
+    """The published <name>_v<N>.csv (newest first) with the same bytes as `csv`, if any."""
+    motions_dir = Path(motions_dir)
+    data = Path(csv).read_bytes()
+    for version in reversed(existing_versions(name, motions_dir)):
+        path = motions_dir / f"{name}_v{version}.csv"
+        if path.stat().st_size == len(data) and path.read_bytes() == data:
+            return path
+    return None
+
+
+def identical_version(motion: Motion, name: str, motions_dir: Path) -> Path | None:
+    """The published <name>_v<N>.csv with the bytes publishing `motion` would write, if any."""
+    if not existing_versions(name, Path(motions_dir)):
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        return identical_file(write_csv(motion, Path(tmp) / "candidate.csv"), name, motions_dir)
 
 
 def next_version(name: str, motions_dir: Path) -> int:
@@ -107,12 +127,35 @@ def publish_motion(
     record: dict | None = None,
     allow_unknown_name: bool = False,
 ) -> Path:
-    """Write motions/<name>_v<N>.csv (+ .json record) and append the README provenance row."""
+    """Write motions/<name>_v<N>.csv (+ .json record) and append the README provenance row.
+
+    A motion byte-identical to any published version of `name` is not published again: that
+    version's path is returned and nothing is written (publish_if_new tells the cases apart)."""
+    return publish_if_new(motion, name, provenance, motions_dir, record, allow_unknown_name)[0]
+
+
+def publish_message(path: Path, is_new: bool) -> str:
+    return f"published {path}" if is_new else f"unchanged: identical to {path.name}, nothing written"
+
+
+def publish_if_new(
+    motion: Motion,
+    name: str,
+    provenance: Provenance,
+    motions_dir: Path = paths.MOTIONS_DIR,
+    record: dict | None = None,
+    allow_unknown_name: bool = False,
+) -> tuple[Path, bool]:
+    """publish_motion, plus whether it wrote a new version (False: an identical one already exists)."""
     check_motion_name(name, allow_unknown_name)
     motions_dir = Path(motions_dir)
     readme = motions_dir / "README.md"
     if not readme.exists():
         raise PublishError(f"{readme} not found; motions_dir must be the repo's motions/ folder")
+    # A superseded version (thrust_v4) re-published as the newest (thrust_v6) is what training picks.
+    same = identical_version(motion, name, motions_dir)
+    if same is not None:
+        return same, False
     version = next_version(name, motions_dir)
     for _ in range(100):
         path = motions_dir / f"{name}_v{version}.csv"
@@ -134,4 +177,4 @@ def publish_motion(
     }
     write_sidecar(path.with_suffix(".json"), full_record)
     append_provenance_row(readme, provenance_row(path.name, provenance))
-    return path
+    return path, True

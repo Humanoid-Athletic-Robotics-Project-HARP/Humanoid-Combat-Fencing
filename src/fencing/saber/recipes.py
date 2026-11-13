@@ -33,6 +33,14 @@ SYNTHETIC_SCRIPTS = {
 
 # name -> (blade target, requested move s, hold s). Attack moves ask for 0.2 s and are
 # stretched by the keyframer to the fastest the speed cap allows.
+#
+# cut_head asks for 0.3 s (cut_head_v4). Its straight-arm swing never reaches the speed cap
+# (0.37x motor), so at 0.2 s it kept the request, and that move demanded 1.94x the shoulder pitch
+# and 5.20x the wrist pitch effort limit (move_torque_ratio), where every other Goal 1 move stays
+# at or under 2.27x. Its tip was still 20 cm out at 10 m/s two policy steps before the key,
+# inside the +-2 step scoring window, and the key error was the worst of the set (v3: 4.2 cm in
+# sim2sim, 6.1 cm in PhysX). 0.3 s (9 frames at 30 fps) is the shortest move inside that envelope
+# (0.81x / 2.35x; 0.267 s gives 2.95x on wrist pitch); the flank and chest cuts take 0.23-0.27 s.
 STATIC_RECIPES = {
     "extension": ("extension", 0.45, 0.8),
     "parry_prime": ("parry_prime", 0.3, 0.6),
@@ -41,7 +49,7 @@ STATIC_RECIPES = {
     "parry_quarte_high": ("parry_quarte_high", 0.3, 0.6),
     "parry_quinte": ("parry_quinte", 0.3, 0.6),
     "parry_sixte": ("parry_sixte", 0.3, 0.6),
-    "cut_head": ("cut_head", 0.2, 0.3),
+    "cut_head": ("cut_head", 0.3, 0.3),
     "cut_flank": ("cut_flank", 0.2, 0.3),
     "cut_chest": ("cut_chest", 0.2, 0.3),
     "cut_cheek": ("cut_cheek", 0.2, 0.3),
@@ -231,6 +239,8 @@ def provenance_for(result: RecipeResult) -> Provenance:
                f"min-jerk, speed <= {cfg['velocity_fraction']:g}x motor, soft limits {cfg['soft_limit_factor']:g}")
     if cfg.get("end_hold_s"):
         cleanup += f", end hold {cfg['end_hold_s']:g} s"
+    if cfg.get("blade_path") == "line":
+        cleanup += ", blade tip on the straight line between keys (blade_path line)"
     notes = (f"legs/root/left arm: {body}; saber arm: hand-keyframed (not from video); "
              f"key tip err max {100 * s['max_tip_error_m']:.1f} cm, dir {s['max_angle_error_deg']:.1f} deg; "
              f"{summary_line(result.quality)}")

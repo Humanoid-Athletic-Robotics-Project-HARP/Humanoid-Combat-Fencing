@@ -7,19 +7,22 @@ from __future__ import annotations
 
 import pytest
 
-pytest.importorskip("torch")
-pytest.importorskip("mjlab")
+_HOW = ("run in the mjlab venv: PYTHONPATH=src ~/hcf-data/venvs/mjlab/bin/python -m pytest -q "
+        "-p no:cacheprovider tests/test_saber_mjlab.py (docs/evaluation.md, Tests)")
+pytest.importorskip("torch", reason=f"no torch; {_HOW}")
+pytest.importorskip("mjlab", reason=f"no mjlab; {_HOW}")
 
 
 def test_register_is_idempotent_and_lists_both_tasks():
     from mjlab.tasks.registry import list_tasks
 
-    from fencing.saber.mjlab_task import TASK_ID, TASK_ID_NO_STATE_ESTIMATION, register
+    from fencing.saber.mjlab_task import ENTRY_TASK_ID, TASK_ID, TASK_ID_NO_STATE_ESTIMATION, register
 
     first = register()
     second = register()
-    assert first == second == [TASK_ID, TASK_ID_NO_STATE_ESTIMATION]
-    assert {TASK_ID, TASK_ID_NO_STATE_ESTIMATION} <= set(list_tasks())
+    # The entry joint variants follow (test_register_lists_the_entry_joint_variants_after_the_existing_tasks).
+    assert first == second and first[:3] == [TASK_ID, TASK_ID_NO_STATE_ESTIMATION, ENTRY_TASK_ID]
+    assert {TASK_ID, TASK_ID_NO_STATE_ESTIMATION, ENTRY_TASK_ID} <= set(list_tasks())
 
 
 def test_saber_task_trains_with_mass_randomization_and_plays_without():
@@ -201,3 +204,200 @@ def test_blade_tip_reward_fails_loudly_when_the_wrist_is_not_tracked():
     env = _fake_tip_env([[0, 0, 1]], [_yaw_quat(0)], [[0, 0, 1]], [_yaw_quat(0)])
     with pytest.raises(KeyError, match="left_wrist_yaw_link"):
         blade_tip_position_error_exp(env, "motion", 0.15, "left_wrist_yaw_link", (0.8, 0, 0))
+
+
+# --- The entry task (Fencing-Tracking-Flat-G1-Saber-Entry) is purely additive ----------------
+# tests/data/saber_task_cfgs.json describes the two existing saber tasks as registered by the
+# committed (HEAD) src/fencing/saber/mjlab_task.py, before the entry task existed. Regenerate only
+# on purpose, from a copy of that committed file, never from the working tree:
+#   git -C <repo> show HEAD:src/fencing/saber/mjlab_task.py > /tmp/x/head_mjlab_task.py
+#   PYTHONPATH=src ~/hcf-data/venvs/mjlab/bin/python tests/test_saber_mjlab.py /tmp/x/head_mjlab_task.py
+SNAPSHOT = __import__("pathlib").Path(__file__).parent / "data" / "saber_task_cfgs.json"
+# Keyed term groups: one entry per term, so a diff names the term that changed.
+TERM_GROUPS = ("rewards", "events", "terminations", "observations", "commands", "curriculum", "metrics")
+
+
+def _strip_addresses(text: str) -> str:
+    import re
+
+    return re.sub(r" at 0x[0-9a-f]+", "", text)
+
+
+def _robot_model_digest(cfg) -> dict:
+    """The compiled robot (G1 + saber): sizes and a hash of its physical parameters, so a
+    change to the saber spec, actuators, joint ranges or masses shows up."""
+    import hashlib
+
+    import numpy as np
+
+    model = cfg.scene.entities["robot"].spec_fn().compile()
+    fields = ("body_mass", "body_inertia", "body_ipos", "body_pos", "jnt_range", "dof_damping", "dof_armature",
+              "dof_frictionloss", "actuator_gainprm", "actuator_biasprm", "actuator_forcerange", "actuator_ctrlrange",
+              "geom_size", "geom_friction", "geom_pos", "site_pos")
+    digest = hashlib.sha256()
+    for name in fields:
+        digest.update(np.round(np.asarray(getattr(model, name), dtype=np.float64), 9).tobytes())
+    return {"nbody": model.nbody, "njnt": model.njnt, "nu": model.nu, "ngeom": model.ngeom, "nsite": model.nsite,
+            "physical_parameters_sha256": digest.hexdigest()}
+
+
+def describe_task_cfg(task_id: str, play: bool) -> dict:
+    """Every field of the task's env config as text (term groups per term), plus the compiled
+    robot model: what a policy trained on `task_id` sees, is paid for, is perturbed by, and runs on."""
+    import dataclasses
+
+    from mjlab.tasks.registry import load_env_cfg
+
+    cfg = load_env_cfg(task_id, play=play)
+    description = {}
+    for field in dataclasses.fields(cfg):
+        value = getattr(cfg, field.name)
+        if field.name in TERM_GROUPS:
+            description[field.name] = {name: _strip_addresses(repr(term)) for name, term in value.items()}
+        else:
+            description[field.name] = _strip_addresses(repr(value))
+    description["robot_model"] = _robot_model_digest(cfg)
+    return description
+
+
+def _existing_tasks() -> dict:
+    task_ids = ("Fencing-Tracking-Flat-G1-Saber", "Fencing-Tracking-Flat-G1-Saber-No-State-Estimation")
+    return {f"{task}{':play' if play else ''}": describe_task_cfg(task, play)
+            for task in task_ids for play in (False, True)}
+
+
+def test_the_existing_saber_tasks_are_exactly_as_committed_before_the_entry_task():
+    import json
+
+    from fencing.saber.mjlab_task import register
+
+    register()
+    expected = json.loads(SNAPSHOT.read_text())
+    actual = json.loads(json.dumps(_existing_tasks()))
+    assert actual.keys() == expected.keys()
+    for task in expected:
+        assert actual[task].keys() == expected[task].keys(), task
+        for field in expected[task]:
+            assert actual[task][field] == expected[task][field], f"{task}: {field}"
+
+
+def test_entry_task_is_the_saber_task_plus_one_feet_reward_term():
+    from fencing.saber.mjlab_task import ENTRY_TASK_ID, FEET_REWARD, TASK_ID, register
+
+    assert ENTRY_TASK_ID in register()
+    for play in (False, True):
+        saber, entry = describe_task_cfg(TASK_ID, play), describe_task_cfg(ENTRY_TASK_ID, play)
+        # Same observations, actions, robot, events, sim and episode: the ONNX runs in the
+        # unmodified C++ controller and the policy is trained under the same perturbations.
+        assert {k: v for k, v in entry.items() if k != "rewards"} == {k: v for k, v in saber.items() if k != "rewards"}
+        assert {k: v for k, v in entry["rewards"].items() if k != FEET_REWARD} == saber["rewards"]
+        assert FEET_REWARD in entry["rewards"] and FEET_REWARD not in saber["rewards"]
+
+
+# tests/data/saber_entry_task_cfgs.json describes the entry task as registered before the joint
+# variants existed (the working-tree mjlab_task.py of 2026-11-12, sha256 e1e9cbed...). Regenerate
+# only on purpose, from a copy of a mjlab_task.py whose entry task is the one to pin:
+#   PYTHONPATH=src ~/hcf-data/venvs/mjlab/bin/python tests/test_saber_mjlab.py --entry /tmp/x/mjlab_task.py
+ENTRY_SNAPSHOT = SNAPSHOT.parent / "saber_entry_task_cfgs.json"
+
+
+def _entry_tasks() -> dict:
+    task = "Fencing-Tracking-Flat-G1-Saber-Entry"
+    return {f"{task}{':play' if play else ''}": describe_task_cfg(task, play) for play in (False, True)}
+
+
+def test_the_entry_task_is_exactly_as_before_the_joint_variants():
+    import json
+
+    from fencing.saber.mjlab_task import register
+
+    register()
+    expected = json.loads(ENTRY_SNAPSHOT.read_text())
+    actual = json.loads(json.dumps(_entry_tasks()))
+    assert actual.keys() == expected.keys()
+    for task in expected:
+        assert actual[task].keys() == expected[task].keys(), task
+        for field in expected[task]:
+            assert actual[task][field] == expected[task][field], f"{task}: {field}"
+
+
+def test_register_lists_the_entry_joint_variants_after_the_existing_tasks():
+    from fencing.saber.mjlab_task import (
+        ENTRY_JOINT_TASK_IDS, ENTRY_TASK_ID, TASK_ID, TASK_ID_NO_STATE_ESTIMATION, register,
+    )
+
+    assert register() == [TASK_ID, TASK_ID_NO_STATE_ESTIMATION, ENTRY_TASK_ID, *ENTRY_JOINT_TASK_IDS]
+    assert ENTRY_JOINT_TASK_IDS == ("Fencing-Tracking-Flat-G1-Saber-Entry-Joint",
+                                    "Fencing-Tracking-Flat-G1-Saber-Entry-Joint05")
+
+
+def test_entry_joint_variants_are_the_entry_task_plus_one_joint_reward_term():
+    from fencing.saber.mjlab_task import (
+        ENTRY_JOINT_TASK_IDS, ENTRY_JOINT_WEIGHTS, ENTRY_TASK_ID, JOINT_REWARD, JOINT_REWARD_STD_RAD,
+        joint_position_error_exp, register,
+    )
+    from mjlab.tasks.registry import load_env_cfg
+
+    register()
+    for task_id in ENTRY_JOINT_TASK_IDS:
+        for play in (False, True):
+            entry, variant = describe_task_cfg(ENTRY_TASK_ID, play), describe_task_cfg(task_id, play)
+            assert {k: v for k, v in variant.items() if k != "rewards"} == {k: v for k, v in entry.items() if k != "rewards"}
+            assert {k: v for k, v in variant["rewards"].items() if k != JOINT_REWARD} == entry["rewards"]
+            term = load_env_cfg(task_id, play=play).rewards[JOINT_REWARD]
+            assert term.func is joint_position_error_exp
+            assert term.weight == ENTRY_JOINT_WEIGHTS[task_id]
+            assert term.params == {"command_name": "motion", "std": JOINT_REWARD_STD_RAD}
+    assert ENTRY_JOINT_WEIGHTS == {ENTRY_JOINT_TASK_IDS[0]: 1.0, ENTRY_JOINT_TASK_IDS[1]: 0.5}
+
+
+def test_joint_reward_is_exp_of_the_mean_squared_joint_error():
+    import math
+    from types import SimpleNamespace
+
+    import numpy as np
+    import torch
+
+    from fencing.saber.mjlab_task import joint_position_error_exp
+
+    ref = torch.zeros(3, 4)
+    robot = torch.tensor([[0.0, 0.0, 0.0, 0.0], [0.1, 0.0, 0.0, 0.0], [0.2, -0.2, 0.2, -0.2]])
+    command = SimpleNamespace(joint_pos=ref, robot_joint_pos=robot)
+    env = SimpleNamespace(command_manager=SimpleNamespace(get_term=lambda name: {"motion": command}[name]))
+
+    reward = joint_position_error_exp(env, "motion", 0.15).numpy()
+
+    np.testing.assert_allclose(reward, [1.0, math.exp(-(0.01 / 4) / 0.15**2), math.exp(-0.04 / 0.15**2)], rtol=1e-6)
+
+
+def test_feet_reward_tracks_only_the_two_ankle_roll_links_with_a_tight_std():
+    from mjlab.tasks.registry import load_env_cfg
+
+    from fencing.saber.mjlab_task import (
+        ENTRY_TASK_ID, FEET_BODIES, FEET_REWARD, FEET_REWARD_STD_M, FEET_REWARD_WEIGHT, register,
+    )
+
+    register()
+    cfg = load_env_cfg(ENTRY_TASK_ID)
+    term = cfg.rewards[FEET_REWARD]
+    assert term.func.__name__ == "motion_relative_body_position_error_exp"
+    assert term.params["body_names"] == FEET_BODIES == ("left_ankle_roll_link", "right_ankle_roll_link")
+    assert set(FEET_BODIES) <= set(cfg.commands["motion"].body_names)
+    assert term.weight == FEET_REWARD_WEIGHT and term.params["std"] == FEET_REWARD_STD_M < 0.3
+
+
+if __name__ == "__main__":
+    # Write SNAPSHOT from the mjlab_task.py given on the command line (a copy of the committed one),
+    # or with --entry, ENTRY_SNAPSHOT (the entry task) from the given copy.
+    import importlib.util
+    import json
+    import sys
+
+    entry = sys.argv[1] == "--entry"
+    spec = importlib.util.spec_from_file_location("committed_mjlab_task", sys.argv[-1])
+    committed = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(committed)
+    print("registered", committed.register())
+    target, tasks = (ENTRY_SNAPSHOT, _entry_tasks()) if entry else (SNAPSHOT, _existing_tasks())
+    target.write_text(json.dumps(tasks, indent=1, sort_keys=True) + "\n")
+    print(f"wrote {target}")
