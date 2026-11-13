@@ -248,3 +248,6 @@ MUJOCO_LOG.TXT
 # logs are wanted here, so the rules above do not apply under results/.
 !results/
 !results/**
+
+# Small test fixtures are part of the test suite.
+!tests/data/*.npz
