@@ -67,6 +67,43 @@ scripts/setup_linux_gpu.sh            # all stages: mjlab isaaclab wbt gvhmr gmr
 
 Stages can be run on their own (`scripts/setup_linux_gpu.sh mjlab gmr`). The script follows each upstream project's install docs at the pinned commit but **has not yet been run end to end**. Expect to fix things the first time and commit the fixes.
 
+### GVHMR venv
+
+`scripts/setup_linux_gpu.sh gvhmr` builds a uv venv at `$HCF_DATA/venvs/gvhmr` (default `~/hcf-data`), not a conda env. It needs no sudo. What it does and why:
+
+- **torch 2.7.1+cu128**, because older wheels have no kernels for RTX 50-series GPUs. Then `src/fencing/pose/gvhmr_requirements.txt` (adds `yacs` and `ninja`, which upstream lacks), GVHMR itself (editable), and `chumpy` (needs `--no-build-isolation`).
+- **pytorch3d v0.7.9 built with its CUDA ops.** `demo.py` imports `pytorch3d.renderer` and `pytorch3d.ops.knn` when it loads, and both need the compiled `pytorch3d._C`. It also renders on the GPU, so a CPU-only build is not enough. The build needs a CUDA 12.8 compiler, and no CUDA 12 pip wheel ships `nvcc`. So the script unpacks NVIDIA's own redist tarballs (nvcc 12.8.61, cccl 12.8.55, cudart 12.8.57, sha256-checked) into `$HCF_DATA/cuda-12.8`, and takes the cuBLAS/cuSPARSE/etc. headers from the venv's `nvidia-*` wheels.
+- **gcc 14 if the system gcc is newer.** CUDA 12.8 rejects gcc 15, and nvcc 12.9 fails on gcc 15's C++ headers too. On such a system (Ubuntu 26.04) the script unpacks Ubuntu's gcc-14 packages into `$HCF_DATA/gcc-14` with `apt-get download` + `dpkg -x`.
+- **A one-line header fix if glibc is 2.41 or newer.** That glibc declares `sinpi`, `cospi` and `rsqrt` `noexcept`, and CUDA 12.8's `crt/math_functions.h` does not, so every `.cu` file fails to compile. The script adds the matching `noexcept` to the six declarations in its private copy (the original is kept as `math_functions.h.orig`).
+- **`torch.load` back to its old default.** torch 2.6 and later default to `weights_only=True`, which refuses the YOLO, HMR2 and GVHMR checkpoints. The file `hcf_torch_load_compat.pth` in that venv's site-packages sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1`. That turns off torch's safe default for every `torch.load` call that does not pass `weights_only`, in every Python process started from this venv and in their child processes. It covers the model checkpoints and also the cached `preprocess/*.pt` files GVHMR writes under its output folder. A pickle can run code when it is loaded, so only load checkpoints and caches you made or trust, and only put files from the upstream projects in `inputs/checkpoints`. Deleting that file undoes the change.
+- Symlinks `third_party/GVHMR/inputs` to `$HCF_DATA/gvhmr/inputs` (GVHMR reads some paths from its package root and some from the working directory), and creates the empty `body_models/smplx` and `body_models/smpl` folders.
+
+*Checked 2026-11-12 on the RTX 5080 PC (WSL2, Ubuntu 26.04, gcc 15.2, glibc 2.43):* without the SMPL/SMPL-X files, `demo.py -s` runs all of preprocessing and stops at the first body model load. Preprocessing is YOLOv8 tracking, ViTPose-H 2D keypoints and HMR2 image features, and it needs no body model. The stop is `assert smplx_path.exists()` in `hmr4d/utils/body_model/smplx_lite.py` for `body_models/smplx/SMPLX_NEUTRAL.npz`. The assert prints no file name; the traceback goes through `EnDecoder`. Everything after that point needs the body models:
+
+| Stage | Needs |
+|---|---|
+| Person tracking (YOLOv8x), ViTPose-H, HMR2 features | `checkpoints/{yolo,vitpose,hmr2}` only |
+| GVHMR network (`EnDecoder` builds the SMPL-X skeleton when the model is created) | `SMPLX_NEUTRAL.npz` + `checkpoints/gvhmr` |
+| In-camera and global render videos | `SMPLX_NEUTRAL.npz` + `SMPL_NEUTRAL.pkl` |
+
+For a 5 s, 30 fps, 1280×720 clip, preprocessing took 26–28 s (about 5.5 s per second of video, including about 12 s of model loading). Tracking was 3 s, ViTPose 7 s and HMR2 3.5 s. GPU memory peaked about 4 GB above what was already in use (torch: 3.2 GB allocated, 3.7 GB reserved, plus the CUDA context), and held there until the process exited. The GVHMR network and rendering were not reached, so their memory is unmeasured. Check free memory before starting it next to mjlab trainings.
+
+`fencing pose` does not call `demo.py` as a script, because the demo tracks the largest person, which in a fencing clip can be the wrong one. `fencing.pose.gvhmr_worker` imports the demo's own functions and gives it the pipeline's fencer boxes instead (docs/pipeline.md, "GVHMR branch"). Phase 1 runs now, without the body models:
+
+```bash
+scripts/hcf pose --all --existing --gvhmr-preprocess   # every clip with a pose/<clip_id>/ folder; cached, re-runs skip done clips
+```
+
+This was run on 2026-11-12 over all 64 clips that had a pose folder (the four published sources first): 64 of 64 finished, no errors. That is 638 s of video in 2850 s, about 4.5 s per second of video, one clip at a time, with mjlab trainings on the same GPU. On 30 of the clips YOLO sees two or more people. On 4 of them the person GVHMR's demo would have picked (largest summed box area) is the other fencer or the coach, not the pipeline's fencer; the chosen boxes are on the fencer in all 4 (checked on the overlays). The fencer check fails on 3 clips, which will stay `fallback_mediapipe`:
+
+| Clip | Why it fails | What the overlay shows |
+|---|---|---|
+| `cLmKzPFfkew_44000-53000` | YOLO boxes on 46 % of frames, keypoints agree on 79 % | One person. The screen track box stays at the en garde position during lunges, so the YOLO box of the lunging fencer does not overlap it enough and the stale track box is used |
+| `rKRYHsJDnJc_18033-23467` | keypoints agree on 69 % of frames | Crowded hall. The chosen boxes follow the screen's fencer, but MediaPipe's landmarks jump to the person beside them on part of the clip, so the existing fallback pose is partly wrong too |
+| `8GwT1fx7_RM_7925-10594` | YOLO boxes on 0 % of frames | No person: the screen tracked a fencer drawn in a logo. This clip has no `pose.json` |
+
+All other 61 clips pass, with YOLO boxes on at least 98 % of frames, at least 97 % of frames agreeing, and a median centroid distance of at most 0.023 box heights.
+
 Smoke tests once installed:
 
 ```bash
@@ -82,12 +119,12 @@ conda activate env_isaaclab && cd third_party/IsaacLab
 | Step | What | Where it goes |
 |---|---|---|
 | **W&B** | Create a W&B **organization** (team). `wandb login`. Under Registry, create a collection named **Motions** with artifact type "All Types". Set `export WANDB_ENTITY=<org>` (the org, not your username) | env var on every machine |
-| **SMPL-X** | Register at [smpl-x.is.tue.mpg.de](https://smpl-x.is.tue.mpg.de/) and download the models | GMR: `third_party/GMR/assets/body_models/smplx/SMPLX_{NEUTRAL,MALE,FEMALE}.pkl`. GVHMR: `third_party/GVHMR/inputs/checkpoints/body_models/smplx/SMPLX_{GENDER}.npz` |
-| **SMPL** | Register at [smpl.is.tue.mpg.de](https://smpl.is.tue.mpg.de/) | `third_party/GVHMR/inputs/checkpoints/body_models/smpl/SMPL_{GENDER}.pkl` |
-| **GVHMR checkpoints** | `gvhmr`, `hmr2`, `vitpose`, `yolo` (and optionally `dpvo`) from the [GVHMR Google Drive](https://drive.google.com/drive/folders/1eebJ13FUEXrKBawHpJroW0sNSxLjh9xD) | `third_party/GVHMR/inputs/checkpoints/` (layout in `third_party/GVHMR/docs/INSTALL.md`) |
+| **SMPL-X** | Register at [smpl-x.is.tue.mpg.de](https://smpl-x.is.tue.mpg.de/), download "SMPL-X v1.1" (`models_smplx_v1_1.zip`) and take `models/smplx/SMPLX_NEUTRAL.npz` | `$HCF_DATA/gvhmr/inputs/checkpoints/body_models/smplx/SMPLX_NEUTRAL.npz` (`third_party/GVHMR/inputs` links there). `fencing pose` and `fencing retarget` both read this one file. GMR's own scripts (run by hand) want theirs in `third_party/GMR/assets/body_models/smplx/` |
+| **SMPL** | Register at [smpl.is.tue.mpg.de](https://smpl.is.tue.mpg.de/), download "SMPL for Python" v1.1.0 and take the neutral model, `basicmodel_neutral_lbs_10_207_0_v1.1.0.pkl` | `$HCF_DATA/gvhmr/inputs/checkpoints/body_models/smpl/SMPL_NEUTRAL.pkl` (renamed). Only GVHMR's render videos use it (`--gvhmr-render`) |
+| **GVHMR checkpoints** | `gvhmr`, `hmr2`, `vitpose`, `yolo` (and optionally `dpvo`) from the [GVHMR Google Drive](https://drive.google.com/drive/folders/1eebJ13FUEXrKBawHpJroW0sNSxLjh9xD) | `$HCF_DATA/gvhmr/inputs/checkpoints/` (layout in `third_party/GVHMR/docs/INSTALL.md`) |
 | **Isaac Sim EULA** | Accept on first launch | — |
 
-GMR's SMPL-X loader: if you use the `.pkl` models, GMR's README says to change `ext` in `smplx/body_models.py` from `npz` to `pkl`.
+GMR's SMPL-X loader, only for GMR's own scripts: if you use the `.pkl` models, GMR's README says to change `ext` in `smplx/body_models.py` from `npz` to `pkl`. `fencing retarget` passes the `.npz` and needs no change.
 
 SMPL, SMPL-X, GVHMR and LAFAN1 are all **non-commercial research only**. None of them are committed to this repo.
 
@@ -134,14 +171,34 @@ scripts/hcf motion render ~/hcf-data/retarget/csv/<clip_id>.csv --png /tmp/<clip
 scripts/hcf motion batch                # dry run of the cleanup over retarget/csv (add --publish to publish)
 ```
 
-`fencing pose` uses GVHMR only when `$HCF_DATA/gvhmr/inputs/checkpoints/body_models/smplx/SMPLX_NEUTRAL.npz` and `.../smpl/SMPL_NEUTRAL.pkl` exist (licence-gated, see the table above; that branch is untested). Otherwise it uses the licence-free MediaPipe fallback and says so once. Useful flags: `--max-seconds` (clip length cap, default 20), `--height` (fencer height, default 1.75 m), `--hfov` / `--pitch-deg` (camera), `--reprocess` (redo the post-processing from cached MediaPipe output), `--force`. Check `pose/<clip_id>/overlay.png` before retargeting.
+`fencing pose` uses GVHMR when `$HCF_DATA/gvhmr/inputs/checkpoints/body_models/smplx/SMPLX_NEUTRAL.npz` exists (licence-gated, see the table above). Otherwise it uses the licence-free MediaPipe fallback and says so once. A bare `<yt_id>` covers the clips planned from screen.json plus the clips of that video that already have a `pose/<clip_id>/` folder; `--existing` takes only the latter. Useful flags: `--max-seconds` (clip length cap, default 20), `--height` (fencer height, default 1.75 m), `--hfov` / `--pitch-deg` (camera), `--reprocess` (redo the post-processing from cached MediaPipe output), `--gvhmr-preprocess` (GVHMR phase 1 only, see below), `--gvhmr-render` (GVHMR's mesh videos, needs `SMPL_NEUTRAL.pkl`), `--force`. Check `pose/<clip_id>/overlay.png` (and `gvhmr/fencer_check.png` for GVHMR) before retargeting.
+
+#### When the body models arrive
+
+Phase 1 of GVHMR (person boxes, ViTPose, HMR2 features) is already cached for every clip made so far (see "GVHMR venv" above). After the two files are in place (table above, exact names):
+
+```bash
+ls ~/hcf-data/gvhmr/inputs/checkpoints/body_models/smplx/SMPLX_NEUTRAL.npz \
+   ~/hcf-data/gvhmr/inputs/checkpoints/body_models/smpl/SMPL_NEUTRAL.pkl
+scripts/hcf pose <yt_id> --existing --gvhmr-render   # only the GVHMR network; pose_method -> gvhmr
+scripts/hcf retarget <yt_id>                         # GVHMR clips again; old CSVs in retarget/csv/previous/
+# every clip made so far:
+scripts/hcf pose --all --existing
+scripts/hcf retarget --all
+```
+
+Without `--existing`, `pose <yt_id>` also makes any new clips screen.json plans for that video (MediaPipe and the full GVHMR run). The first time, look at `pose/<clip_id>/gvhmr/<clip_id>/<clip_id>_3_incam_global_horiz.mp4` (mesh on the video, and in the world) for one clip, and check GPU memory: the network's peak is not measured yet. A clip whose GVHMR keypoints are not on MediaPipe's fencer stays `fallback_mediapipe` and says why in `pose.json`.
 
 The upstream commands the wrapper follows, for running a stage by hand:
 
 ```bash
-# 1. GVHMR (third_party/GVHMR, conda env gvhmr). -s = static camera, skips visual odometry
-python tools/demo/demo.py --video=/path/to/clip.mp4 -s
-#    → outputs/demo/<clip>/hmr4d_results.pt  (+ overlay video for the visual check)
+# 1. GVHMR (gvhmr venv; run from $HCF_DATA/gvhmr, because it finds inputs/checkpoints relative to
+#    the working directory). -s = static camera, skips visual odometry
+env -C ~/hcf-data/gvhmr PYTHONPATH="$PWD/third_party/GVHMR" ~/hcf-data/venvs/gvhmr/bin/python \
+  "$PWD/third_party/GVHMR/tools/demo/demo.py" --video=/path/to/clip.mp4 --output_root=/path/to/out -s
+#    → /path/to/out/<clip>/hmr4d_results.pt  (+ overlay video for the visual check)
+#    By hand, demo.py tracks the LARGEST person, not the fencer: on two-fencer clips use
+#    `scripts/hcf pose` (fencing.pose.gvhmr_worker), which gives it the screen's fencer boxes.
 #    No GPU? Use the GVHMR Colab or HuggingFace Space demo linked in its README and download hmr4d_results.pt.
 
 # 2. GMR (third_party/GMR): SMPL-X → G1 (pkl: root_pos, root_rot xyzw, dof_pos, fps)
