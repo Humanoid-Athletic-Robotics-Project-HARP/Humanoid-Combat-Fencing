@@ -1,0 +1,17 @@
+{
+  "frames": 285,
+  "source_fps": 30.0,
+  "human_height_m": 1.715300199985504,
+  "ik_error_median": 0.7285,
+  "ik_error_p95": 0.8431,
+  "ik_seconds": 1.1,
+  "joint_limit_frac": 0.0094,
+  "despiked_joint_samples": 0,
+  "betas_height_m": 1.715,
+  "ground_shift_m": [
+    0.0027,
+    -0.0103,
+    -0.0209
+  ],
+  "ground_drift_m": 0.0032
+}

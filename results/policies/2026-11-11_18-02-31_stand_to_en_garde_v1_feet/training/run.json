@@ -1,0 +1,16 @@
+{
+  "run_name": "stand_to_en_garde_v1_feet",
+  "task": "Fencing-Tracking-Flat-G1-Saber-Entry",
+  "motion_npz": "/home/nathan/hcf-data/npz/stand_to_en_garde_v1_mjlab.npz",
+  "motion_npz_sha256": "5b02d609cfb2cb49829a8d922a538261c0b4b2d04a77219a462cb929e70ded28",
+  "motion_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/stand_to_en_garde_v1.csv",
+  "motion_csv_sha256": "3a5ddef2589cc9af4ce07ff93027262838fa189e024061cf33f422764abdf79e",
+  "repo_commit": "5f48884",
+  "repo_dirty": true,
+  "iterations": 3000,
+  "num_envs": 4096,
+  "started_at": "2026-11-12T02:02:40+00:00",
+  "resume_from": null,
+  "extra": {},
+  "schema_version": 1
+}

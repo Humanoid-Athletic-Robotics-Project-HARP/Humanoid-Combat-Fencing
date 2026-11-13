@@ -3,20 +3,27 @@
   "yt_id": "aY1P3wzvNBM",
   "source_start_s": 0.0,
   "source_end_s": 20.0,
-  "pose_method": "fallback_mediapipe",
+  "pose_method": "gvhmr",
   "track_id": 1,
-  "human_height_m": 1.75,
+  "human_height_m": 1.7037169313430784,
   "handedness_guess": "L",
   "fps": 30,
-  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; retargeted with GMR smplx_to_g1 (fallback input)",
+  "notes": "GVHMR (SMPL-X) on the screen's fencer track; handedness, body_scale and quality are from MediaPipe on the same track; retargeted with GMR smplx_to_g1 (gvhmr input)",
   "retarget": {
-    "frames": 601,
+    "frames": 600,
     "source_fps": 30.0,
-    "human_height_m": 1.75,
-    "ik_error_median": 1.1686,
-    "ik_error_p95": 2.2384,
-    "ik_seconds": 1.2,
-    "joint_limit_frac": 0.0793,
-    "despiked_joint_samples": 0
+    "human_height_m": 1.7037169313430784,
+    "ik_error_median": 0.8161,
+    "ik_error_p95": 1.0094,
+    "ik_seconds": 1.9,
+    "joint_limit_frac": 0.0543,
+    "despiked_joint_samples": 0,
+    "betas_height_m": 1.704,
+    "ground_shift_m": [
+      0.003,
+      -0.0087,
+      0.1161
+    ],
+    "ground_drift_m": 0.3431
   }
 }

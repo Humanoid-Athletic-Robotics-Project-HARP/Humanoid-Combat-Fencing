@@ -1,0 +1,26 @@
+{
+  "clip": "FbuFW5CcKkI_243400-255400",
+  "track_id": 44,
+  "fps": 30.0,
+  "boxes": {
+    "key": {
+      "track_npz": "/home/nathan/hcf-data/pose/FbuFW5CcKkI/track.npz",
+      "track_id": 44,
+      "start_s": 243.4,
+      "frames": 360,
+      "guide_sha256": "bec07cb0a2da01843e4ac8ad2fe131798deebf6e05bf42ad4ef27fd141d07ef9"
+    },
+    "frames": 360,
+    "yolo_frac": 1.0,
+    "bridged_frac": 0.0,
+    "pipeline_frac": 0.0,
+    "matched_iou_median": 0.9521
+  },
+  "keypoints": {
+    "frames_compared": 360,
+    "centroid_dist_median": 0.0063,
+    "centroid_dist_p95": 0.0087,
+    "frac_within": 1.0,
+    "same_person": true
+  }
+}

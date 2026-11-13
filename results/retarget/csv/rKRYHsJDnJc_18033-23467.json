@@ -8,14 +8,14 @@
   "human_height_m": 1.75,
   "handedness_guess": null,
   "fps": 30,
-  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; handedness undecided (cues weak or disagree); retargeted with GMR smplx_to_g1 (fallback input)",
+  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; GVHMR not used: its keypoints are not on MediaPipe's fencer (centroid distance median 0.0195 box heights, 69% of frames close); see gvhmr/fencer_check.png; handedness undecided (cues weak or disagree); retargeted with GMR smplx_to_g1 (fallback input)",
   "retarget": {
     "frames": 164,
     "source_fps": 30.0,
     "human_height_m": 1.75,
     "ik_error_median": 4.7478,
     "ik_error_p95": 5.7474,
-    "ik_seconds": 0.7,
+    "ik_seconds": 0.8,
     "joint_limit_frac": 0.2923,
     "despiked_joint_samples": 19
   }

@@ -1,0 +1,14 @@
+{
+  "key": {
+    "track_npz": "/home/nathan/hcf-data/pose/8vFarFIpOA0/track.npz",
+    "track_id": 8,
+    "start_s": 34.9,
+    "frames": 99,
+    "guide_sha256": "4a908ccde949eae33293b03b456807b80c4a008b894c9efbcc2b5827ada1f5a1"
+  },
+  "frames": 99,
+  "yolo_frac": 1.0,
+  "bridged_frac": 0.0,
+  "pipeline_frac": 0.0,
+  "matched_iou_median": 0.9555
+}

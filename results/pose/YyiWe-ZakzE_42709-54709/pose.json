@@ -5,7 +5,7 @@
   "source_end_s": 54.709,
   "track_id": 1,
   "video": "/home/nathan/hcf-data/videos/raw/YyiWe-ZakzE.mp4",
-  "pose_method": "fallback_mediapipe",
+  "pose_method": "gvhmr",
   "pose_version": 2,
   "fps": 30.0,
   "human_height_m": 1.75,
@@ -34,7 +34,37 @@
     "upper_foot_height_median_m": 0.049,
     "shin_length_cv": 0.042
   },
-  "created": "2026-11-11T19:54:42+00:00",
-  "seconds": 18.3,
-  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate"
+  "created": "2026-11-12T21:47:15+00:00",
+  "seconds": 18.7,
+  "notes": "GVHMR (SMPL-X) on the screen's fencer track; handedness, body_scale and quality are from MediaPipe on the same track",
+  "gvhmr": {
+    "fps": 30,
+    "results": "hmr4d_results.pt",
+    "fencer_check": {
+      "clip": "YyiWe-ZakzE_42709-54709",
+      "track_id": 1,
+      "fps": 30.0,
+      "boxes": {
+        "key": {
+          "track_npz": "/home/nathan/hcf-data/pose/YyiWe-ZakzE/track.npz",
+          "track_id": 1,
+          "start_s": 42.709,
+          "frames": 362,
+          "guide_sha256": "fb70058da9c481759a0f83ccf2c2c94acd9df2598417e1e57e1da4c618896dd5"
+        },
+        "frames": 362,
+        "yolo_frac": 1.0,
+        "bridged_frac": 0.0,
+        "pipeline_frac": 0.0,
+        "matched_iou_median": 0.9361
+      },
+      "keypoints": {
+        "frames_compared": 360,
+        "centroid_dist_median": 0.0078,
+        "centroid_dist_p95": 0.065,
+        "frac_within": 1.0,
+        "same_person": true
+      }
+    }
+  }
 }

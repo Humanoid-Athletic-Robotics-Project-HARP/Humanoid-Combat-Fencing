@@ -1,0 +1,22 @@
+{
+  "clip_id": "cLmKzPFfkew_44000-53000",
+  "yt_id": "cLmKzPFfkew",
+  "source_start_s": 44.0,
+  "source_end_s": 53.0,
+  "pose_method": "fallback_mediapipe",
+  "track_id": 10,
+  "human_height_m": 1.75,
+  "handedness_guess": "R",
+  "fps": 30,
+  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; GVHMR not used: its keypoints are not on MediaPipe's fencer (centroid distance median 0.0254 box heights, 79% of frames close); see gvhmr/fencer_check.png; retargeted with GMR smplx_to_g1 (fallback input)",
+  "retarget": {
+    "frames": 270,
+    "source_fps": 30.0,
+    "human_height_m": 1.75,
+    "ik_error_median": 2.5094,
+    "ik_error_p95": 4.3196,
+    "ik_seconds": 0.5,
+    "joint_limit_frac": 0.1816,
+    "despiked_joint_samples": 37
+  }
+}

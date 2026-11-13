@@ -1,0 +1,26 @@
+{
+  "clip": "fduOcTekMHc_120700-132700",
+  "track_id": 104,
+  "fps": 30.0,
+  "boxes": {
+    "key": {
+      "track_npz": "/home/nathan/hcf-data/pose/fduOcTekMHc/track.npz",
+      "track_id": 104,
+      "start_s": 120.7,
+      "frames": 360,
+      "guide_sha256": "0c40607071ace4d0c63e39db352c6af05c43c440f60cb486d9c4f8cfe8b82033"
+    },
+    "frames": 360,
+    "yolo_frac": 1.0,
+    "bridged_frac": 0.0,
+    "pipeline_frac": 0.0,
+    "matched_iou_median": 0.9317
+  },
+  "keypoints": {
+    "frames_compared": 360,
+    "centroid_dist_median": 0.0085,
+    "centroid_dist_p95": 0.0126,
+    "frac_within": 1.0,
+    "same_person": true
+  }
+}

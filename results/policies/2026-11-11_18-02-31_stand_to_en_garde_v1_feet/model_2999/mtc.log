@@ -1,0 +1,15 @@
+[mtc] saber policy: plant /home/nathan/hcf-data/mtc/models/g1_saber.xml + /home/nathan/hcf-data/mtc/models/g1_saber.urdf
+[mtc] /home/nathan/hcf-data/eval/2026-11-11_18-02-31_stand_to_en_garde_v1_feet/model_2999/policy.onnx in motion_tracking_controller + mujoco_sim_ros2, 11 s past activation
+[mtc] activation at sim 2.936 s, first tick +2 ms, real-time factor 1.0
+[mtc] state estimator vs truth: pelvis pos 17.6 cm, lin vel 0.009 m/s (means); at the first tick: speed 0.114 m/s, height error +3.7 cm
+[mtc] success 1 | joint 0.0992 rad | body 3.33 cm | anchor 4.86 cm | slip 0.00416 m/s | recovery 1 | blade 1.38 cm (after a 0.0 s unscored settle)
+[mtc] gap vs sim2sim.json (mtc - sim2sim): success_rate +0, joint_angle_error_rad +0.000633, body_pos_error_m +0.000343, anchor_pos_error_m -0.00217, anchor_ori_error_rad +0.00159, foot_slip_m_s -0.000224, blade_tip_error_m +0.000994
+[mtc]   PASS    nominal.success_rate = 1 (need >= 0.95)
+[mtc]   PASS    nominal.joint_angle_error_rad = 0.09923 (need <= 0.1)
+[mtc]   PASS    nominal.body_pos_error_m = 0.0333 (need <= 0.05)
+[mtc]   PASS    nominal.anchor_pos_error_m = 0.0486 (need <= 0.25)
+[mtc]   PASS    nominal.anchor_ori_error_rad = 0.128 (need <= 0.2)
+[mtc]   PASS    nominal.foot_slip_m_s = 0.004157 (need <= 0.1)
+[mtc]   PASS    nominal.recovery_rate = 1 (need >= 0.9)
+[mtc]   PASS    nominal.blade_tip_error_m = 0.0138 (need <= 0.1)
+[mtc] PASS -> /home/nathan/hcf-data/eval/2026-11-11_18-02-31_stand_to_en_garde_v1_feet/model_2999/mtc.json

@@ -1,0 +1,16 @@
+{
+  "run_name": "en_garde_v4_pipe",
+  "task": "Mjlab-Tracking-Flat-Unitree-G1",
+  "motion_npz": "/home/nathan/hcf-data/npz/en_garde_v4_mjlab.npz",
+  "motion_npz_sha256": "c73758b3aac04b54321968a0fedbcee47cf753b993d09f54ddfc84a63eb2c4a9",
+  "motion_csv": "/mnt/c/Users/Nathan/Documents/Coding Projects/Humanoid-Combat-Fencing/motions/en_garde_v4.csv",
+  "motion_csv_sha256": "b504bd1610670d605f2dc69e4210cf02dedb39fbaddcffd9e43885304cc3b6e4",
+  "repo_commit": "5f48884",
+  "repo_dirty": true,
+  "iterations": 3000,
+  "num_envs": 4096,
+  "started_at": "2026-11-13T00:13:22+00:00",
+  "resume_from": null,
+  "extra": {},
+  "schema_version": 1
+}

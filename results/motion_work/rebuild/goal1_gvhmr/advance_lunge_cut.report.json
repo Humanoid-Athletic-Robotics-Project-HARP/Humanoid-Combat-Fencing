@@ -1,0 +1,116 @@
+{
+  "anchored": null,
+  "compare": [],
+  "csv": "/home/nathan/hcf-data/motion/rebuild/goal1_gvhmr/advance_lunge_cut.csv",
+  "error": null,
+  "motion": "advance_lunge_cut",
+  "pose_method": "gvhmr",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.9547738693467337,
+          "right": 0.8291457286432161
+        },
+        "no_contact_frames": 0,
+        "pattern": {
+          "left": "#############...############################################",
+          "right": "##########...#######...##############....###################"
+        },
+        "phases": {
+          "left": 2,
+          "right": 4
+        }
+      },
+      "duration_s": 6.6,
+      "foot_slip": {
+        "contact_phases": 6,
+        "max_deviation_m": 0.012655644260295876,
+        "mean_slide_speed_mps": 0.0043948004867914526,
+        "total_slide_m": 0.05200513909369885
+      },
+      "fps": 30.0,
+      "frames": 199,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "right_wrist_pitch_joint",
+        "max_fraction_of_motor_limit": 0.43262863636363635,
+        "max_rad_s": 11.017500000000002
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 8.068631451826555e-06
+      },
+      "planted_float_p95_m": 0.015061078676091327,
+      "plausibility": {
+        "pelvis_height_min_m": 0.667259,
+        "pelvis_high_sustained_m": 0.788594,
+        "pelvis_low_sustained_m": 0.667839,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 21.872565222019624,
+        "torso_tilt_sustained_deg": 21.012513143778925
+      },
+      "root": {
+        "height_max_m": 0.794167,
+        "height_min_m": 0.667259,
+        "max_ground_speed_mps": 0.9596777482571949,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "pass"
+  },
+  "re_choose_on_this_data": [],
+  "source_csv": "/home/nathan/hcf-data/motion/rebuild/goal1_gvhmr/advance_lunge.csv",
+  "source_sha256": "a1560bf6b5577643891e3e6dcb6cf81ecc9b18c18f8761edfbb60f44108424b3",
+  "steps": [
+    {
+      "config": {
+        "end_hold_s": 2.0
+      },
+      "cut": "cut_head",
+      "info": {
+        "blade_ok": true,
+        "collision_frames": 0,
+        "keys": "en_garde@0.00s(arm) tip 0.0cm dir 0.0deg move 0.00s; cut_head@2.57s(arm) tip 0.0cm dir 0.0deg move 0.33s; en_garde@4.43s(arm) tip 0.0cm dir 0.0deg move 0.50s",
+        "keys_off_target": [],
+        "script": "en_garde 0s > cut_head 0.3s/0.3s@2.57s > en_garde 0.5s/0.6s@4.43s"
+      },
+      "op": "blade",
+      "recipe": "advance_lunge_cut"
+    }
+  ]
+}

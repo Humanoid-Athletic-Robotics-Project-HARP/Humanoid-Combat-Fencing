@@ -1,0 +1,154 @@
+{
+  "entry": {
+    "target": "parry_quinte_v3.csv",
+    "frame": 0,
+    "phases": [
+      {
+        "label": "start_hold",
+        "start_s": 0.0,
+        "end_s": 1.0
+      },
+      {
+        "label": "shift",
+        "start_s": 1.0,
+        "end_s": 1.8
+      },
+      {
+        "label": "step_right",
+        "start_s": 1.8,
+        "end_s": 2.6
+      },
+      {
+        "label": "transfer",
+        "start_s": 2.6,
+        "end_s": 3.4
+      },
+      {
+        "label": "step_left",
+        "start_s": 3.4,
+        "end_s": 4.2
+      },
+      {
+        "label": "settle",
+        "start_s": 4.2,
+        "end_s": 5.0
+      },
+      {
+        "label": "end_hold",
+        "start_s": 5.0,
+        "end_s": 7.5
+      }
+    ],
+    "duration_s": 7.5,
+    "worst_ik_error_m": {
+      "planted": 0.00129223643816963,
+      "swing": 0.006232778257092024
+    },
+    "com_release_frames": {
+      "step_right": 72,
+      "step_left": 120
+    },
+    "last_moving_frame_to_target_rad": 0.0006691661029299967,
+    "standby_pelvis": {
+      "pos": [
+        -0.16341654807395814,
+        -0.057952044901263135,
+        0.7564828143842829
+      ],
+      "quat_xyzw": [
+        -3.2397388925427123e-09,
+        -0.01349958994123626,
+        -2.3996607970471586e-07,
+        0.9999088763839238
+      ]
+    }
+  },
+  "quality": {
+    "verdict": "pass",
+    "reasons": [],
+    "format_ok": true,
+    "metrics": {
+      "frames": 225,
+      "fps": 30.0,
+      "duration_s": 7.466666666666667,
+      "foot_slip": {
+        "max_deviation_m": 0.004398234075413265,
+        "total_slide_m": 0.014281623623624357,
+        "mean_slide_speed_mps": 0.0010201159731160255,
+        "contact_phases": 4
+      },
+      "penetration": {
+        "max_depth_m": 0.0009622546269320627,
+        "frames_below_5mm": 0
+      },
+      "planted_float_p95_m": 0.00650358635003832,
+      "joint_limits": {
+        "violations": 0,
+        "max_violation_rad": 0.0,
+        "joints": []
+      },
+      "joint_speed": {
+        "max_rad_s": 3.1313432849596134,
+        "fastest_joint": "right_knee_joint",
+        "max_fraction_of_motor_limit": 0.15656716424798067
+      },
+      "root": {
+        "height_min_m": 0.711455,
+        "height_max_m": 0.7564828143842829,
+        "max_ground_speed_mps": 0.758738754879462,
+        "start_xy": [
+          -0.16341654807395814,
+          -0.057952044901263135
+        ]
+      },
+      "contacts": {
+        "fraction": {
+          "left": 0.9333333333333333,
+          "right": 0.9333333333333333
+        },
+        "phases": {
+          "left": 2,
+          "right": 2
+        },
+        "pattern": {
+          "left": "#############################....###########################",
+          "right": "################....########################################"
+        },
+        "no_contact_frames": 0
+      },
+      "plausibility": {
+        "torso_tilt_max_deg": 10.110061475106603,
+        "torso_tilt_sustained_deg": 10.110061475106603,
+        "pelvis_height_min_m": 0.711455,
+        "pelvis_low_sustained_m": 0.711455,
+        "pelvis_high_sustained_m": 0.7564828143842829,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null
+      }
+    },
+    "thresholds": {
+      "slip_warn_m": 0.02,
+      "slip_fail_m": 0.05,
+      "penetration_warn_m": 0.005,
+      "penetration_fail_m": 0.02,
+      "float_warn_m": 0.02,
+      "float_fail_m": 0.05,
+      "limit_tolerance_rad": 0.001,
+      "speed_warn_fraction": 0.6,
+      "speed_fail_fraction": 0.9,
+      "min_duration_s": 0.5,
+      "torso_tilt_warn_deg": 30.0,
+      "torso_tilt_fail_deg": 45.0,
+      "pelvis_low_warn_m": 0.55,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "sustain_s": 0.2,
+      "root_speed_warn_mps": 4.5,
+      "root_speed_fail_mps": 6.0,
+      "ik_error_warn": 2.0,
+      "ik_error_fail": 3.0,
+      "limit_frac_warn": 0.1,
+      "limit_frac_fail": 0.2
+    }
+  }
+}

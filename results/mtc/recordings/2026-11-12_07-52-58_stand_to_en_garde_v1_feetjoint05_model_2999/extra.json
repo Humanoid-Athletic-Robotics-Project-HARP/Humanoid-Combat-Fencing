@@ -1,0 +1,1 @@
+{"recorder_status": 0, "recording_dir": "/home/nathan/hcf-data/mtc/runs/2026-11-12_07-52-58_stand_to_en_garde_v1_feetjoint05_model_2999", "start_hold": true, "hold_release_sim_s": 3.0680, "plant_urdf": "/home/nathan/hcf-data/mtc/models/g1_saber.urdf", "attempt": 1, "start_from_standby": false, "standby_switch_after_s": null, "chain_entry_dir": null, "chain_switch_after_s": null}

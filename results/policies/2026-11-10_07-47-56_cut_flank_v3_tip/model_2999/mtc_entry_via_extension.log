@@ -1,0 +1,41 @@
+[mtc] saber policy: plant /home/nathan/hcf-data/mtc/models/g1_saber.xml + /home/nathan/hcf-data/mtc/models/g1_saber.urdf
+[mtc] /home/nathan/hcf-data/eval/2026-11-10_07-47-56_cut_flank_v3_tip/model_2999/policy.onnx in motion_tracking_controller + mujoco_sim_ros2, 7 s past activation
+[mtc] chained start: standby -> /home/nathan/hcf-data/eval/2026-11-10_06-14-28_extension_v3_tip/model_2999 (R1 + A after 10 s) -> target (R1 + X after 7 s)
+[mtc] activation at sim 20.002 s, first tick +2 ms, real-time factor 1.0
+[mtc] state estimator vs truth: pelvis pos 2.5 cm, lin vel 0.004 m/s (means); at the first tick: speed 0.001 m/s, height error +0.2 cm
+[mtc] success 1 | joint 0.0793 rad | body 5.05 cm | anchor 2.89 cm | slip 0.00233 m/s | recovery 1 | blade 2.37 cm | blade at key 2.64 cm (after a 0.0 s unscored settle)
+[mtc] gap vs sim2sim.json (mtc - sim2sim): success_rate +0, joint_angle_error_rad +0.0109, body_pos_error_m +0.00815, anchor_pos_error_m +0.00513, anchor_ori_error_rad +0.036, foot_slip_m_s -0.0459, blade_tip_error_m +0.00625, blade_tip_error_key_m -0.000411
+[mtc]   PASS    nominal.success_rate = 1 (need >= 0.95)
+[mtc]   PASS    nominal.joint_angle_error_rad = 0.07926 (need <= 0.1)
+[mtc]   FAIL    nominal.body_pos_error_m = 0.05054 (need <= 0.05)
+[mtc]   PASS    nominal.anchor_pos_error_m = 0.02893 (need <= 0.25)
+[mtc]   PASS    nominal.anchor_ori_error_rad = 0.07257 (need <= 0.2)
+[mtc]   PASS    nominal.foot_slip_m_s = 0.002329 (need <= 0.1)
+[mtc]   PASS    nominal.recovery_rate = 1 (need >= 0.9)
+[mtc]   PASS    nominal.blade_tip_error_m = 0.02375 (need <= 0.1)
+[mtc]   PASS    nominal.blade_tip_error_key_m = 0.02645 (need <= 0.05)
+[mtc] standby start: {'still': True, 'reasons': [], 'window_s': 1.0, 'window_ends_before_switch_s': 0.01, 'standby_active_s': 7.005999998999998, 'pelvis_height_m': 0.7463574750447601, 'pelvis_height_range_m': 2.3709981189501406e-06, 'pelvis_speed_max_m_s': 0.0018895861256498852, 'pelvis_tilt_max_rad': 0.0824111815403564, 'joint_speed_max_rad_s': 0.008435955779541541, 'limits': {'standby_active_s': 3.0, 'pelvis_speed_max_m_s': 0.01, 'pelvis_height_range_m': 0.002, 'pelvis_tilt_max_rad': 0.2, 'joint_speed_max_rad_s': 0.05}}
+[mtc] converged (joint error < 0.15 rad for 0.5 s) at step 0, 0.04199999999999804 s after the switch
+[mtc] after convergence: success 1 | joint 0.0793 rad | body 5.05 cm | anchor 2.89 cm | slip 0.00233 m/s | recovery 1 | blade 2.37 cm | blade at key 2.64 cm -> FAIL
+[mtc] entry 2026-11-10_06-14-28_extension_v3_tip: success 1 | joint 0.1 rad | body 6.26 cm | anchor 11.1 cm | slip 0.0281 m/s | recovery 1 | blade 4.17 cm | blade at key 4.52 cm -> FAIL; switched to the motion 7.01 s after the entry
+[mtc]   INVALID entry: a scored state was recorded 0.012 s from its policy tick (limit 0.010 s, half a policy step): /joint_states or /mid360 messages were dropped
+[mtc] INVALID -> /home/nathan/hcf-data/eval/2026-11-10_07-47-56_cut_flank_v3_tip/model_2999/mtc_entry.json
+[mtc] attempt 1 INVALID (dropped messages); recording again
+[mtc] activation at sim 20.004 s, first tick +2 ms, real-time factor 1.0
+[mtc] state estimator vs truth: pelvis pos 2.5 cm, lin vel 0.004 m/s (means); at the first tick: speed 0.001 m/s, height error +0.2 cm
+[mtc] success 1 | joint 0.0793 rad | body 5.05 cm | anchor 2.89 cm | slip 0.00233 m/s | recovery 1 | blade 2.37 cm | blade at key 2.64 cm (after a 0.0 s unscored settle)
+[mtc] gap vs sim2sim.json (mtc - sim2sim): success_rate +0, joint_angle_error_rad +0.0109, body_pos_error_m +0.00815, anchor_pos_error_m +0.00513, anchor_ori_error_rad +0.036, foot_slip_m_s -0.0459, blade_tip_error_m +0.00625, blade_tip_error_key_m -0.000411
+[mtc]   PASS    nominal.success_rate = 1 (need >= 0.95)
+[mtc]   PASS    nominal.joint_angle_error_rad = 0.07926 (need <= 0.1)
+[mtc]   FAIL    nominal.body_pos_error_m = 0.05054 (need <= 0.05)
+[mtc]   PASS    nominal.anchor_pos_error_m = 0.02893 (need <= 0.25)
+[mtc]   PASS    nominal.anchor_ori_error_rad = 0.07257 (need <= 0.2)
+[mtc]   PASS    nominal.foot_slip_m_s = 0.00233 (need <= 0.1)
+[mtc]   PASS    nominal.recovery_rate = 1 (need >= 0.9)
+[mtc]   PASS    nominal.blade_tip_error_m = 0.02375 (need <= 0.1)
+[mtc]   PASS    nominal.blade_tip_error_key_m = 0.02645 (need <= 0.05)
+[mtc] standby start: {'still': True, 'reasons': [], 'window_s': 1.0, 'window_ends_before_switch_s': 0.01, 'standby_active_s': 7.005999999000002, 'pelvis_height_m': 0.7463574782938343, 'pelvis_height_range_m': 2.367066514574745e-06, 'pelvis_speed_max_m_s': 0.0018895572226616496, 'pelvis_tilt_max_rad': 0.0824116267301239, 'joint_speed_max_rad_s': 0.008435904777918665, 'limits': {'standby_active_s': 3.0, 'pelvis_speed_max_m_s': 0.01, 'pelvis_height_range_m': 0.002, 'pelvis_tilt_max_rad': 0.2, 'joint_speed_max_rad_s': 0.05}}
+[mtc] converged (joint error < 0.15 rad for 0.5 s) at step 0, 0.04199999999999804 s after the switch
+[mtc] after convergence: success 1 | joint 0.0793 rad | body 5.05 cm | anchor 2.89 cm | slip 0.00233 m/s | recovery 1 | blade 2.37 cm | blade at key 2.64 cm -> FAIL
+[mtc] entry 2026-11-10_06-14-28_extension_v3_tip: success 1 | joint 0.1 rad | body 6.26 cm | anchor 11.1 cm | slip 0.0281 m/s | recovery 1 | blade 4.17 cm | blade at key 4.52 cm -> FAIL; switched to the motion 7.01 s after the entry
+[mtc] FAIL -> /home/nathan/hcf-data/eval/2026-11-10_07-47-56_cut_flank_v3_tip/model_2999/mtc_entry.json

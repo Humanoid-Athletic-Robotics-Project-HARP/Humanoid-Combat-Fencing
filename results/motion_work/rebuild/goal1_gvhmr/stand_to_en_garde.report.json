@@ -1,0 +1,168 @@
+{
+  "anchored": null,
+  "compare": [],
+  "csv": "/home/nathan/hcf-data/motion/rebuild/goal1_gvhmr/stand_to_en_garde.csv",
+  "error": null,
+  "motion": "stand_to_en_garde",
+  "pose_method": "gvhmr",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.9333333333333333,
+          "right": 0.9333333333333333
+        },
+        "no_contact_frames": 0,
+        "pattern": {
+          "left": "#############################....###########################",
+          "right": "################....########################################"
+        },
+        "phases": {
+          "left": 2,
+          "right": 2
+        }
+      },
+      "duration_s": 7.466666666666667,
+      "foot_slip": {
+        "contact_phases": 4,
+        "max_deviation_m": 0.001351323890907538,
+        "mean_slide_speed_mps": 0.0007448934954410664,
+        "total_slide_m": 0.010428508936174929
+      },
+      "fps": 30.0,
+      "frames": 225,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "left_knee_joint",
+        "max_fraction_of_motor_limit": 0.22889849999999998,
+        "max_rad_s": 4.57797
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 0.000578352987585495
+      },
+      "planted_float_p95_m": 0.000598458533488725,
+      "plausibility": {
+        "pelvis_height_min_m": 0.756483,
+        "pelvis_high_sustained_m": 0.759406,
+        "pelvis_low_sustained_m": 0.756483,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 12.89868586667823,
+        "torso_tilt_sustained_deg": 12.89868586667823
+      },
+      "root": {
+        "height_max_m": 0.759406,
+        "height_min_m": 0.756483,
+        "max_ground_speed_mps": 0.6951297106296063,
+        "start_xy": [
+          0.026542,
+          -0.046245
+        ]
+      }
+    },
+    "reasons": [],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "pass"
+  },
+  "re_choose_on_this_data": [],
+  "source_csv": "/home/nathan/hcf-data/motion/rebuild/goal1_gvhmr/parry_quinte.csv",
+  "source_sha256": "b4ace04e8c9e849dd7b5a629348851a25805cb6414f4030dbeed8c3c113f56c6",
+  "steps": [
+    {
+      "frame": 0,
+      "info": {
+        "com_release_frames": {
+          "step_left": 120,
+          "step_right": 72
+        },
+        "duration_s": 7.5,
+        "frame": 0,
+        "last_moving_frame_to_target_rad": 0.00026613224141813774,
+        "phases": [
+          {
+            "end_s": 1.0,
+            "label": "start_hold",
+            "start_s": 0.0
+          },
+          {
+            "end_s": 1.8,
+            "label": "shift",
+            "start_s": 1.0
+          },
+          {
+            "end_s": 2.6,
+            "label": "step_right",
+            "start_s": 1.8
+          },
+          {
+            "end_s": 3.4,
+            "label": "transfer",
+            "start_s": 2.6
+          },
+          {
+            "end_s": 4.2,
+            "label": "step_left",
+            "start_s": 3.4
+          },
+          {
+            "end_s": 5.0,
+            "label": "settle",
+            "start_s": 4.2
+          },
+          {
+            "end_s": 7.5,
+            "label": "end_hold",
+            "start_s": 5.0
+          }
+        ],
+        "standby_pelvis": {
+          "pos": [
+            0.026541746234178577,
+            -0.046244670815684744,
+            0.7564828143842828
+          ],
+          "quat_xyzw": [
+            0.009061967735301992,
+            -0.010005981678270423,
+            0.67121608993135,
+            0.7411388005553942
+          ]
+        },
+        "worst_ik_error_m": {
+          "planted": 0.0007639630190549165,
+          "swing": 0.002076723930543705
+        }
+      },
+      "op": "entry"
+    }
+  ]
+}

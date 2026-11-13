@@ -34,7 +34,38 @@
     "upper_foot_height_median_m": 0.063,
     "shin_length_cv": 0.085
   },
-  "created": "2026-11-10T00:55:55+00:00",
-  "seconds": 0.7,
-  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; handedness undecided (cues weak or disagree)"
+  "created": "2026-11-12T21:53:13+00:00",
+  "seconds": 14.2,
+  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; GVHMR not used: its keypoints are not on MediaPipe's fencer (centroid distance median 0.0195 box heights, 69% of frames close); see gvhmr/fencer_check.png; handedness undecided (cues weak or disagree)",
+  "gvhmr": {
+    "fps": 30,
+    "results": "hmr4d_results.pt",
+    "fencer_check": {
+      "clip": "rKRYHsJDnJc_18033-23467",
+      "track_id": 65,
+      "fps": 30.0,
+      "boxes": {
+        "key": {
+          "track_npz": "/home/nathan/hcf-data/pose/rKRYHsJDnJc/track.npz",
+          "track_id": 65,
+          "start_s": 18.033,
+          "frames": 164,
+          "guide_sha256": "5f78f87e2e2904b7296237e8788e74dd5138111a1bc76bc46d569ca89176f407"
+        },
+        "frames": 164,
+        "yolo_frac": 1.0,
+        "bridged_frac": 0.0,
+        "pipeline_frac": 0.0,
+        "matched_iou_median": 0.8991
+      },
+      "keypoints": {
+        "frames_compared": 164,
+        "centroid_dist_median": 0.0195,
+        "centroid_dist_p95": 0.5222,
+        "frac_within": 0.689,
+        "same_person": false
+      }
+    },
+    "note": "GVHMR not used: its keypoints are not on MediaPipe's fencer (centroid distance median 0.0195 box heights, 69% of frames close); see gvhmr/fencer_check.png"
+  }
 }

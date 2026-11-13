@@ -1,0 +1,115 @@
+{
+  "anchored": null,
+  "compare": [],
+  "csv": "/home/nathan/hcf-data/motion/rebuild/goal1_gvhmr/parry_tierce_high.csv",
+  "error": null,
+  "motion": "parry_tierce_high",
+  "pose_method": "gvhmr",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 1.0,
+          "right": 1.0
+        },
+        "no_contact_frames": 0,
+        "pattern": {
+          "left": "############################################################",
+          "right": "############################################################"
+        },
+        "phases": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      "duration_s": 4.166666666666667,
+      "foot_slip": {
+        "contact_phases": 2,
+        "max_deviation_m": 0.0035742678767570323,
+        "mean_slide_speed_mps": 0.0030998912979491814,
+        "total_slide_m": 0.026039086902773123
+      },
+      "fps": 30.0,
+      "frames": 126,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "right_wrist_yaw_joint",
+        "max_fraction_of_motor_limit": 0.44142545454545457,
+        "max_rad_s": 9.71136
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 0.00019361824550184585
+      },
+      "planted_float_p95_m": 0.0006441443586900681,
+      "plausibility": {
+        "pelvis_height_min_m": 0.754862,
+        "pelvis_high_sustained_m": 0.759406,
+        "pelvis_low_sustained_m": 0.755166,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 12.961370999508219,
+        "torso_tilt_sustained_deg": 12.961370999508219
+      },
+      "root": {
+        "height_max_m": 0.759406,
+        "height_min_m": 0.754862,
+        "max_ground_speed_mps": 0.03302205626547202,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "pass"
+  },
+  "re_choose_on_this_data": [],
+  "source_csv": "/home/nathan/hcf-data/motion/rebuild/goal1_gvhmr/en_garde.csv",
+  "source_sha256": "b504bd1610670d605f2dc69e4210cf02dedb39fbaddcffd9e43885304cc3b6e4",
+  "steps": [
+    {
+      "config": {
+        "end_hold_s": 2.0
+      },
+      "info": {
+        "blade_ok": true,
+        "collision_frames": 0,
+        "keys": "en_garde@0.00s(arm) tip 0.0cm dir 0.0deg move 0.00s; parry_tierce_high@1.07s(arm) tip 0.1cm dir 0.1deg move 0.47s; en_garde@2.17s(arm) tip 0.0cm dir 0.0deg move 0.50s",
+        "keys_off_target": [],
+        "script": "en_garde 0s/0.6s > parry_tierce_high 0.3s/0.6s > en_garde 0.5s/0.6s"
+      },
+      "op": "blade",
+      "recipe": "parry_tierce_high"
+    }
+  ]
+}

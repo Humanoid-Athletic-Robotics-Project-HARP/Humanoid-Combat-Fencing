@@ -1,0 +1,28 @@
+{
+  "clip_id": "IKDmvrc87o8_4605-9109",
+  "yt_id": "IKDmvrc87o8",
+  "source_start_s": 4.605,
+  "source_end_s": 9.109,
+  "pose_method": "gvhmr",
+  "track_id": 19,
+  "human_height_m": 1.720663616657257,
+  "handedness_guess": "R",
+  "fps": 30,
+  "notes": "GVHMR (SMPL-X) on the screen's fencer track; handedness, body_scale and quality are from MediaPipe on the same track; retargeted with GMR smplx_to_g1 (gvhmr input)",
+  "retarget": {
+    "frames": 135,
+    "source_fps": 30.0,
+    "human_height_m": 1.720663616657257,
+    "ik_error_median": 0.8026,
+    "ik_error_p95": 0.9339,
+    "ik_seconds": 0.2,
+    "joint_limit_frac": 0.0603,
+    "despiked_joint_samples": 0,
+    "betas_height_m": 1.721,
+    "ground_shift_m": [
+      0.0027,
+      -0.0118,
+      0.0382
+    ]
+  }
+}

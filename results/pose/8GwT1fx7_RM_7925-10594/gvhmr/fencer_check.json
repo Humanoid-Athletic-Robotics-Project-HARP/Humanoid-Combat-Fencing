@@ -1,0 +1,25 @@
+{
+  "clip": "8GwT1fx7_RM_7925-10594",
+  "track_id": 23,
+  "fps": 30.0,
+  "boxes": {
+    "key": {
+      "track_npz": "/home/nathan/hcf-data/pose/8GwT1fx7_RM/track.npz",
+      "track_id": 23,
+      "start_s": 7.925,
+      "frames": 80
+    },
+    "frames": 80,
+    "yolo_frac": 0.0,
+    "bridged_frac": 0.0,
+    "pipeline_frac": 1.0,
+    "matched_iou_median": null
+  },
+  "keypoints": {
+    "frames_compared": 32,
+    "centroid_dist_median": 0.0463,
+    "centroid_dist_p95": 0.0844,
+    "frac_within": 1.0,
+    "same_person": true
+  }
+}

@@ -5,7 +5,7 @@
   "source_end_s": 97.711,
   "track_id": 16,
   "video": "/home/nathan/hcf-data/videos/raw/vDITr6kREII.mp4",
-  "pose_method": "fallback_mediapipe",
+  "pose_method": "gvhmr",
   "pose_version": 2,
   "fps": 30.0,
   "human_height_m": 1.75,
@@ -34,7 +34,37 @@
     "upper_foot_height_median_m": 0.033,
     "shin_length_cv": 0.046
   },
-  "created": "2026-11-11T20:00:43+00:00",
-  "seconds": 12.8,
-  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; handedness undecided (cues weak or disagree)"
+  "created": "2026-11-12T21:53:48+00:00",
+  "seconds": 16.5,
+  "notes": "GVHMR (SMPL-X) on the screen's fencer track; handedness, body_scale and quality are from MediaPipe on the same track; handedness undecided (cues weak or disagree)",
+  "gvhmr": {
+    "fps": 30,
+    "results": "hmr4d_results.pt",
+    "fencer_check": {
+      "clip": "vDITr6kREII_85711-97711",
+      "track_id": 16,
+      "fps": 30.0,
+      "boxes": {
+        "key": {
+          "track_npz": "/home/nathan/hcf-data/pose/vDITr6kREII/track.npz",
+          "track_id": 16,
+          "start_s": 85.711,
+          "frames": 361,
+          "guide_sha256": "0ad1620a59acfbfc0991d32b7db4e0139fb16cbb2b82cf5bcd64da565ab4f3b8"
+        },
+        "frames": 361,
+        "yolo_frac": 1.0,
+        "bridged_frac": 0.0,
+        "pipeline_frac": 0.0,
+        "matched_iou_median": 0.955
+      },
+      "keypoints": {
+        "frames_compared": 308,
+        "centroid_dist_median": 0.0111,
+        "centroid_dist_p95": 0.0155,
+        "frac_within": 1.0,
+        "same_person": true
+      }
+    }
+  }
 }

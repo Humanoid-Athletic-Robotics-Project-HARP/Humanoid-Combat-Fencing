@@ -1,0 +1,319 @@
+{
+  "anchored": null,
+  "compare": [],
+  "csv": "/home/nathan/hcf-data/motion/rebuild/goal1_gvhmr/retreat.csv",
+  "error": null,
+  "motion": "retreat",
+  "pose_method": "gvhmr",
+  "quality": {
+    "format_ok": true,
+    "metrics": {
+      "contacts": {
+        "fraction": {
+          "left": 0.9174311926605505,
+          "right": 0.8990825688073395
+        },
+        "no_contact_frames": 0,
+        "pattern": {
+          "left": "##########.....#############################################",
+          "right": "################......######################################"
+        },
+        "phases": {
+          "left": 2,
+          "right": 2
+        }
+      },
+      "duration_s": 3.6,
+      "foot_slip": {
+        "contact_phases": 4,
+        "max_deviation_m": 0.01367366398900837,
+        "mean_slide_speed_mps": 0.011845894338761766,
+        "total_slide_m": 0.07818290263582765
+      },
+      "fps": 30.0,
+      "frames": 109,
+      "joint_limits": {
+        "joints": [],
+        "max_violation_rad": 0.0,
+        "violations": 0
+      },
+      "joint_speed": {
+        "fastest_joint": "right_knee_joint",
+        "max_fraction_of_motor_limit": 0.23931300000000003,
+        "max_rad_s": 4.78626
+      },
+      "penetration": {
+        "frames_below_5mm": 0,
+        "max_depth_m": 0.00140394674144813
+      },
+      "planted_float_p95_m": 0.01775458811777377,
+      "plausibility": {
+        "pelvis_height_min_m": 0.735909,
+        "pelvis_high_sustained_m": 0.788475,
+        "pelvis_low_sustained_m": 0.744185,
+        "retarget_ik_error_median": null,
+        "retarget_joint_limit_frac": null,
+        "torso_tilt_max_deg": 26.046771859834358,
+        "torso_tilt_sustained_deg": 25.725950530117014
+      },
+      "root": {
+        "height_max_m": 0.789781,
+        "height_min_m": 0.735909,
+        "max_ground_speed_mps": 0.9131063141825273,
+        "start_xy": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "reasons": [],
+    "thresholds": {
+      "float_fail_m": 0.05,
+      "float_warn_m": 0.02,
+      "ik_error_fail": 3.0,
+      "ik_error_warn": 2.0,
+      "limit_frac_fail": 0.2,
+      "limit_frac_warn": 0.1,
+      "limit_tolerance_rad": 0.001,
+      "min_duration_s": 0.5,
+      "pelvis_high_fail_m": 0.9,
+      "pelvis_low_fail_m": 0.5,
+      "pelvis_low_warn_m": 0.55,
+      "penetration_fail_m": 0.02,
+      "penetration_warn_m": 0.005,
+      "root_speed_fail_mps": 6.0,
+      "root_speed_warn_mps": 4.5,
+      "slip_fail_m": 0.05,
+      "slip_warn_m": 0.02,
+      "speed_fail_fraction": 0.9,
+      "speed_warn_fraction": 0.6,
+      "sustain_s": 0.2,
+      "torso_tilt_fail_deg": 45.0,
+      "torso_tilt_warn_deg": 30.0
+    },
+    "verdict": "pass"
+  },
+  "re_choose_on_this_data": [],
+  "source_csv": "/home/nathan/hcf-data/retarget/csv/GKsaQ3jsvuI_186486-196546.csv",
+  "source_sha256": "f75b6efd5b97c334cd23ff46ad18d929a4c097aaab8f89cbb76c18af9ec51d0a",
+  "steps": [
+    {
+      "config": {
+        "end_hold_s": 2.0
+      },
+      "frames": [
+        7,
+        41
+      ],
+      "info": {
+        "hand": "R",
+        "hand_source": "sidecar",
+        "mirrored": false,
+        "segment": {
+          "end": 41,
+          "label": "retreat",
+          "source": "manual",
+          "start": 7
+        },
+        "steps": [
+          {
+            "end": 41,
+            "label": "retreat",
+            "source": "manual",
+            "start": 7,
+            "step": "segment"
+          },
+          {
+            "heading_source": "line",
+            "rotated_deg": -160.53121477378727,
+            "step": "canonicalize",
+            "translated_xy": [
+              0.009579,
+              -0.025209
+            ]
+          },
+          {
+            "lateral_after_m": 0.006540613918787652,
+            "lateral_before_m": 0.026162455675150607,
+            "line_deg": 0.0,
+            "line_source": "travel",
+            "max_correction_deg": 7.293609416224103,
+            "mean_heading_to_line_deg": 48.9384987337597,
+            "slow_yaw_range_deg": 11.42808748544721,
+            "step": "straighten"
+          },
+          {
+            "heading_source": "line",
+            "rotated_deg": -0.0,
+            "step": "canonicalize_straight",
+            "translated_xy": [
+              -0.0,
+              -0.0
+            ]
+          },
+          {
+            "cutoff_hz": 8.0,
+            "max_joint_change_rad": 0.0060292652528845525,
+            "mean_joint_change_rad": 0.0007620323587200981,
+            "step": "smooth"
+          },
+          {
+            "clamped_values": 9,
+            "margin_rad": 0.02,
+            "max_violation_rad": 0.0221274494488167,
+            "per_joint_frames": {
+              "right_ankle_roll_joint": 9
+            },
+            "step": "joint_limits"
+          },
+          {
+            "cutoff_hz": 0.3,
+            "drift_range_m": 0.008698263040423936,
+            "step": "vertical_drift"
+          },
+          {
+            "correction_range_m": 0.01353937724204201,
+            "mean_correction_m": 0.02783154399786885,
+            "smoothing_hz": 1.5,
+            "step": "ground_align"
+          },
+          {
+            "ik_solves": 0,
+            "max_lowered_m": 0.0,
+            "planted_phases": [
+              0,
+              0
+            ],
+            "step": "plant_still_feet",
+            "worst_ik_error_m": 0.0
+          },
+          {
+            "blend_s": 0.15,
+            "contact_phases": [
+              1,
+              2
+            ],
+            "ik_solves": 43,
+            "max_root_shift_m": 0.011361785343093985,
+            "slip_after_m": 0.00011008109989361346,
+            "slip_before_m": 0.028106076630776865,
+            "step": "foot_slide",
+            "worst_ik_error_m": 0.0011719566726093636
+          },
+          {
+            "cutoff_hz": 0.3,
+            "drift_range_m": 0.00019039856548866343,
+            "step": "vertical_drift_round2"
+          },
+          {
+            "correction_range_m": 0.0039924327962959924,
+            "mean_correction_m": 0.00020646265295269457,
+            "smoothing_hz": 1.5,
+            "step": "ground_align_round2"
+          },
+          {
+            "ik_solves": 0,
+            "max_lowered_m": 0.0,
+            "planted_phases": [
+              0,
+              0
+            ],
+            "step": "plant_still_feet_round2",
+            "worst_ik_error_m": 0.0
+          },
+          {
+            "blend_s": 0.15,
+            "contact_phases": [
+              1,
+              2
+            ],
+            "ik_solves": 12,
+            "max_root_shift_m": 0.007057261958497068,
+            "slip_after_m": 0.00022821134451529428,
+            "slip_before_m": 0.014128103966995171,
+            "step": "foot_slide_round2",
+            "worst_ik_error_m": 0.001754371188328632
+          },
+          {
+            "cutoff_hz": 0.3,
+            "drift_range_m": 1.018953485502223e-05,
+            "step": "vertical_drift_round3"
+          },
+          {
+            "correction_range_m": 0.002298848845978102,
+            "mean_correction_m": 1.5255154941424611e-06,
+            "smoothing_hz": 1.5,
+            "step": "ground_align_round3"
+          },
+          {
+            "ik_solves": 0,
+            "max_lowered_m": 0.0,
+            "planted_phases": [
+              0,
+              0
+            ],
+            "step": "plant_still_feet_round3",
+            "worst_ik_error_m": 0.0
+          },
+          {
+            "blend_s": 0.15,
+            "contact_phases": [
+              1,
+              2
+            ],
+            "ik_solves": 0,
+            "max_root_shift_m": 0.0001221709953340779,
+            "slip_after_m": 0.0001413660638127429,
+            "slip_before_m": 0.00022821134451529428,
+            "step": "foot_slide_round3",
+            "worst_ik_error_m": 0.0
+          },
+          {
+            "frames_over": 0,
+            "max_speed_before": 4.786259185025856,
+            "step": "joint_speed"
+          },
+          {
+            "clamped_values": 0,
+            "margin_rad": 0.0,
+            "max_violation_rad": 0.0,
+            "step": "joint_limits_final"
+          },
+          {
+            "frames_lifted": 34,
+            "max_depth_m": 0.0073217972998722135,
+            "step": "floor_penetration"
+          },
+          {
+            "ease_s": 0.25,
+            "end_hold_s": 2.0,
+            "start_hold_s": 0.5,
+            "step": "hold"
+          },
+          {
+            "ik_solves": 21,
+            "max_lowered_m": 0.025286919334793788,
+            "planted_phases": [
+              1,
+              0
+            ],
+            "step": "plant_still_feet_final",
+            "worst_ik_error_m": 0.00012554677797319453
+          },
+          {
+            "heading_source": "line",
+            "rotated_deg": 1.00507488146364,
+            "step": "canonicalize_final",
+            "translated_xy": [
+              0.00772816739448533,
+              0.007721241106506706
+            ]
+          }
+        ],
+        "verdict": "pass"
+      },
+      "label": "retreat",
+      "op": "clean"
+    }
+  ]
+}

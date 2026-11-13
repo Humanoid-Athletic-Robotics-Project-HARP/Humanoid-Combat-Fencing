@@ -1,0 +1,28 @@
+{
+  "clip_id": "Jwo2_EV89Qw_38200-44000",
+  "yt_id": "Jwo2_EV89Qw",
+  "source_start_s": 38.2,
+  "source_end_s": 44.0,
+  "pose_method": "gvhmr",
+  "track_id": 548,
+  "human_height_m": 1.7364484763145447,
+  "handedness_guess": "R",
+  "fps": 30,
+  "notes": "GVHMR (SMPL-X) on the screen's fencer track; handedness, body_scale and quality are from MediaPipe on the same track; retargeted with GMR smplx_to_g1 (gvhmr input)",
+  "retarget": {
+    "frames": 174,
+    "source_fps": 30.0,
+    "human_height_m": 1.7364484763145447,
+    "ik_error_median": 1.0273,
+    "ik_error_p95": 1.088,
+    "ik_seconds": 0.3,
+    "joint_limit_frac": 0.0386,
+    "despiked_joint_samples": 0,
+    "betas_height_m": 1.736,
+    "ground_shift_m": [
+      0.0026,
+      -0.0153,
+      -0.0045
+    ]
+  }
+}

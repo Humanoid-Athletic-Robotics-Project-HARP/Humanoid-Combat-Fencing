@@ -4,7 +4,7 @@
   "human_height_m": 1.75,
   "ik_error_median": 4.7478,
   "ik_error_p95": 5.7474,
-  "ik_seconds": 0.7,
+  "ik_seconds": 0.8,
   "joint_limit_frac": 0.2923,
   "despiked_joint_samples": 19
 }

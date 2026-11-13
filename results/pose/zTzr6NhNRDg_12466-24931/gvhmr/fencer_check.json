@@ -1,0 +1,26 @@
+{
+  "clip": "zTzr6NhNRDg_12466-24931",
+  "track_id": 1,
+  "fps": 30.0,
+  "boxes": {
+    "key": {
+      "track_npz": "/home/nathan/hcf-data/pose/zTzr6NhNRDg/track.npz",
+      "track_id": 1,
+      "start_s": 12.466,
+      "frames": 374,
+      "guide_sha256": "b48cdd319bba63351994d5ae312e13d37cada64e7086871f41fe9eb7c7ebfb76"
+    },
+    "frames": 374,
+    "yolo_frac": 1.0,
+    "bridged_frac": 0.0,
+    "pipeline_frac": 0.0,
+    "matched_iou_median": 0.944
+  },
+  "keypoints": {
+    "frames_compared": 374,
+    "centroid_dist_median": 0.0217,
+    "centroid_dist_p95": 0.0566,
+    "frac_within": 1.0,
+    "same_person": true
+  }
+}

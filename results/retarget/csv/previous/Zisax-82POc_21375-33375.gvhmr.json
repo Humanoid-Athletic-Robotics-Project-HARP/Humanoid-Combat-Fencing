@@ -1,0 +1,28 @@
+{
+  "clip_id": "Zisax-82POc_21375-33375",
+  "yt_id": "Zisax-82POc",
+  "source_start_s": 21.375,
+  "source_end_s": 33.375,
+  "pose_method": "gvhmr",
+  "track_id": 4,
+  "human_height_m": 1.7294088876247404,
+  "handedness_guess": null,
+  "fps": 30,
+  "notes": "GVHMR (SMPL-X) on the screen's fencer track; handedness, body_scale and quality are from MediaPipe on the same track; handedness undecided (cues weak or disagree); retargeted with GMR smplx_to_g1 (gvhmr input)",
+  "retarget": {
+    "frames": 360,
+    "source_fps": 30.0,
+    "human_height_m": 1.7294088876247404,
+    "ik_error_median": 0.6921,
+    "ik_error_p95": 0.6943,
+    "ik_seconds": 0.5,
+    "joint_limit_frac": 0.0345,
+    "despiked_joint_samples": 0,
+    "betas_height_m": 1.729,
+    "ground_shift_m": [
+      0.0025,
+      -0.013,
+      -0.0263
+    ]
+  }
+}

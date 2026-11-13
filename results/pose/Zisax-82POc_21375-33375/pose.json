@@ -5,7 +5,7 @@
   "source_end_s": 33.375,
   "track_id": 4,
   "video": "/home/nathan/hcf-data/videos/raw/Zisax-82POc.mp4",
-  "pose_method": "fallback_mediapipe",
+  "pose_method": "gvhmr",
   "pose_version": 2,
   "fps": 30.0,
   "human_height_m": 1.75,
@@ -34,7 +34,37 @@
     "upper_foot_height_median_m": 0.013,
     "shin_length_cv": 0.016
   },
-  "created": "2026-11-11T19:57:58+00:00",
-  "seconds": 13.4,
-  "notes": "monocular MediaPipe + pinhole root solve; no body model, wrist twist approximate; handedness undecided (cues weak or disagree)"
+  "created": "2026-11-12T21:47:50+00:00",
+  "seconds": 16.5,
+  "notes": "GVHMR (SMPL-X) on the screen's fencer track; handedness, body_scale and quality are from MediaPipe on the same track; handedness undecided (cues weak or disagree)",
+  "gvhmr": {
+    "fps": 30,
+    "results": "hmr4d_results.pt",
+    "fencer_check": {
+      "clip": "Zisax-82POc_21375-33375",
+      "track_id": 4,
+      "fps": 30.0,
+      "boxes": {
+        "key": {
+          "track_npz": "/home/nathan/hcf-data/pose/Zisax-82POc/track.npz",
+          "track_id": 4,
+          "start_s": 21.375,
+          "frames": 360,
+          "guide_sha256": "f38346752960d2f2b30511e1e341c0c117ac20f48fbc17cc2fcf7ed41b7b7a5d"
+        },
+        "frames": 360,
+        "yolo_frac": 1.0,
+        "bridged_frac": 0.0,
+        "pipeline_frac": 0.0,
+        "matched_iou_median": 0.8779
+      },
+      "keypoints": {
+        "frames_compared": 360,
+        "centroid_dist_median": 0.0026,
+        "centroid_dist_p95": 0.0036,
+        "frac_within": 1.0,
+        "same_person": true
+      }
+    }
+  }
 }

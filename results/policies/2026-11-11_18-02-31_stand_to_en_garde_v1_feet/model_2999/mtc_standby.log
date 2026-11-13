@@ -1,0 +1,18 @@
+[mtc] saber policy: plant /home/nathan/hcf-data/mtc/models/g1_saber.xml + /home/nathan/hcf-data/mtc/models/g1_saber.urdf
+[mtc] /home/nathan/hcf-data/eval/2026-11-11_18-02-31_stand_to_en_garde_v1_feet/model_2999/policy.onnx in motion_tracking_controller + mujoco_sim_ros2, 11 s past activation
+[mtc] activation at sim 13.346 s, first tick +2 ms, real-time factor 1.0
+[mtc] state estimator vs truth: pelvis pos 0.4 cm, lin vel 0.006 m/s (means); at the first tick: speed 0.008 m/s, height error +0.2 cm
+[mtc] success 1 | joint 0.0985 rad | body 3.35 cm | anchor 4.73 cm | slip 0.0043 m/s | recovery 1 | blade 1.39 cm (after a 0.0 s unscored settle)
+[mtc] gap vs sim2sim.json (mtc - sim2sim): success_rate +0, joint_angle_error_rad -7.8e-05, body_pos_error_m +0.000553, anchor_pos_error_m -0.00346, anchor_ori_error_rad +0.000948, foot_slip_m_s -8.53e-05, blade_tip_error_m +0.00111
+[mtc]   PASS    nominal.success_rate = 1 (need >= 0.95)
+[mtc]   PASS    nominal.joint_angle_error_rad = 0.09852 (need <= 0.1)
+[mtc]   PASS    nominal.body_pos_error_m = 0.03351 (need <= 0.05)
+[mtc]   PASS    nominal.anchor_pos_error_m = 0.04731 (need <= 0.25)
+[mtc]   PASS    nominal.anchor_ori_error_rad = 0.1274 (need <= 0.2)
+[mtc]   PASS    nominal.foot_slip_m_s = 0.004296 (need <= 0.1)
+[mtc]   PASS    nominal.recovery_rate = 1 (need >= 0.9)
+[mtc]   PASS    nominal.blade_tip_error_m = 0.01392 (need <= 0.1)
+[mtc] standby start: {'still': True, 'reasons': [], 'window_s': 1.0, 'window_ends_before_switch_s': 0.01, 'standby_active_s': 10.004000001, 'pelvis_height_m': 0.7497101725092977, 'pelvis_height_range_m': 1.5002534017316549e-06, 'pelvis_speed_max_m_s': 5.466155473356655e-05, 'pelvis_tilt_max_rad': 0.0863715800106711, 'joint_speed_max_rad_s': 5.56282325490084e-05, 'limits': {'standby_active_s': 3.0, 'pelvis_speed_max_m_s': 0.01, 'pelvis_height_range_m': 0.002, 'pelvis_tilt_max_rad': 0.2, 'joint_speed_max_rad_s': 0.05}}
+[mtc] converged (joint error < 0.15 rad for 0.5 s) at step 0, 0.04199999999999804 s after the switch
+[mtc] after convergence: success 1 | joint 0.0985 rad | body 3.35 cm | anchor 4.73 cm | slip 0.0043 m/s | recovery 1 | blade 1.39 cm -> PASS
+[mtc] PASS -> /home/nathan/hcf-data/eval/2026-11-11_18-02-31_stand_to_en_garde_v1_feet/model_2999/mtc_standby.json

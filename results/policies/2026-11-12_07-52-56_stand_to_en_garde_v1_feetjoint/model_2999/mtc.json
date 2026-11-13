@@ -1,0 +1,215 @@
+{
+  "kind": "mtc_sim2sim",
+  "export_dir": "/home/nathan/hcf-data/eval/2026-11-12_07-52-56_stand_to_en_garde_v1_feetjoint/model_2999",
+  "plant": "g1_saber",
+  "simulator": "motion_tracking_controller C++ + mujoco_sim_ros2 (ROS 2 Jazzy, rootless rootfs)",
+  "recording": "/home/nathan/hcf-data/mtc/runs/2026-11-12_07-52-56_stand_to_en_garde_v1_feetjoint_model_2999/bag.npz",
+  "recorder_status": 0,
+  "recording_dir": "/home/nathan/hcf-data/mtc/runs/2026-11-12_07-52-56_stand_to_en_garde_v1_feetjoint_model_2999",
+  "start_hold": true,
+  "hold_release_sim_s": 3.89,
+  "plant_urdf": "/home/nathan/hcf-data/mtc/models/g1_saber.urdf",
+  "attempt": 1,
+  "start_from_standby": false,
+  "standby_switch_after_s": null,
+  "chain_entry_dir": null,
+  "chain_switch_after_s": null,
+  "reference_source": "onnx (placed like MotionCommandTerm::reset at step 0)",
+  "metadata_full_precision": false,
+  "physics": {
+    "step_dt": 0.02,
+    "simulator": "MTC mujoco_sim_ros2 (/home/nathan/hcf-data/mtc/models/g1_saber.xml)"
+  },
+  "motion_frames": 374,
+  "motion_steps": 374,
+  "hold_steps": 100,
+  "steps_run": 474,
+  "terminated_at_step": null,
+  "terminated_at_s": null,
+  "termination_terms": [],
+  "has_blade": true,
+  "truncated": false,
+  "settle_seconds": 0.0,
+  "start": {
+    "pelvis_height_at_activation_m": 0.7566419429788056,
+    "pelvis_tilt_at_activation_rad": 0.030746035260541652,
+    "anchor_moved_during_settle_m": 0.0
+  },
+  "recording_complete": true,
+  "nominal": {
+    "num_episodes": 1,
+    "success_rate": 1.0,
+    "window_success_rate": 1.0,
+    "recovery_rate": 1.0,
+    "joint_angle_error_rad": 0.031711333814013754,
+    "body_pos_error_m": 0.026230419120895323,
+    "body_pos_error_global_m": 0.059157256808014015,
+    "per_body_pos_error_m": {
+      "pelvis": 0.006659126555603865,
+      "left_hip_roll_link": 0.014481468262867699,
+      "left_knee_link": 0.03806429640771658,
+      "left_ankle_roll_link": 0.052602980343316605,
+      "right_hip_roll_link": 0.013032155069760024,
+      "right_knee_link": 0.03683781829844692,
+      "right_ankle_roll_link": 0.05657230670757839,
+      "torso_link": 0.006301368871979495,
+      "left_shoulder_roll_link": 0.028287492725172537,
+      "left_elbow_link": 0.02758342543547181,
+      "left_wrist_yaw_link": 0.025147990021827417,
+      "right_shoulder_roll_link": 0.026714197598092026,
+      "right_elbow_link": 0.019382446877265622,
+      "right_wrist_yaw_link": 0.015558794517435507
+    },
+    "anchor_pos_error_m": 0.06297542333393026,
+    "anchor_ori_error_rad": 0.09770429055308598,
+    "foot_slip_m_s": 0.0034531760795288116,
+    "foot_slip_samples": 691,
+    "blade_tip_error_m": 0.01096197406532279,
+    "blade_tip_error_global_m": 0.0825578259974288,
+    "blade_tip_error_max_m": 0.029781402853700262,
+    "ground_z_m": 0.03494437336921692,
+    "scored_steps": 374,
+    "final_pelvis_height_error_m": 0.006653808106378278,
+    "final_pelvis_speed_m_s": 0.00011351160682017285
+  },
+  "timing": {
+    "activation_sim_s": 3.889999999,
+    "first_policy_tick_after_activation_s": 0.0019999999999997797,
+    "controller_reference_lag_steps": 1,
+    "joint_states_dt_median_s": 0.0019999999999997797,
+    "joint_states_gaps_over_3ms": 3,
+    "joint_states_max_gap_s": 0.004000000000001336,
+    "mid360_max_gap_s": 0.004000000000001336,
+    "max_state_time_mismatch_s": 1.0000018590972104e-09,
+    "max_state_time_mismatch_limit_s": 0.01,
+    "real_time_factor": 0.9655162204070061,
+    "controller_periodicity_hz": {
+      "average": 49.99999999651323,
+      "min": 49.99999750000013,
+      "max": 50.0
+    }
+  },
+  "estimator": {
+    "at_first_tick": {
+      "lin_vel_m_s": 0.11437941734077425,
+      "height_error_m": 0.03731503453573226
+    },
+    "pelvis_pos_error_m": {
+      "mean": 0.17517221418296902,
+      "max": 0.1774817368846543
+    },
+    "pelvis_pos_error_xy_m": {
+      "mean": 0.17514887483892455,
+      "max": 0.1758437234674531
+    },
+    "pelvis_ori_error_rad": {
+      "mean": 5.658668807790249e-10
+    },
+    "pelvis_lin_vel_error_m_s": {
+      "mean": 0.007286713768176522,
+      "max": 0.3574546817185649
+    }
+  },
+  "thresholds": [
+    {
+      "metric": "nominal.success_rate",
+      "op": ">=",
+      "threshold": 0.95,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.joint_angle_error_rad",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.031711333814013754,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.body_pos_error_m",
+      "op": "<=",
+      "threshold": 0.05,
+      "value": 0.026230419120895323,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_pos_error_m",
+      "op": "<=",
+      "threshold": 0.25,
+      "value": 0.06297542333393026,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.anchor_ori_error_rad",
+      "op": "<=",
+      "threshold": 0.2,
+      "value": 0.09770429055308598,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.foot_slip_m_s",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.0034531760795288116,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.recovery_rate",
+      "op": ">=",
+      "threshold": 0.9,
+      "value": 1.0,
+      "status": "pass"
+    },
+    {
+      "metric": "nominal.blade_tip_error_m",
+      "op": "<=",
+      "threshold": 0.1,
+      "value": 0.01096197406532279,
+      "status": "pass"
+    }
+  ],
+  "invalid_reasons": [],
+  "verdict": "PASS",
+  "gap_vs_sim2sim": {
+    "metrics": {
+      "success_rate": {
+        "mtc": 1.0,
+        "sim2sim": 1.0,
+        "diff": 0.0
+      },
+      "joint_angle_error_rad": {
+        "mtc": 0.031711333814013754,
+        "sim2sim": 0.03140399610716471,
+        "diff": 0.0003073377068490424
+      },
+      "body_pos_error_m": {
+        "mtc": 0.026230419120895323,
+        "sim2sim": 0.026210002725657884,
+        "diff": 2.0416395237438795e-05
+      },
+      "anchor_pos_error_m": {
+        "mtc": 0.06297542333393026,
+        "sim2sim": 0.06039159677918464,
+        "diff": 0.002583826554745622
+      },
+      "anchor_ori_error_rad": {
+        "mtc": 0.09770429055308598,
+        "sim2sim": 0.09700235844539454,
+        "diff": 0.0007019321076914414
+      },
+      "foot_slip_m_s": {
+        "mtc": 0.0034531760795288116,
+        "sim2sim": 0.0037184520785279946,
+        "diff": -0.000265275998999183
+      },
+      "blade_tip_error_m": {
+        "mtc": 0.01096197406532279,
+        "sim2sim": 0.010901562525389348,
+        "diff": 6.0411539933441505e-05
+      }
+    },
+    "sim2sim_motion_steps": 374,
+    "sim2sim_truncated": false,
+    "sim2sim_verdict": "PASS"
+  }
+}

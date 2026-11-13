@@ -1,0 +1,28 @@
+{
+  "clip_id": "YyiWe-ZakzE_42709-54709",
+  "yt_id": "YyiWe-ZakzE",
+  "source_start_s": 42.709,
+  "source_end_s": 54.709,
+  "pose_method": "gvhmr",
+  "track_id": 1,
+  "human_height_m": 1.7389887368679047,
+  "handedness_guess": "L",
+  "fps": 30,
+  "notes": "GVHMR (SMPL-X) on the screen's fencer track; handedness, body_scale and quality are from MediaPipe on the same track; retargeted with GMR smplx_to_g1 (gvhmr input)",
+  "retarget": {
+    "frames": 362,
+    "source_fps": 30.0,
+    "human_height_m": 1.7389887368679047,
+    "ik_error_median": 0.7396,
+    "ik_error_p95": 0.8275,
+    "ik_seconds": 0.5,
+    "joint_limit_frac": 0.0561,
+    "despiked_joint_samples": 0,
+    "betas_height_m": 1.739,
+    "ground_shift_m": [
+      0.0027,
+      -0.0097,
+      0.024
+    ]
+  }
+}

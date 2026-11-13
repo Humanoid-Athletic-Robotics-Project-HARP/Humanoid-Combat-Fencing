@@ -1,0 +1,76 @@
+{
+  "run_dir": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-12_07-52-58_stand_to_en_garde_v1_feetjoint05",
+  "checkpoint": "/home/nathan/hcf-data/runs/rsl_rl/g1_saber_tracking/2026-11-12_07-52-58_stand_to_en_garde_v1_feetjoint05/model_2999.pt",
+  "iteration": 2999,
+  "task": "Fencing-Tracking-Flat-G1-Saber-Entry-Joint05",
+  "motion_file": "/home/nathan/hcf-data/npz/stand_to_en_garde_v1_mjlab.npz",
+  "onnx": "/home/nathan/hcf-data/eval/2026-11-12_07-52-58_stand_to_en_garde_v1_feetjoint05/model_2999/policy.onnx",
+  "scene_xml": "/home/nathan/hcf-data/eval/2026-11-12_07-52-58_stand_to_en_garde_v1_feetjoint05/model_2999/scene/scene.xml",
+  "obs_dim": 160,
+  "onnx_vs_torch_max_abs_action_diff": 5.7220458984375e-06,
+  "step_dt": 0.02,
+  "decimation": 4,
+  "physics_timestep": 0.005,
+  "motion_frames": 374,
+  "inputs": {
+    "obs": [
+      1,
+      160
+    ],
+    "time_step": [
+      1,
+      1
+    ]
+  },
+  "outputs": {
+    "actions": [
+      1,
+      29
+    ],
+    "joint_pos": [
+      1,
+      29
+    ],
+    "joint_vel": [
+      1,
+      29
+    ],
+    "body_pos_w": [
+      1,
+      14,
+      3
+    ],
+    "body_quat_w": [
+      1,
+      14,
+      4
+    ],
+    "body_lin_vel_w": [
+      1,
+      14,
+      3
+    ],
+    "body_ang_vel_w": [
+      1,
+      14,
+      3
+    ]
+  },
+  "metadata_keys": [
+    "action_scale",
+    "anchor_body_name",
+    "body_names",
+    "command_names",
+    "default_joint_pos",
+    "hcf_full_precision",
+    "joint_damping",
+    "joint_names",
+    "joint_stiffness",
+    "observation_names",
+    "observation_terms_clip",
+    "observation_terms_flatten_history_dim",
+    "observation_terms_history_length",
+    "observation_terms_scale",
+    "run_path"
+  ]
+}

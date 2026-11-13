@@ -1,0 +1,14 @@
+{
+  "key": {
+    "track_npz": "/home/nathan/hcf-data/pose/YyiWe-ZakzE/track.npz",
+    "track_id": 1,
+    "start_s": 42.709,
+    "frames": 362,
+    "guide_sha256": "fb70058da9c481759a0f83ccf2c2c94acd9df2598417e1e57e1da4c618896dd5"
+  },
+  "frames": 362,
+  "yolo_frac": 1.0,
+  "bridged_frac": 0.0,
+  "pipeline_frac": 0.0,
+  "matched_iou_median": 0.9361
+}

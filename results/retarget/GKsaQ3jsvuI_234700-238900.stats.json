@@ -1,10 +1,17 @@
 {
-  "frames": 126,
+  "frames": 128,
   "source_fps": 30.0,
-  "human_height_m": 1.75,
-  "ik_error_median": 0.88,
-  "ik_error_p95": 1.1641,
-  "ik_seconds": 0.3,
-  "joint_limit_frac": 0.0553,
-  "despiked_joint_samples": 1
+  "human_height_m": 1.7207839226722716,
+  "ik_error_median": 0.665,
+  "ik_error_p95": 0.8027,
+  "ik_seconds": 0.4,
+  "joint_limit_frac": 0.0151,
+  "despiked_joint_samples": 0,
+  "betas_height_m": 1.721,
+  "ground_shift_m": [
+    0.0029,
+    -0.0095,
+    0.0379
+  ],
+  "ground_drift_m": 0.1098
 }

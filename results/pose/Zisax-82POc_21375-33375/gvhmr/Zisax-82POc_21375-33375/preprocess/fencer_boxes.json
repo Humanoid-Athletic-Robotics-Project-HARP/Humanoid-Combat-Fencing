@@ -1,0 +1,14 @@
+{
+  "key": {
+    "track_npz": "/home/nathan/hcf-data/pose/Zisax-82POc/track.npz",
+    "track_id": 4,
+    "start_s": 21.375,
+    "frames": 360,
+    "guide_sha256": "f38346752960d2f2b30511e1e341c0c117ac20f48fbc17cc2fcf7ed41b7b7a5d"
+  },
+  "frames": 360,
+  "yolo_frac": 1.0,
+  "bridged_frac": 0.0,
+  "pipeline_frac": 0.0,
+  "matched_iou_median": 0.8779
+}

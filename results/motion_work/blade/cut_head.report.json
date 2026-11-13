@@ -31,16 +31,16 @@
         "action": "cut_head",
         "angle_error_deg": 0.0,
         "collisions": [],
-        "frame": 24,
-        "hold_drift_m": 0.0249,
+        "frame": 27,
+        "hold_drift_m": 0.0147,
         "hold_s": 0.3,
         "index": 1,
         "joint_set": "arm",
         "kind": "cut",
-        "move_s_requested": 0.2,
-        "move_s_used": 0.2,
+        "move_s_requested": 0.3,
+        "move_s_used": 0.3,
         "target": "cut_head",
-        "time_s": 0.8,
+        "time_s": 0.9,
         "tip_error_m": 0.0,
         "waist_delta_rad": [
           0.0,
@@ -51,7 +51,7 @@
         "action": "en_garde",
         "angle_error_deg": 1.14,
         "collisions": [],
-        "frame": 48,
+        "frame": 51,
         "hold_drift_m": 0.0097,
         "hold_s": 0.6,
         "index": 2,
@@ -60,7 +60,7 @@
         "move_s_requested": 0.5,
         "move_s_used": 0.5,
         "target": "en_garde",
-        "time_s": 1.6,
+        "time_s": 1.7,
         "tip_error_m": 0.0097,
         "waist_delta_rad": [
           0.0,
@@ -79,7 +79,7 @@
         "action": "cut_head",
         "at_s": null,
         "hold_s": 0.3,
-        "move_s": 0.2
+        "move_s": 0.3
       },
       {
         "action": "en_garde",
@@ -106,12 +106,15 @@
         "waist_yaw_bound_rad": 0.35
       },
       "controlled_joints_beyond_soft_limit": [],
-      "controlled_max_speed_fraction_of_motor": 0.36941174228572266,
-      "frames": 109,
+      "controlled_max_speed_fraction_of_motor": 0.26320080882095137,
+      "frames": 112,
       "keys_off_target": [],
       "max_angle_error_deg": 1.14,
-      "max_hold_drift_m": 0.0249,
+      "max_hold_drift_m": 0.0147,
       "max_tip_error_m": 0.0097,
+      "max_torque_ratio": 2.35,
+      "max_torque_ratio_joint": "right_wrist_pitch_joint",
+      "max_torque_ratio_key": "cut_head",
       "speed_clamp": {
         "frames_over": 0,
         "max_change_rad": 0.0
@@ -121,6 +124,15 @@
       "wrist_pitch_yaw_max_abs_rad": 1.166098043312062
     }
   },
+  "key_frames": [
+    {
+      "frame": 27,
+      "index": 1,
+      "kind": "cut",
+      "target": "cut_head",
+      "time_s": 0.9
+    }
+  ],
   "motion": "cut_head",
   "quality": {
     "format_ok": true,
@@ -140,15 +152,15 @@
           "right": 1
         }
       },
-      "duration_s": 3.6,
+      "duration_s": 3.7,
       "foot_slip": {
         "contact_phases": 2,
         "max_deviation_m": 0.006140048474831899,
-        "mean_slide_speed_mps": 0.004714421175277802,
+        "mean_slide_speed_mps": 0.004588142036654289,
         "total_slide_m": 0.03425812720701869
       },
       "fps": 30.0,
-      "frames": 109,
+      "frames": 112,
       "joint_limits": {
         "joints": [],
         "max_violation_rad": 0.0,
@@ -156,8 +168,8 @@
       },
       "joint_speed": {
         "fastest_joint": "right_shoulder_pitch_joint",
-        "max_fraction_of_motor_limit": 0.36941174228572266,
-        "max_rad_s": 13.668234464571738
+        "max_fraction_of_motor_limit": 0.26320080882095137,
+        "max_rad_s": 9.7384299263752
       },
       "penetration": {
         "frames_below_5mm": 0,
