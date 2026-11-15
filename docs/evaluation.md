@@ -21,11 +21,11 @@ scripts/hcf sim2sim      <run> --checkpoint N [--video] [--pd explicit] [--motio
 | `play.mp4` | `train play` |
 
 **Tests.** Two commands, both needed. The main suite runs in the fencing venv. It skips the
-mjlab task tests (`tests/test_saber_mjlab.py`), because that venv has no torch or mjlab:
+mjlab task tests (`tests/test_saber_mjlab.py`, `tests/test_saber_mjlab_flex.py`), because that venv has no torch or mjlab:
 
 ```bash
 UV_PROJECT_ENVIRONMENT=$HOME/hcf-data/venvs/fencing UV_LINK_MODE=copy uv run --project <repo> pytest -q <repo>/tests
-PYTHONPATH=src ~/hcf-data/venvs/mjlab/bin/python -m pytest -q -p no:cacheprovider tests/test_saber_mjlab.py   # from <repo>
+PYTHONPATH=src ~/hcf-data/venvs/mjlab/bin/python -m pytest -q -p no:cacheprovider tests/test_saber_mjlab.py tests/test_saber_mjlab_flex.py   # from <repo>
 ```
 
 The second command is the only one that checks the training tasks. That includes the check

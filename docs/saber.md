@@ -72,7 +72,7 @@ No separate saber NPZ is needed unless a future reward tracks the saber body its
 
 ## mjlab tasks
 
-`fencing.saber.mjlab_task.register()` registers five tasks without touching `third_party`. It is idempotent. `fencing.train.mjlab_env.register_tasks()` calls it, so eval, export, play and record-obs all see these tasks.
+`fencing.saber.mjlab_task.register()` registers five tasks without touching `third_party`. It is idempotent. `fencing.train.mjlab_env.register_tasks()` calls it, so eval, export, play and record-obs all see these tasks. It also calls `fencing.saber.mjlab_flex_task.register()`, which adds the bending-blade task.
 
 | Task id | Based on |
 |---|---|
@@ -80,6 +80,7 @@ No separate saber NPZ is needed unless a future reward tracks the saber body its
 | `Fencing-Tracking-Flat-G1-Saber-No-State-Estimation` | `Mjlab-Tracking-Flat-Unitree-G1-No-State-Estimation` |
 | `Fencing-Tracking-Flat-G1-Saber-Entry` | `Fencing-Tracking-Flat-G1-Saber`, plus one reward term (below) |
 | `Fencing-Tracking-Flat-G1-Saber-Entry-Joint`, `-Joint05` | `Fencing-Tracking-Flat-G1-Saber-Entry`, plus one more reward term (below) |
+| `Fencing-Tracking-Flat-G1-Saber-Bending` | `Fencing-Tracking-Flat-G1-Saber` with a bending blade ([saber_flex.md](saber_flex.md#training-with-the-bending-blade), [ADR 0004](adr/0004-bending-blade-training.md)) |
 
 Differences from the upstream tasks:
 

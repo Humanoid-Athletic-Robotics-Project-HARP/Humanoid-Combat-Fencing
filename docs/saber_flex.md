@@ -28,6 +28,38 @@ model = g1_saber_model(saber)  # the G1 with a bending blade; SaberSpec() is the
 
 Numbers: `flex_segments` = blade pieces (0 = rigid); `--flex-f1` / `flex_f1_flatwise_hz` = how many times per second the blade wobbles towards its flat side; `--flex-f1-edge` / `flex_f1_edgewise_hz` = towards its edge (0 = same). Until a practice saber is measured, 5 and 12.5 Hz are estimates.
 
+## Using it at each step
+
+Where the bending blade comes in, from video to hardware. "Automatic" means the step reads the task from the run or the blade from the exported scene, with no option to set.
+
+| Step | Bending blade | Command |
+|---|---|---|
+| Video to motion CSV (pose, retarget, cleanup) | No saber yet | |
+| Bladework keyframes (`keyframes`) | Refuses: plans the arm for a straight blade | |
+| Saber model file | `--flex-*` options | `scripts/hcf saber build-mjcf --flex-segments 1 --flex-f1 5 --flex-f1-edge 12.5` |
+| Committed saber policies on a bending blade | Blade chosen per run | `scripts/hcf saber flex sweep` or `measured` ([Commands](#commands)) |
+| Training | Pick the task | `--task Fencing-Tracking-Flat-G1-Saber-Bending` on `scripts/hcf pipeline train` or `scripts/hcf train run` ([Training with the bending blade](#training-with-the-bending-blade)) |
+| Export | Automatic: the ONNX metadata lists the 29 robot joints, and `scene/` holds the nominal bending blade | `scripts/hcf train export <run>` |
+| mjlab eval | Automatic, but the tip is measured at the fixed wrist offset: the straight blade's tip | `scripts/hcf train eval <run>` |
+| sim2sim (CPU MuJoCo) | Automatic: simulates the exported bending blade; tip measured as in eval | `scripts/hcf sim2sim <run>` |
+| Real-tip score | By hand, below | `scripts/hcf saber flex measured --policy <dir>` |
+| PhysX sim2sim, `train play --video`, `motion_tracking_controller` | Not tried with a bending-blade export | |
+| Hardware | The practice saber is the blade; none measured yet ([Measuring a practice saber](#measuring-a-practice-saber)) | |
+
+**Real-tip score of a newly trained policy.** `fencing saber flex` puts the blade into a rigid scene and reads the scored moments from `sim2sim.json` (the motion NPZs are not committed), so it needs the committed rigid policy of the same motion next to the new policy. It looks for `<dir>/model_2999` whatever the checkpoint.
+
+```bash
+RUN=2026-11-15_00-25-04_cut_head_v4_bending_v1                        # the new run
+RIGID=results/policies/2026-11-11_13-49-44_cut_head_v4_tip/model_2999   # committed rigid run, same motion
+D=$HCF_DATA/eval/flex/$RUN/model_2999
+mkdir -p $D
+cp $HCF_DATA/eval/$RUN/model_2999/{policy.onnx,export.json} $D/       # from scripts/hcf train export
+cp -r $RIGID/{scene,sim2sim.json} $D/
+scripts/hcf saber flex measured --policy $HCF_DATA/eval/flex/$RUN cut_head_v4 --f1 5 --f1-edge 12.5 --tag ${RUN}_nominal
+```
+
+Each policy runs on the bending blade and on a rigid saber of the same mass. With `cut_head_v4` added, the committed policy runs too, for comparison. For `cut_head_v4_bending_v1` this gives 3.7 cm on the bending blade and 7.3 cm on the rigid one, as in [Training with the bending blade](#training-with-the-bending-blade).
+
 ## Commands
 
 ```bash
@@ -87,7 +119,7 @@ With `flex_segments = 0` the built model is identical to the committed one: same
 | Code | With `flex_segments > 0` |
 |---|---|
 | `attach_saber`, `g1_saber_spec`, `g1_saber_model`, `write_mjcf` | Build it. They refuse a blade that would blow up at the model's timestep, and refuse `collision=True`. |
-| Training (`mjlab_task.saber_g1_robot_cfg`) | Refuses. The policy inputs would include the blade hinges (the real robot cannot sense them), the tracking command expects the 29 robot joints, and the blade-tip reward assumes a straight blade. |
+| Training (`mjlab_task.saber_g1_robot_cfg`) | The saber task refuses. Its policy inputs would include the blade hinges (the real robot cannot sense them), its tracking command expects the 29 robot joints, and its blade-tip reward assumes a straight blade. The bending-blade task trains with it ([Training with the bending blade](#training-with-the-bending-blade)). |
 | Keyframer, reach analysis, blade path (`keyframes`, `reach`, `blade`) | Refuse. They plan with the straight blade. |
 | URDF snippet | Refuses (rigid saber only). |
 | `fencing saber build-mjcf` | `--flex-segments N --flex-f1 HZ [--flex-f1-edge HZ] [--flex-damping R]` writes a bending model to `$HCF_DATA/eval/flex/` (no URDF snippet). |
@@ -210,9 +242,14 @@ About 15 minutes with a phone that records slow motion, a clamp, a kitchen scale
 `Fencing-Tracking-Flat-G1-Saber-Bending` (`src/fencing/saber/mjlab_flex_task.py`) is the saber task with a one-piece bending blade. The decision record is [ADR 0004](adr/0004-bending-blade-training.md) (proposed). The saber task itself is unchanged.
 
 ```bash
-scripts/hcf train run results/motion_npz/cut_head_v4_mjlab.npz --name bending_v1     --task Fencing-Tracking-Flat-G1-Saber-Bending --iterations 3000
-scripts/hcf train export <run>   # ONNX with the 29 robot joints in its metadata, plus the scene
+scripts/hcf pipeline train motions/cut_head_v4.csv --task Fencing-Tracking-Flat-G1-Saber-Bending --tag bending --iterations 3000
+#   train -> export -> eval -> sim2sim, as for the other tasks; eval and sim2sim measure the straight blade's tip.
+#   Unverified end to end: checked with --dry-run only.
+scripts/hcf train run results/motion_npz/cut_head_v4_mjlab.npz --name bending_v1 --task Fencing-Tracking-Flat-G1-Saber-Bending --iterations 3000
+#   training only, as cut_head_v4_bending_v1 was run; then scripts/hcf train export <run>
 ```
+
+Then score the real tip by hand ([Using it at each step](#using-it-at-each-step)).
 
 First result (2026-11-15, `cut_head_v4_bending_v1`, one run): the key-frame tip error on the bending blade went from 15.1 to 3.7 cm (nominal 5 / 12.5 Hz) and from 9.6 to 3.0 cm (6.3 / 15.7 Hz), both now inside the 5 cm gate; the floppy 4 / 10 Hz blade improved from 22.4 to 9.2 cm but still fails, and on a rigid saber the new policy misses by 7.3 cm (the committed one: 3.2 cm). Joint and body errors barely changed. Details: [ADR 0004](adr/0004-bending-blade-training.md#result).
 
@@ -230,7 +267,7 @@ What differs from the saber task:
 
 Still open:
 
-- **Scoring.** `fencing train evaluate` measures the tip from the fixed wrist offset, so for these policies it reports the straight blade's tip. Score them with `scripts/hcf saber flex` (put the exported `policy.onnx` next to the rigid saber scene).
+- **Scoring.** `fencing train evaluate` measures the tip from the fixed wrist offset, so for these policies it reports the straight blade's tip. Score them with `scripts/hcf saber flex` ([Real-tip score of a newly trained policy](#using-it-at-each-step)).
 - **The ranges are estimates.** Narrow them to the measured practice saber, then retrain.
 - **The keyframer plans the arm for a straight blade**, so a policy that tracks those arm angles is pushed to move its wrist as if the blade were rigid. One option is to plan the arm with the blade's dynamics.
 
