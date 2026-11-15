@@ -14,7 +14,7 @@ from fencing import paths
 from fencing.train import naming, provenance
 
 SABER_TASK_MODULE = "fencing.saber.mjlab_task"
-FLEX_TASK_MODULE = "fencing.saber.mjlab_flex_task"  # the saber task with a bending blade (experimental)
+FLEX_TASK_MODULE = "fencing.saber.mjlab_flex_task"  # the saber task with a bending blade
 
 
 def register_tasks() -> list[str]:

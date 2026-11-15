@@ -227,6 +227,9 @@ scripts/hcf pipeline train motions/en_garde_v1.csv --iterations 3000
 #   one motion after another: train (foreground) -> export -> eval -> sim2sim,
 #   then a row in docs/log.md and a summary in $HCF_DATA/eval/pipeline/<ts>.json.
 #   --task auto picks Fencing-Tracking-Flat-G1-Saber for bladework motions.
+#   --task Fencing-Tracking-Flat-G1-Saber-Bending trains with a bending blade instead (see
+#   docs/adr/0004-bending-blade-training.md); eval and sim2sim then score the straight blade's tip,
+#   so score the real tip with scripts/hcf saber flex (docs/saber_flex.md).
 scripts/hcf pipeline data                        # (scrape) -> screen -> pose -> retarget -> motion batch
 scripts/hcf train eval <run> --checkpoint N      # single stages; see docs/evaluation.md
 scripts/hcf sim2sim <run> --checkpoint N [--video]

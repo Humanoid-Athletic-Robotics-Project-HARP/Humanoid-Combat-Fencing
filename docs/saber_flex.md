@@ -2,7 +2,7 @@
 
 The saber in [saber.md](saber.md) is one rigid body. A real foam practice saber bends: stop a swing and the tip keeps going, then wobbles. This page covers an optional bending blade, a command that reruns the existing saber policies with it, and what that showed.
 
-Nothing changes unless you ask for it. The default `SaberSpec` builds exactly the committed rigid saber. The saber training task refuses a bending one; a separate, experimental task trains with it (see the last sections).
+Nothing changes unless you ask for it. The default `SaberSpec` builds exactly the committed rigid saber. The saber training task refuses a bending one; a separate task trains with it (see the last sections).
 
 ## How to turn it on
 
@@ -24,7 +24,7 @@ model = g1_saber_model(saber)  # the G1 with a bending blade; SaberSpec() is the
 
 **To test the trained saber policies with it**: `scripts/hcf saber flex …` below.
 
-**To train with it**: the task `Fencing-Tracking-Flat-G1-Saber-Bending` ([Training with the bending blade](#training-with-the-bending-blade-experimental)). `Fencing-Tracking-Flat-G1-Saber` refuses a bending saber.
+**To train with it**: the task `Fencing-Tracking-Flat-G1-Saber-Bending` ([Training with the bending blade](#training-with-the-bending-blade)). `Fencing-Tracking-Flat-G1-Saber` refuses a bending saber.
 
 Numbers: `flex_segments` = blade pieces (0 = rigid); `--flex-f1` / `flex_f1_flatwise_hz` = how many times per second the blade wobbles towards its flat side; `--flex-f1-edge` / `flex_f1_edgewise_hz` = towards its edge (0 = same). Until a practice saber is measured, 5 and 12.5 Hz are estimates.
 
@@ -205,7 +205,7 @@ About 15 minutes with a phone that records slow motion, a clamp, a kitchen scale
 
 `--bend LOAD_G DEFLECTION_CM FREE_LENGTH_CM` adds a bend-test cross-check. It assumes a uniform blade, so it reads low for a tapered one. Trust the video.
 
-## Training with the bending blade (experimental)
+## Training with the bending blade
 
 `Fencing-Tracking-Flat-G1-Saber-Bending` (`src/fencing/saber/mjlab_flex_task.py`) is the saber task with a one-piece bending blade. The decision record is [ADR 0004](adr/0004-bending-blade-training.md) (proposed). The saber task itself is unchanged.
 

@@ -1,4 +1,4 @@
-"""mjlab task: the saber task with a bending blade (fencing.saber.flex). Experimental.
+"""mjlab task: the saber task with a bending blade (fencing.saber.flex).
 
 Runs in the mjlab venv. Registered like the saber task (fencing.train.mjlab_env registers both):
 
