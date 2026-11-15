@@ -2,6 +2,8 @@
 
 The saber is one rigid body ("saber") welded to `right_wrist_yaw_link`, the end link of
 the 29-DoF G1's right arm. No joint: the fixed mount has no compliance worth modelling.
+The blade is rigid too unless SaberSpec.flex_segments > 0, which hangs a bending blade
+(spring-hinged pieces, fencing.saber.flex) from the same body instead.
 
 Saber frame (origin at the centre of the grip):
     +x  along the blade, towards the tip
@@ -72,6 +74,15 @@ class SaberSpec:
     rgba_blade: tuple[float, float, float, float] = (0.95, 0.85, 0.15, 1.0)
     rgba_guard: tuple[float, float, float, float] = (0.15, 0.15, 0.15, 1.0)
     rgba_grip: tuple[float, float, float, float] = (0.45, 0.25, 0.10, 1.0)
+    # Bending blade (fencing.saber.flex). 0 pieces (the default) keeps the rigid blade above; more
+    # splits the blade into that many pieces joined by spring hinges. Each frequency is the first
+    # wobble (Hz) of the blade clamped at the guard: towards its flat side (the floppy direction)
+    # and towards its edge (0 = same as flatwise). repr=False keeps these out of the task
+    # snapshots in tests/data/, which store repr(SaberSpec).
+    flex_segments: int = field(default=0, repr=False)
+    flex_f1_flatwise_hz: float = field(default=0.0, repr=False)
+    flex_f1_edgewise_hz: float = field(default=0.0, repr=False)
+    flex_damping_ratio: float = field(default=0.05, repr=False)
 
     def __post_init__(self) -> None:
         for name in (
@@ -87,6 +98,14 @@ class SaberSpec:
             raise ValueError(f"mount_yaw_deg must be in (-90, 90), got {self.mount_yaw_deg}")
         if len(self.mount_pos) != 3:
             raise ValueError(f"mount_pos must have 3 components, got {self.mount_pos!r}")
+        if not (isinstance(self.flex_segments, int) and self.flex_segments >= 0):
+            raise ValueError(f"flex_segments must be an integer >= 0, got {self.flex_segments!r}")
+        if self.flex_segments:
+            if not (self.flex_f1_flatwise_hz > 0 and self.flex_f1_edgewise_hz >= 0):
+                raise ValueError("a bending blade needs flex_f1_flatwise_hz > 0 and flex_f1_edgewise_hz >= 0 "
+                                 f"(0 = same), got {self.flex_f1_flatwise_hz}, {self.flex_f1_edgewise_hz}")
+            if not 0 <= self.flex_damping_ratio < 1:
+                raise ValueError(f"flex_damping_ratio must be in [0, 1), got {self.flex_damping_ratio}")
 
     # Positions along the saber x axis.
     @property
@@ -241,24 +260,39 @@ def attach_saber(spec: mujoco.MjSpec, saber: SaberSpec = NOMINAL_SABER,
     `right_wrist_yaw_link` is the last body of the G1 kinematic tree, so the saber becomes
     the last body and every existing body keeps its index: NPZ motions built for the plain
     robot stay valid (see docs/saber.md, "Motion NPZ compatibility").
+
+    With saber.flex_segments > 0 this body keeps only the grip and guard, and the blade hangs
+    from it as spring-hinged pieces (fencing.saber.flex). Their hinges add joints after the
+    robot's, and attach_saber refuses a blade that would blow up at spec.option.timestep.
     """
     parent_body = spec.body(parent)
     if parent_body is None:
         raise ValueError(f"parent body {parent!r} not found in spec")
     if spec.body(SABER_BODY) is not None:
         raise ValueError(f"spec already has a body named {SABER_BODY!r}; attach_saber called twice?")
+    bending = saber.flex_segments > 0
+    if bending and saber.collision:
+        raise NotImplementedError(
+            "blade collision is not built for the bending blade yet. The reach analysis and the "
+            "keyframer turn it on for their self-collision check; they plan with the straight blade, "
+            "so give them a SaberSpec with flex_segments=0")
 
-    props = mass_properties(saber)
     body = parent_body.add_body(name=SABER_BODY, pos=list(saber.mount_pos),
                                 quat=list(mount_quat(saber)))
     body.explicitinertial = True
-    body.mass = props.mass
-    body.ipos = props.com
-    # Parts are symmetric about the saber x axis, so the inertia is already diagonal.
-    off_diagonal = props.inertia - np.diag(np.diag(props.inertia))
-    if np.abs(off_diagonal).max() > 1e-12:
-        raise AssertionError(f"saber inertia not diagonal in its frame: {props.inertia}")
-    body.inertia = np.diag(props.inertia)
+    if bending:
+        from fencing.saber import flex  # imported here: flex imports this module
+
+        body.mass, body.ipos, body.inertia = flex.handle_mass_properties(saber)
+    else:
+        props = mass_properties(saber)
+        body.mass = props.mass
+        body.ipos = props.com
+        # Parts are symmetric about the saber x axis, so the inertia is already diagonal.
+        off_diagonal = props.inertia - np.diag(np.diag(props.inertia))
+        if np.abs(off_diagonal).max() > 1e-12:
+            raise AssertionError(f"saber inertia not diagonal in its frame: {props.inertia}")
+        body.inertia = np.diag(props.inertia)
 
     half_grip = saber.grip_length / 2
     _add_visual_geom(body, "saber_grip", type=mujoco.mjtGeom.mjGEOM_CYLINDER,
@@ -268,10 +302,11 @@ def attach_saber(spec: mujoco.MjSpec, saber: SaberSpec = NOMINAL_SABER,
                      size=[saber.guard_thickness / 2, saber.guard_width / 2,
                            saber.guard_height / 2],
                      pos=[saber.guard_center_x, 0, 0], rgba=list(saber.rgba_guard))
-    _add_visual_geom(body, "saber_blade", type=mujoco.mjtGeom.mjGEOM_CYLINDER,
-                     size=[saber.blade_radius, saber.blade_length / 2, 0],
-                     pos=[saber.blade_center_x, 0, 0], quat=list(_X_TO_CYLINDER_AXIS),
-                     rgba=list(saber.rgba_blade))
+    if not bending:
+        _add_visual_geom(body, "saber_blade", type=mujoco.mjtGeom.mjGEOM_CYLINDER,
+                         size=[saber.blade_radius, saber.blade_length / 2, 0],
+                         pos=[saber.blade_center_x, 0, 0], quat=list(_X_TO_CYLINDER_AXIS),
+                         rgba=list(saber.rgba_blade))
 
     if saber.collision:
         # Name ends in "_collision" on purpose: mjlab's G1 CollisionCfg regex then gives it
@@ -285,10 +320,15 @@ def attach_saber(spec: mujoco.MjSpec, saber: SaberSpec = NOMINAL_SABER,
         geom.group = 3
         geom.mass = 0.0
 
-    for name, x, rgba in ((GUARD_SITE, saber.blade_base_x, [0, 0, 1, 1]),
-                          (TIP_SITE, saber.tip_x, [1, 0, 0, 1])):
+    sites = [(GUARD_SITE, saber.blade_base_x, [0, 0, 1, 1])]
+    if not bending:  # the bending blade puts its tip site on its last piece
+        sites.append((TIP_SITE, saber.tip_x, [1, 0, 0, 1]))
+    for name, x, rgba in sites:
         site = body.add_site(name=name, pos=[x, 0, 0], size=[0.012, 0, 0], rgba=rgba)
         site.group = 3
+    if bending:
+        flex.add_bending_blade(body, saber)
+        flex.check_stable(flex.FlexBlade.from_saber(saber), spec.option.timestep, saber, spec.option.integrator)
     return spec
 
 
@@ -342,6 +382,8 @@ def urdf_snippet(saber: SaberSpec = NOMINAL_SABER) -> str:
 
     Kept as a snippet: Isaac Sim does not run on this WSL2 machine, so it is untested there.
     """
+    if saber.flex_segments:
+        raise NotImplementedError("the URDF snippet describes the rigid saber only (flex_segments=0)")
     props = mass_properties(saber)
     q = mount_quat(saber)
     # URDF wants fixed-axis roll-pitch-yaw; convert from the wxyz quaternion.

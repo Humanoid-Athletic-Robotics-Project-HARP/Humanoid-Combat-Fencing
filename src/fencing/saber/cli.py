@@ -1,9 +1,13 @@
 """`fencing saber <command>`: saber model, wrist-reach analysis, renders and the GPU smoke test.
 
     fencing saber build-mjcf   # write src/fencing/saber/assets/g1_29dof_saber.xml (+ URDF snippet)
+                               # --flex-segments N --flex-f1 HZ: a bending blade instead
+                               # -> ~/hcf-data/eval/flex/g1_29dof_saber_bending.xml
     fencing saber reach        # IK over the canonical parries/cuts -> ~/hcf-data/eval/saber/reach.json
     fencing saber render       # PNGs of those poses -> ~/hcf-data/eval/saber/renders/
     fencing saber smoke        # build + step the mjlab saber task on the GPU (mjlab venv)
+    fencing saber flex ...     # rerun saber policies with a bending blade -> ~/hcf-data/eval/flex/
+                               # (docs/saber_flex.md; `fencing saber flex --help`)
 
 build-mjcf, reach and render run in the fencing venv. smoke needs mjlab + torch; if they
 are not importable here it re-runs itself with ~/hcf-data/venvs/mjlab/bin/python.
@@ -22,6 +26,7 @@ from pathlib import Path
 from fencing.paths import EVAL, REPO_ROOT, venv_python
 
 SABER_EVAL = EVAL / "saber"
+BENDING_MJCF_OUT = EVAL / "flex" / "g1_29dof_saber_bending.xml"
 
 
 def _saber_from_args(args: argparse.Namespace):
@@ -36,6 +41,9 @@ def _saber_from_args(args: argparse.Namespace):
         saber = saber.with_total_mass(args.mass)
     if getattr(args, "collision", False):
         saber = replace(saber, collision=True)
+    if getattr(args, "flex_segments", 0):
+        saber = replace(saber, flex_segments=args.flex_segments, flex_f1_flatwise_hz=args.flex_f1 or 0.0,
+                        flex_f1_edgewise_hz=args.flex_f1_edge, flex_damping_ratio=args.flex_damping)
     return saber
 
 
@@ -48,14 +56,30 @@ def _add_saber_options(parser: argparse.ArgumentParser) -> None:
 def cmd_build_mjcf(args: argparse.Namespace) -> int:
     import mujoco
 
-    from fencing.saber.spec import mass_properties, tip_in_hand, write_mjcf, write_urdf_snippet
+    from fencing.saber.spec import (
+        DEFAULT_MJCF_OUT,
+        mass_properties,
+        tip_in_hand,
+        write_mjcf,
+        write_urdf_snippet,
+    )
 
+    if args.flex_segments and not args.flex_f1:
+        print("--flex-segments needs --flex-f1 (the blade's wobble towards its flat side, Hz)", file=sys.stderr)
+        return 2
     saber = _saber_from_args(args)
-    path = write_mjcf(args.out, saber)
-    model = mujoco.MjModel.from_xml_path(str(path))  # prove plain MuJoCo loads the file
-    snippet = write_urdf_snippet(args.urdf_out, saber)
+    if saber.flex_segments:
+        # A bending blade never overwrites the committed rigid asset, and has no URDF (rigid only).
+        path = write_mjcf(args.out or BENDING_MJCF_OUT, saber)
+        model = mujoco.MjModel.from_xml_path(str(path))  # prove plain MuJoCo loads the file
+        print(f"wrote {path} (nbody={model.nbody}, nq={model.nq}: bending blade, "
+              f"{saber.flex_segments} piece(s), {2 * saber.flex_segments} spring hinges)")
+    else:
+        path = write_mjcf(args.out or DEFAULT_MJCF_OUT, saber)
+        model = mujoco.MjModel.from_xml_path(str(path))  # prove plain MuJoCo loads the file
+        snippet = write_urdf_snippet(args.urdf_out, saber)
+        print(f"wrote {path} (nbody={model.nbody}, nq={model.nq}) and {snippet}")
     props = mass_properties(saber)
-    print(f"wrote {path} (nbody={model.nbody}, nq={model.nq}) and {snippet}")
     print(f"saber: {saber.total_length:.3f} m, {props.mass:.3f} kg, COM {props.com[0]:.3f} m "
           f"from grip centre, tip in wrist frame {tip_in_hand(saber).round(3).tolist()}")
     return 0
@@ -130,7 +154,12 @@ def build_parser() -> argparse.ArgumentParser:
     build = sub.add_parser("build-mjcf", help="write the G1 + saber MJCF and URDF snippet")
     _add_saber_options(build)
     build.add_argument("--collision", action="store_true", help="add the blade collision capsule")
-    build.add_argument("--out", type=Path, default=DEFAULT_MJCF_OUT)
+    build.add_argument("--out", type=Path, help=f"default {DEFAULT_MJCF_OUT} (rigid) or {BENDING_MJCF_OUT} (bending)")
+    flex = build.add_argument_group("bending blade (docs/saber_flex.md); off unless --flex-segments > 0")
+    flex.add_argument("--flex-segments", type=int, default=0, help="number of blade pieces (0 = rigid blade)")
+    flex.add_argument("--flex-f1", type=float, help="first wobble towards the blade's flat side, Hz")
+    flex.add_argument("--flex-f1-edge", type=float, default=0.0, help="first wobble towards its edge, Hz (0 = same)")
+    flex.add_argument("--flex-damping", type=float, default=0.05, help="damping ratio (default 0.05)")
     build.add_argument("--urdf-out", type=Path, default=DEFAULT_URDF_SNIPPET_OUT)
 
     reach = sub.add_parser("reach", help="IK reachability of parries and cuts")
@@ -148,6 +177,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("smoke", help="GPU smoke test of the mjlab saber task (args: see --help)",
                    add_help=False)
+    sub.add_parser("flex", help="rerun saber policies with a bending blade (args: see --help)",
+                   add_help=False)
     return parser
 
 
@@ -156,6 +187,11 @@ def main(argv: list[str] | None = None) -> int:
     if argv and argv[0] == "smoke":
         # Forward everything after "smoke" untouched; fencing.saber.smoke owns those options.
         return cmd_smoke(argparse.Namespace(), argv[1:])
+    if argv and argv[0] == "flex":
+        # fencing.saber.flex_eval owns these options (validate / sweep / measured / report).
+        from fencing.saber.flex_eval import main as flex_main
+
+        return flex_main(argv[1:])
     args = build_parser().parse_args(argv)
     handlers = {"build-mjcf": cmd_build_mjcf, "reach": cmd_reach, "render": cmd_render}
     return handlers[args.command](args)
