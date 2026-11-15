@@ -93,7 +93,7 @@ Motions 1–4 are trained **without the saber** first. The saber is added once t
 | 1.0 | Repository setup and pinned upstream code | ✅ Done |
 | 1.1 | Environments: Mac, the WSL2 GPU PC (mjlab) and motion_tracking_controller ([mtc.md](docs/mtc.md)) done; Isaac Lab (does not run on WSL2) and SMPL-X still open | 🟡 In progress |
 | 1.2 | Train one known motion end to end to prove the pipeline: LAFAN1 `dance1_subject2` trained to the upstream 30,000 iterations; passes every gate in mjlab, CPU MuJoCo, CPU PhysX and the C++ controller (joint 0.093 vs 0.10); no Isaac Lab run | 🟡 In progress |
-| 1.3 | Saber and hardware decisions (grip, wrist range, sim model): [ADR 0002](docs/adr/0002-saber-grip-and-mount.md), [saber.md](docs/saber.md) | 🟡 Mostly done |
+| 1.3 | Saber and hardware decisions (grip, wrist range, sim model): [ADR 0002](docs/adr/0002-saber-grip-and-mount.md), [saber.md](docs/saber.md); bending blade: [saber_flex.md](docs/saber_flex.md) | 🟡 Mostly done |
 | 1.4 | Fencing motion dataset: video → G1 motion ([pipeline.md](docs/pipeline.md)); all footwork (en garde, advance, retreat, lunge, advance-lunge) from video; bladework keyframed; SMPL-X/GVHMR still open | 🟡 Mostly done |
 | 1.5 | Train and evaluate all seven motions in simulation: 16 policies pass in mjlab, CPU MuJoCo, the motion_tracking_controller sim and CPU PhysX ([results](results/SUMMARY.md)); no Isaac Sim cross-check (it does not run on WSL2) | ✅ Done in MuJoCo and PhysX |
 | 1.6 | Human-supervised hardware tests | ⚪ Planned |

@@ -1,6 +1,6 @@
 """Run existing saber policies (unchanged ONNX) on a bending blade in CPU MuJoCo.
 
-Experimental. Reuses fencing.sim2sim's rollout pieces read-only and copies the default path of
+Reuses fencing.sim2sim's rollout pieces read-only and copies the default path of
 `rollout.rollout` (scene PD, no start noise, no video) rather than changing it; a test runs both on the
 rigid saber and requires identical metrics. Adds three measurements the repo's rollout does not make:
   * the REAL blade tip (the `blade_tip` site, at the end of the bending chain), scored like the

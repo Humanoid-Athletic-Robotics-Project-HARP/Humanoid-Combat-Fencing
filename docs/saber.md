@@ -348,6 +348,6 @@ The Payload section above guessed 100 rad/s² for a fast wrist cut. `keyframes.m
 
 Every fast move asks the 5 Nm wrists for more than they have, so the reference is not exactly trackable at its fastest instants. The policies cope at about 2x, and cut_head at 5x is where key-frame placement broke down. `cut_head_v4` takes 0.3 s and demands 0.81 / 2.35 / 1.20 ([pipeline.md](pipeline.md), known errors). These are reference demands, not what a policy draws: in sim2sim cut_head_v3 peaked at 22.8 of 25 Nm on the shoulder pitch and at the 5 Nm limit on the wrist pitch.
 
-## Bending blade (experimental)
+## Bending blade
 
 The saber above is rigid. `SaberSpec.flex_segments > 0` (or `scripts/hcf saber build-mjcf --flex-segments 1 --flex-f1 5`) swaps in a blade of spring-hinged pieces, and `scripts/hcf saber flex` reruns the saber policies with it. First result (2026-11-14): with every plausible foam practice saber, 6 of the 12 saber policies miss the 5 cm key gate, all of them hard-swinging cuts and parries. The switch is off by default, and training refuses it for now. Details: [saber_flex.md](saber_flex.md).

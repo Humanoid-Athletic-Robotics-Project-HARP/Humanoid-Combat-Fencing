@@ -1,4 +1,4 @@
-# Bending blade (experimental)
+# Bending blade
 
 The saber in [saber.md](saber.md) is one rigid body. A real foam practice saber bends: stop a swing and the tip keeps going, then wobbles. This page covers an optional bending blade, a command that reruns the existing saber policies with it, and what that showed.
 

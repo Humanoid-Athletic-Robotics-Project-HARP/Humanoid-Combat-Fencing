@@ -230,6 +230,7 @@ scripts/hcf pipeline train motions/en_garde_v1.csv --iterations 3000
 scripts/hcf pipeline data                        # (scrape) -> screen -> pose -> retarget -> motion batch
 scripts/hcf train eval <run> --checkpoint N      # single stages; see docs/evaluation.md
 scripts/hcf sim2sim <run> --checkpoint N [--video]
+scripts/hcf saber flex measured --policy all --f1 5 --f1-edge 12.5   # saber policies on a bending blade; docs/saber_flex.md
 ```
 
 Training is CPU-latency-bound here (see `docs/log.md`, Environments). Two runs fit on the 16 GB card at once. Other heavy CPU jobs slow both runs a lot.
