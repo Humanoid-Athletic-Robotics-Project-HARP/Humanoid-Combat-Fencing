@@ -14,23 +14,25 @@ from fencing import paths
 from fencing.train import naming, provenance
 
 SABER_TASK_MODULE = "fencing.saber.mjlab_task"
+FLEX_TASK_MODULE = "fencing.saber.mjlab_flex_task"  # the saber task with a bending blade (experimental)
 
 
 def register_tasks() -> list[str]:
-    """Register mjlab's tasks plus this repo's saber task (if it exists yet)."""
+    """Register mjlab's tasks plus this repo's saber tasks (if they exist yet)."""
     import mjlab.tasks  # noqa: F401  (populates the registry)
     from mjlab.tasks.registry import list_tasks
 
-    try:
-        import importlib
+    for module in (SABER_TASK_MODULE, FLEX_TASK_MODULE):
+        try:
+            import importlib
 
-        saber_task = importlib.import_module(SABER_TASK_MODULE)
-    except ModuleNotFoundError as error:
-        print(f"[train] saber task not available ({error.name} not importable); "
-              "only upstream mjlab tasks are registered", flush=True)
-    else:
-        saber_task.register()
-        print(f"[train] registered saber task(s) from {SABER_TASK_MODULE}", flush=True)
+            saber_task = importlib.import_module(module)
+        except ModuleNotFoundError as error:
+            print(f"[train] saber task not available ({error.name} not importable); "
+                  f"{module} is not registered", flush=True)
+        else:
+            saber_task.register()
+            print(f"[train] registered saber task(s) from {module}", flush=True)
     return list_tasks()
 
 

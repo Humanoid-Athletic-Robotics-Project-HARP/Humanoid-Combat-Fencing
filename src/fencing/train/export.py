@@ -107,6 +107,7 @@ def check_onnx_matches_torch(onnx_path: Path, policy, obs_dim: int, device: str,
 def export(run: str, checkpoint: str | None, out: Path | None = None, device: str | None = None) -> dict:
     from mjlab.rl.exporter_utils import attach_metadata_to_onnx, get_base_metadata
 
+    from fencing.saber.mjlab_flex_task import FLEX_TASK_ID, drop_blade_joints
     from fencing.sim2sim.contract import FLOAT_LIST_KEYS, FULL_PRECISION_KEY, full_precision_metadata
     from fencing.train import mjlab_env
 
@@ -127,6 +128,8 @@ def export(run: str, checkpoint: str | None, out: Path | None = None, device: st
             "anchor_body_name": motion_term.cfg.anchor_body_name,
             "body_names": list(motion_term.cfg.body_names),
         })
+        if task == FLEX_TASK_ID:  # the bending blade's hinges have no motor: not policy joints
+            metadata = drop_blade_joints(metadata)
         # mjlab writes floats with 3 decimals; sim2sim needs the action scale exactly.
         metadata[FULL_PRECISION_KEY] = full_precision_metadata({
             key: metadata[key] if isinstance(metadata[key], list) else [metadata[key]]

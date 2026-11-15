@@ -128,10 +128,10 @@ def saber_g1_spec(saber: SaberSpec = NOMINAL_SABER) -> mujoco.MjSpec:
 def saber_g1_robot_cfg(saber: SaberSpec = NOMINAL_SABER):
     if saber.flex_segments:
         raise NotImplementedError(
-            "training with a bending blade (SaberSpec.flex_segments > 0) is not supported yet: the "
-            "policy inputs would include the blade hinges, which the real robot cannot sense; the "
-            "motion command expects the 29 robot joints only; and the blade-tip reward assumes a "
-            "straight blade")
+            "this task trains with a straight blade (SaberSpec.flex_segments = 0); for a bending blade "
+            "use fencing.saber.mjlab_flex_task (task Fencing-Tracking-Flat-G1-Saber-Bending), which keeps "
+            "the blade hinges out of the policy inputs, the motion command and the ONNX metadata, and "
+            "rewards the real blade tip")
     from mjlab.asset_zoo.robots import get_g1_robot_cfg
 
     cfg = get_g1_robot_cfg()
