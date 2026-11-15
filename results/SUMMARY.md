@@ -182,3 +182,5 @@ Robustness pass rates and the task are in [`summary.csv`](summary.csv). Empty ce
 | 2026-11-12_16-12-31_advance_v2_pipe | advance_v2 | sim2sim | PASS | 1.00 | 1.00 | 0.0663 | 2.8 | 3.2 | 0.017 |  |  |
 | 2026-11-12_16-13-10_en_garde_v4_pipe | en_garde_v4 | mjlab | PASS | 1.00 | 1.00 | 0.0484 | 1.7 | 3.1 | 0.009 |  |  |
 | 2026-11-12_16-13-10_en_garde_v4_pipe | en_garde_v4 | sim2sim | PASS | 1.00 | 1.00 | 0.0456 | 1.4 | 3.2 | 0.005 |  |  |
+| 2026-11-15_00-25-04_cut_head_v4_bending_v1 | cut_head_v4 | mjlab | PASS | 1.00 | 1.00 | 0.0911 | 4.7 | 3.3 | 0.045 | 2.9 |  |
+| 2026-11-15_00-25-04_cut_head_v4_bending_v1 | cut_head_v4 | sim2sim | PASS | 1.00 | 1.00 | 0.0908 | 4.7 | 3.5 | 0.046 | 2.8 |  |

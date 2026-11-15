@@ -1,0 +1,16 @@
+{
+  "run_name": "cut_head_v4_bending_v1",
+  "task": "Fencing-Tracking-Flat-G1-Saber-Bending",
+  "motion_npz": "/home/gregf/code/Humanoid-Combat-Fencing/results/motion_npz/cut_head_v4_mjlab.npz",
+  "motion_npz_sha256": "bd34200d961910972eaaee52d75a50ab9fdac14b9ddabe7379fb3f768ebf25d9",
+  "motion_csv": null,
+  "motion_csv_sha256": null,
+  "repo_commit": "92fe130",
+  "repo_dirty": true,
+  "iterations": 3000,
+  "num_envs": 4096,
+  "started_at": "2026-11-15T08:25:04+00:00",
+  "resume_from": null,
+  "extra": {},
+  "schema_version": 1
+}
