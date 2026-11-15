@@ -2,7 +2,7 @@
 
 The saber in [saber.md](saber.md) is one rigid body. A real foam practice saber bends: stop a swing and the tip keeps going, then wobbles. This page covers an optional bending blade, a command that reruns the existing saber policies with it, and what that showed.
 
-Nothing changes unless you ask for it. The default `SaberSpec` builds exactly the committed rigid saber, and training refuses a bending one.
+Nothing changes unless you ask for it. The default `SaberSpec` builds exactly the committed rigid saber. The saber training task refuses a bending one; a separate, experimental task trains with it (see the last sections).
 
 ## How to turn it on
 
@@ -24,7 +24,7 @@ model = g1_saber_model(saber)  # the G1 with a bending blade; SaberSpec() is the
 
 **To test the trained saber policies with it**: `scripts/hcf saber flex …` below.
 
-**Training** with it is not possible yet: `Fencing-Tracking-Flat-G1-Saber` refuses a bending saber (see the last sections).
+**To train with it**: the task `Fencing-Tracking-Flat-G1-Saber-Bending` ([Training with the bending blade](#training-with-the-bending-blade-experimental)). `Fencing-Tracking-Flat-G1-Saber` refuses a bending saber.
 
 Numbers: `flex_segments` = blade pieces (0 = rigid); `--flex-f1` / `flex_f1_flatwise_hz` = how many times per second the blade wobbles towards its flat side; `--flex-f1-edge` / `flex_f1_edgewise_hz` = towards its edge (0 = same). Until a practice saber is measured, 5 and 12.5 Hz are estimates.
 
@@ -205,18 +205,34 @@ About 15 minutes with a phone that records slow motion, a clamp, a kitchen scale
 
 `--bend LOAD_G DEFLECTION_CM FREE_LENGTH_CM` adds a bend-test cross-check. It assumes a uniform blade, so it reads low for a tapered one. Trust the video.
 
-## Training with the bending blade (not done)
+## Training with the bending blade (experimental)
 
-Training refuses a bending saber until these exist:
+`Fencing-Tracking-Flat-G1-Saber-Bending` (`src/fencing/saber/mjlab_flex_task.py`) is the saber task with a one-piece bending blade. The decision record is [ADR 0004](adr/0004-bending-blade-training.md) (proposed). The saber task itself is unchanged.
 
-- **Observations.** Restrict the joint observations to the 29 motor joints. mjlab's defaults include every joint, so the hinges would leak into the policy and the ONNX contract.
-- **Tracking command.** It must handle the extra joints: the motion command assumes the 29 joints of the motion file.
-- **Blade-tip reward.** It should score the real tip ([ADR 0003](adr/0003-blade-tip-reward.md) defines it on the rigid offset).
-- **Mass randomization.** It must cover the blade pieces: `dr.pseudo_inertia` acts on the `saber` body only, which with the switch on is just the grip and guard.
-- **Pieces and timestep.** Choose them from the measured stiffness (see Stability).
-- **A new ADR** ([training/README.md](../training/README.md)).
+```bash
+scripts/hcf train run results/motion_npz/cut_head_v4_mjlab.npz --name bending_v1     --task Fencing-Tracking-Flat-G1-Saber-Bending --iterations 3000
+scripts/hcf train export <run>   # ONNX with the 29 robot joints in its metadata, plus the scene
+```
 
-Also open: the keyframer plans the arm for a straight blade, so a policy that tracks those arm angles is pushed to move its wrist as if the blade were rigid. One option is to plan the arm with the blade's dynamics.
+First result (2026-11-15, `cut_head_v4_bending_v1`, one run): the key-frame tip error on the bending blade went from 15.1 to 3.7 cm (nominal 5 / 12.5 Hz) and from 9.6 to 3.0 cm (6.3 / 15.7 Hz), both now inside the 5 cm gate; the floppy 4 / 10 Hz blade improved from 22.4 to 9.2 cm but still fails, and on a rigid saber the new policy misses by 7.3 cm (the committed one: 3.2 cm). Joint and body errors barely changed. Details: [ADR 0004](adr/0004-bending-blade-training.md#result).
+
+What differs from the saber task:
+
+| Part | Saber task | Bending task |
+|---|---|---|
+| Blade | Rigid | 1 piece on 2 spring hinges (stable at 5 ms over the whole randomization range) |
+| Policy inputs | 29 joints | The same 29 joints: the robot can't sense the blade |
+| Critic inputs | — | Also the blade hinge angles and speeds (training only, not exported) |
+| Motion command | 29 joints | Compares and resets the 29 robot joints; the blade starts straight and still |
+| `blade_tip_pos` reward | Tip at a fixed offset from the wrist | The real tip (`blade_tip` site); same reference tip, weight and std |
+| `saber_mass` event | Saber mass 0.12-0.35 kg | Same mass range for the whole saber, plus each direction's wobble: 4-6 Hz flat, 10-16 Hz edge at the nominal mass; damping ratio kept at 0.05 |
+| ONNX metadata | 29 joints | 29 joints (the hinges are dropped) |
+
+Still open:
+
+- **Scoring.** `fencing train evaluate` measures the tip from the fixed wrist offset, so for these policies it reports the straight blade's tip. Score them with `scripts/hcf saber flex` (put the exported `policy.onnx` next to the rigid saber scene).
+- **The ranges are estimates.** Narrow them to the measured practice saber, then retrain.
+- **The keyframer plans the arm for a straight blade**, so a policy that tracks those arm angles is pushed to move its wrist as if the blade were rigid. One option is to plan the arm with the blade's dynamics.
 
 ## Files
 
@@ -225,6 +241,9 @@ Also open: the keyframer plans the arm for a straight blade, so a policy that tr
 | `src/fencing/saber/flex.py` | Model, stability check, scene editing |
 | `src/fencing/saber/flex_eval.py` | `fencing saber flex` |
 | `src/fencing/saber/spec.py` | The `flex_*` fields and `attach_saber` |
-| `src/fencing/saber/mjlab_task.py` | The training refusal |
+| `src/fencing/saber/mjlab_task.py` | The saber task's refusal |
+| `src/fencing/saber/mjlab_flex_task.py` | The bending-blade training task |
 | `src/fencing/saber/cli.py` | `fencing saber flex`, and the `--flex-*` options of `build-mjcf` |
 | `tests/test_saber_flex.py` | Tests |
+| `tests/test_saber_mjlab_flex.py` | Tests of the training task (mjlab venv) |
+| [ADR 0004](adr/0004-bending-blade-training.md) | Why the training task is built this way |
